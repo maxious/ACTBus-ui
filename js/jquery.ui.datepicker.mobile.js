@@ -48,7 +48,7 @@
 		
 	//bind to pagecreate to automatically enhance date inputs	
 	$( ".ui-page" ).live( "pagecreate", function(){     
-		$( "input[type='date'], input[data-type='date']" ).each(function(){
+		$( "#date, input[type='date'], input[data-type='date']" ).each(function(){
 		    if ($(this).hasClass("hasDatepicker") == false) {
 			$(this).after( $( "<div />" ).datepicker({ altField: "#" + $(this).attr( "id" ), showOtherMonths: true }) );
 			$(this).addClass("hasDatepicker");

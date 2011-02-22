@@ -24,7 +24,7 @@
     </div>
     <div data-role="fieldcontain">
         <label for="date"> on </label>
-        <input type="date" name="date" id="date" value="' . $date . '"  />
+        <input type="text" name="date" id="date" value="' . $date . '"  />
     </div>
         <div data-role="fieldcontain">
         <label for="time"> at </label>

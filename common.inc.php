@@ -3,7 +3,7 @@ date_default_timezone_set('Australia/ACT');
 $APIurl = "http://localhost:8765";
 $cloudmadeAPIkey="daa03470bb8740298d4b10e3f03d63e6";
 $googleMapsAPIkey="ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q";
-$otpAPIurl = 'http://10.1.0.243:5080/opentripplanner-api-webapp/';
+$otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
 if (isDebug()) error_reporting(E_ALL ^ E_NOTICE);
 
 // SELECT array_to_string(array(SELECT REPLACE(name_2006, ',', '\,') as name FROM suburbs order by name), ',')
@@ -258,9 +258,9 @@ $maxlon = 0;
        $center = $totalLat/sizeof($mapPoints).",".$totalLon/sizeof($mapPoints);
     }
     $output = "";
-    $output .= '<div data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
+   if(basename($_SERVER['PHP_SELF']) != "tripPlanner.php") $output .= '<div data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
     $output .= '<center><img src="staticmaplite/staticmap.php?center='.$center.'&zoom='.$zoom.'&size='.$width.'x'.$height.'&maptype=mapnik&markers='.$markers.'" width='.$width.' height='.$height.'></center>';
-    $output .= '</div>';
+   if(basename($_SERVER['PHP_SELF']) != "tripPlanner.php") $output .= '</div>';
     return $output;
 }
 
