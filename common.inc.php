@@ -11,18 +11,27 @@ $suburbs = explode(",","Acton,Ainslie,Amaroo,Aranda,Banks,Barton,Belconnen,Bonne
 
  // you have to open the session to be able to modify or remove it 
 session_start();
- if (isset($_REQUEST['service_period'])) $_SESSION['service_period'] = filter_var($_REQUEST['service_period'],FILTER_SANITIZE_STRING);
- if (isset($_REQUEST['time'])) $_SESSION['time'] = filter_var($_REQUEST['time'],FILTER_SANITIZE_STRING);
+ if (isset($_REQUEST['service_period'])) {
+   $_SESSION['service_period'] = filter_var($_REQUEST['service_period'],FILTER_SANITIZE_STRING);
+ }
+ if (isset($_REQUEST['time'])) {
+   $_SESSION['time'] = filter_var($_REQUEST['time'],FILTER_SANITIZE_STRING);
+ }
  if (isset($_REQUEST['geolocate'])) {
+   if (isset($_REQUEST['lat']) && isset($_REQUEST['lon'])) {
+      $_SESSION['lat'] = $_REQUEST['lat'];
+        $_SESSION['lon'] = $_REQUEST['lon'];
+   } else {
     $contents = geocode(var_filter($_REQUEST['geolocate'],FILTER_SANITIZE_URL),true);
     if (isset($contents[0]->centroid)) {
-        $session['lat'] = $contents[0]->centroid->coordinates[0];
-        $session['lon'] = $contents[0]->centroid->coordinates[1];
+        $_SESSION['lat'] = $contents[0]->centroid->coordinates[0];
+        $_SESSION['lon'] = $contents[0]->centroid->coordinates[1];
     }
     else {
-        $session['lat'] = "";
-        $session['lon'] = "";
+        $_SESSION['lat'] = "";
+        $_SESSION['lon'] = "";
     }
+   }
  }
 //print_r ($_SESSION);
 function isDebug()
@@ -32,11 +41,11 @@ function isDebug()
 
 function isMetricsOn()
 {
-    return true;
+    return false;
 }
 
 function debug($msg) {
-    if (isDebug()) echo "<!-- $msg -->";
+    if (isDebug()) echo "\n<!-- $msg -->\n";
 }
 function isFastDevice() {
     $fastDevices = Array("Mozilla/5.0 (X11;", "Mozilla/5.0 (Windows;", "Mozilla/5.0 (iP", "Mozilla/5.0 (Linux; U; Android", "Mozilla/4.0 (compatible; MSIE");
@@ -199,7 +208,7 @@ curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
 curl_setopt( $ch, CURLOPT_HEADER, 0 );
           curl_setopt($ch,CURLOPT_TIMEOUT,30); 
 $page = curl_exec($ch);
- if(curl_errno($ch)) echo "<font color=red> Database temporarily unavailable: ".curl_errno($ch)." ".curl_error($ch)."</font>";
+ if(curl_errno($ch)) echo "<font color=red> Database temporarily unavailable: ".curl_errno($ch)." ".curl_error($ch)."</font><br>";
 curl_close($ch);
 return $page;
 }
@@ -368,7 +377,7 @@ function object2array($object) {
 
 function geocode($query, $giveOptions) {
     global $cloudmadeAPIkey;
-       $url = "http://geocoding.cloudmade.com/$cloudmadeAPIkey/geocoding/v2/find.js?query=".$query."&bbox=-35.5,149.00,-35.15,149.1930&return_location=true&bbox_only=true";
+       $url = "http://geocoding.cloudmade.com/$cloudmadeAPIkey/geocoding/v2/find.js?query=".urlencode($query)."&bbox=-35.5,149.00,-35.15,149.1930&return_location=true&bbox_only=true";
       $contents = json_decode(getPage($url));
       if ($giveOptions) return $contents->features;
       elseif (isset($contents->features[0]->centroid)) return $contents->features[0]->centroid->coordinates[0].",".$contents->features[0]->centroid->coordinates[1];

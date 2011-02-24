@@ -28,7 +28,10 @@ foreach ($trips as $row)
 {
 echo  '<li>';
 echo '<h3><a href="trip.php?stopid='.$_REQUEST['stopid'].'&tripid='.$row[1][0].'">'.$row[1][1];
-echo '<br><small>Via: '.viaPointNames($row[1][0],$_REQUEST['stopid']).'</small> </a></h3>';      
+if (isFastDevice()) {
+    $viaPoints = viaPointNames($row[1][0],$_REQUEST['stopid']);
+    if ($viaPoints != "") echo '<br><small>Via: '.$viaPoints.'</small> </a></h3>';
+}
 echo '<p class="ui-li-aside"><strong>'.midnight_seconds_to_time($row[0]).'</strong></p>';
 echo '</li>';  
 }

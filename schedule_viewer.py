@@ -32,6 +32,7 @@ import signal
 import simplejson
 import socket
 import time
+import datetime
 import transitfeed
 from transitfeed import util
 import urllib
@@ -95,6 +96,8 @@ def StopZoneToTuple(stop):
           float(stop.stop_lon), stop.location_type, stop.stop_code, stop.zone_id)
 
 class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+  cache = {}
+  
   def do_GET(self):
     scheme, host, path, x, params, fragment = urlparse.urlparse(self.path)
     parsed_params = {}
@@ -114,7 +117,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       handler_name = 'handle_json_GET_%s' % m.group(1)
       handler = getattr(self, handler_name, None)
       if callable(handler):
-        return self.handle_json_wrapper_GET(handler, parsed_params)
+        return self.handle_json_wrapper_GET(handler, parsed_params, handler_name)
 
     # Restrict allowable file names to prevent relative path attacks etc
     m = re.match(r'/file/([a-z0-9_-]{1,64}\.?[a-z0-9_-]{1,64})$', path)
@@ -243,11 +246,22 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     patterns.sort()
     return patterns
 
-  def handle_json_wrapper_GET(self, handler, parsed_params):
+  def handle_json_wrapper_GET(self, handler, parsed_params, handler_name):
     """Call handler and output the return value in JSON."""
     schedule = self.server.schedule
-    result = handler(parsed_params)
-    content = ResultEncoder().encode(result)
+    # round times to nearest 100 seconds
+    if "time" in parsed_params:
+      parsed_params['time'] = int(round(float(parsed_params['time']),-2))
+    paramkey = tuple(sorted(parsed_params.items()))
+    if handler_name in self.cache and paramkey in self.cache[handler_name] :
+      print ("Cache hit for ",handler_name," params ",parsed_params)
+    else:
+      print ("Cache miss for ",handler_name," params ",parsed_params)
+      result = handler(parsed_params)
+      if not handler_name in self.cache:
+        self.cache[handler_name] = {}
+      self.cache[handler_name][paramkey] = ResultEncoder().encode(result)
+    content = self.cache[handler_name][paramkey]
     self.send_response(200)
     self.send_header('Content-Type', 'text/plain')
     self.send_header('Content-Length', str(len(content)))
@@ -566,12 +580,13 @@ a file into the console may enter the filename.
 
   if options.key and os.path.isfile(options.key):
     options.key = open(options.key).read().strip()
-
+  
   schedule = transitfeed.Schedule(problem_reporter=transitfeed.ProblemReporter())
   print 'Loading data from feed "%s"...' % options.feed_filename
   print '(this may take a few minutes for larger cities)'
+  t0 = datetime.datetime.now()
   schedule.Load(options.feed_filename)
-
+  print ("Loaded in", (datetime.datetime.now() - t0).seconds , "seconds")
   server = StoppableHTTPServer(server_address=('', options.port),
                                RequestHandlerClass=RequestHandlerClass)
   server.key = options.key
@@ -579,6 +594,8 @@ a file into the console may enter the filename.
   server.file_dir = options.file_dir
   server.host = options.host
   server.feed_path = options.feed_filename
+  
+
 
   print ("To view, point your browser at http://localhost:%d/" %
          (server.server_port))
