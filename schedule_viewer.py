@@ -428,6 +428,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     schedule = self.server.schedule
     stop = schedule.GetStop(params.get('stop', None))
     time = int(params.get('time', 0))
+    limit = int(params.get('limit', 15))
     service_period = params.get('service_period', None)
     time_trips = stop.GetStopTimeTrips(schedule)
     time_trips.sort()  # OPT: use bisect.insort to make this O(N*ln(N)) -> O(N)
@@ -437,6 +438,8 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     time_trips = time_trips[:15]
     result = []
     for time, (trip, index), tp in time_trips:
+      if len(result) > limit:
+        break
       headsign = None
       # Find the most recent headsign from the StopTime objects
       for stoptime in trip.GetStopTimes()[index::-1]:

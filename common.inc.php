@@ -22,7 +22,7 @@ session_start();
       $_SESSION['lat'] = $_REQUEST['lat'];
         $_SESSION['lon'] = $_REQUEST['lon'];
    } else {
-    $contents = geocode(var_filter($_REQUEST['geolocate'],FILTER_SANITIZE_URL),true);
+    $contents = geocode(filter_var($_REQUEST['geolocate'],FILTER_SANITIZE_URL),true);
     if (isset($contents[0]->centroid)) {
         $_SESSION['lat'] = $contents[0]->centroid->coordinates[0];
         $_SESSION['lon'] = $contents[0]->centroid->coordinates[1];
@@ -33,7 +33,7 @@ session_start();
     }
    }
  }
-//print_r ($_SESSION);
+debug(print_r($_SESSION,true));
 function isDebug()
 {
     return $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" || !$_SERVER['SERVER_NAME'];
@@ -48,7 +48,9 @@ function debug($msg) {
     if (isDebug()) echo "\n<!-- $msg -->\n";
 }
 function isFastDevice() {
+   $ua = $_SERVER['HTTP_USER_AGENT']; 
     $fastDevices = Array("Mozilla/5.0 (X11;", "Mozilla/5.0 (Windows;", "Mozilla/5.0 (iP", "Mozilla/5.0 (Linux; U; Android", "Mozilla/4.0 (compatible; MSIE");
+   
     $slowDevices = Array("J2ME","MIDP","Opera/","Mozilla/2.0 (compatible;","Mozilla/3.0 (compatible;");
     return true;
 }
@@ -105,7 +107,7 @@ echo "<script>
 
 function success(position) {
 $('#geolocate').val(position.coords.latitude+','+position.coords.longitude);
-// setCookie('geolocate',position.coords.latitude+','+position.coords.longitude,1);
+$.ajax({ url: \"common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
 $('#here').click(function(event) { $('#geolocate').val(doAJAXrequestForGeolocSessionHere()); return false;});
 $('#here').show();
 }
@@ -454,11 +456,11 @@ function timePlaceSettings($geolocate = false) {
         <div class="ui-body"> 
 		<div data-role="fieldcontain">
 	            <label for="geolocate"> Current Location: </label>
-			<input type="text" id="geolocate" name="geolocate" value="Enter co-ordinates or address here"/> <a href="#" style="display:none" name="here" id="here"/>Here?</a>
+			<input type="text" id="geolocate" name="geolocate" value="'. (isset($_SESSION['lat']) && isset($_SESSION['lon']) ? $_SESSION['lat'] .",". $_SESSION['lon'] :"Enter co-ordinates or address here"). '"/> <a href="#" style="display:none" name="here" id="here"/>Here?</a>
 	        </div>
     		<div data-role="fieldcontain">
 		        <label for="time"> Time: </label>
-		    	<input type="time" name="time" id="time" value="'. ($_SESSION['time'] ? $_SESSION['time'] : date("H:m")).'"/> <a href="#" name="currentTime" id="currentTime"/>Current Time?</a>
+		    	<input type="time" name="time" id="time" value="'. (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:m")).'"/> <a href="#" name="currentTime" id="currentTime"/>Current Time?</a>
 	        </div>
 		<div data-role="fieldcontain">
 		    <label for="service_period"> Service Period:  </label>

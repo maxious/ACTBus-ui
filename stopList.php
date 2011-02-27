@@ -12,7 +12,6 @@ function navbar() {
 			</ul>
                 </div>
 	';
-	timePlaceSettings();
 }
 // By suburb
 if (isset($_REQUEST['suburbs'])) {
@@ -30,11 +29,12 @@ if ($_REQUEST['allstops']) {
    $url = $APIurl."/json/stops";
    include_header("All Stops","stopList");
    navbar();
+   	timePlaceSettings();
 } else if ($_REQUEST['nearby']) {
    $url = $APIurl."/json/neareststops?lat={$_SESSION['lat']}&lon={$_SESSION['lon']}&limit=15";
 include_header("Nearby Stops","stopList");
    navbar();
-   timePlaceSettings();
+   timePlaceSettings(true);
 } else if ($_REQUEST['suburb']) {
    $url = $APIurl."/json/stopzonesearch?q=".filter_var($_REQUEST['suburb'], FILTER_SANITIZE_STRING);
 include_header("Stops in ".ucwords(filter_var($_REQUEST['suburb'], FILTER_SANITIZE_STRING)),"stopList");
@@ -57,6 +57,7 @@ $owa->trackEvent($event);
    $url = $APIurl."/json/timingpoints";
    include_header("Timing Points / Major Stops","stopList");
    navbar();
+   	timePlaceSettings();
 }
         echo '<div class="noscriptnav"> Go to letter: ';
 foreach(range('A','Z') as $letter) 
@@ -84,7 +85,12 @@ foreach ($contents as $row)
         echo "<a name=$firstletter></a>";
         $firstletter = substr($row[1],0,1);
     }
-      echo  '<li><a href="stop.php?stopid='.$row[0].'">'.bracketsMeanNewLine($row[1]).'</a></li>';
+      echo  '<li><a href="stop.php?stopid='.$row[0].'">';
+      if (isset($_SESSION['lat']) && isset($_SESSION['lon'])){
+	 echo '<span class="ui-li-count">'.floor(distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'])).'m away</span>';
+      }
+      echo bracketsMeanNewLine($row[1]);
+      echo '</a></li>';
         }
 echo '</ul>';
 }

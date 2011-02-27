@@ -26,7 +26,7 @@ foreach ($contents as $row)
         $hotspot['distance'] = distance($row[2], $row[3], $_REQUEST['lat'], $_REQUEST['lon']);
         if (!isset($_REQUEST['radius']) || $hotspot['distance'] < $_REQUEST['radius']) {
             $hotspot['actions'] = Array(Array("label" => 'View more trips/information', 'uri' => 'http://bus.lambdacomplex.org/'.'stop.php?stopid='.$row[0]));
-            $url = $APIurl."/json/stoptrips?stop=".$row[0]."&time=".midnight_seconds()."&service_period=".service_period();
+            $url = $APIurl."/json/stoptrips?stop=".$row[0]."&time=".midnight_seconds()."&service_period=".service_period()."&limit=4";
             $trips = json_decode(getPage($url));
             debug(print_r($trips,true));
             foreach ($trips as $key => $row)
