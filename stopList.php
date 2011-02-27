@@ -42,7 +42,7 @@ if (isMetricsOn()) {
 // Create a new Instance of the tracker
 $owa = new owa_php($config);
 // Set the ID of the site being tracked
-$owa->setSiteId('bus.lambdacomplex.org');
+$owa->setSiteId($owaSiteID);
 // Create a new event object
 $event = $owa->makeEvent();
 // Set the Event Type, in this case a "video_play"

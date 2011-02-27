@@ -4,7 +4,7 @@
   $from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'],FILTER_SANITIZE_STRING) : "Brigalow");
       $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'],FILTER_SANITIZE_STRING) : "Barry");
       $date = (isset($_REQUEST['date']) ? filter_var($_REQUEST['date'],FILTER_SANITIZE_STRING) : date("m/d/Y"));
-      $time = (isset($_REQUEST['time']) ? filter_var($_REQUEST['time'],FILTER_SANITIZE_STRING) : date("H:m"));
+      $time = (isset($_REQUEST['time']) ? filter_var($_REQUEST['time'],FILTER_SANITIZE_STRING) : date("H:i"));
       # todo: convert date from form to h:ia?
 
   function tripPlanForm($errorMessage = "")
@@ -100,9 +100,9 @@ $('#fromHere').show();
       } else {
         if (isMetricsOn()) {
 // Create a new Instance of the tracker
-$owa = new owa_php($config);
+$owa = new owa_php();
 // Set the ID of the site being tracked
-$owa->setSiteId('bus.lambdacomplex.org');
+$owa->setSiteId($owaSiteID);
 // Create a new event object
 $event = $owa->makeEvent();
 // Set the Event Type, in this case a "video_play"

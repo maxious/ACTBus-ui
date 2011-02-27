@@ -6,9 +6,9 @@ $stop = json_decode(getPage($url));
 include_header($stop[1],"stop");
 if (isMetricsOn()) {
 // Create a new Instance of the tracker
-$owa = new owa_php($config);
+$owa = new owa_php();
 // Set the ID of the site being tracked
-$owa->setSiteId('bus.lambdacomplex.org');
+$owa->setSiteId($owaSiteID);
 // Create a new event object
 $event = $owa->makeEvent();
 // Set the Event Type, in this case a "video_play"

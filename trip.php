@@ -21,9 +21,9 @@ debug(print_r($trips,true));
 include_header("Stops on ". $trips[1]->route_short_name . ' '. $trips[1]->route_long_name,"trip");
 if (isMetricsOn()) {
 // Create a new Instance of the tracker
-$owa = new owa_php($config);
+$owa = new owa_php();
 // Set the ID of the site being tracked
-$owa->setSiteId('bus.lambdacomplex.org');
+$owa->setSiteId($owaSiteID);
 // Create a new event object
 $event = $owa->makeEvent();
 // Set the Event Type, in this case a "video_play"
