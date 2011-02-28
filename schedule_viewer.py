@@ -421,23 +421,57 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       if s.stop_id.lower() == query:
         return StopToTuple(s)
     return []
+    
+  def handle_json_GET_stopalltrips(self, params):
+    """Given a stop_id return all trips to visit the stop."""
+    schedule = self.server.schedule
+    stop = schedule.GetStop(params.get('stop', None))
+    service_period = params.get('service_period', None)
+    time_trips = stop.GetStopTimeTrips(schedule)
+    result = []
+    for time, (trip, index), tp in time_trips:
+      headsign = None
+      # Find the most recent headsign from the StopTime objects
+      for stoptime in trip.GetStopTimes()[index::-1]:
+        if stoptime.stop_headsign:
+          headsign = stoptime.stop_headsign
+          break
+      # If stop_headsign isn't found, look for a trip_headsign
+      if not headsign:
+        headsign = trip.trip_headsign
+      route = schedule.GetRoute(trip.route_id)
+      trip_name = ''
+      if route.route_short_name:
+        trip_name += route.route_short_name
+      if route.route_long_name:
+        if len(trip_name):
+          trip_name += " - "
+        trip_name += route.route_long_name
+      if service_period == None or trip.service_id == service_period:
+        result.append((time, (trip.trip_id, trip_name, trip.service_id), tp))
+    return result
 
   def handle_json_GET_stoptrips(self, params):
     """Given a stop_id and time in seconds since midnight return the next
     trips to visit the stop."""
     schedule = self.server.schedule
     stop = schedule.GetStop(params.get('stop', None))
-    time = int(params.get('time', 0))
+    requested_time = int(params.get('time', 0))
     limit = int(params.get('limit', 15))
     service_period = params.get('service_period', None)
-    time_trips = stop.GetStopTimeTrips(schedule)
-    time_trips.sort()  # OPT: use bisect.insort to make this O(N*ln(N)) -> O(N)
-    # Keep the first 15 after param 'time'.
-    # Need make a tuple to find correct bisect point
-    time_trips = time_trips[bisect.bisect_left(time_trips, (time, 0)):]
-    time_trips = time_trips[:15]
+    time_range = params.get('time_range', 24*60*60)
+    
+    
+    filtered_time_trips = []
+    for trip, index in stop._GetTripIndex(schedule):
+      tripstarttime = trip.GetStartTime()
+      if tripstarttime > requested_time and tripstarttime < (requested_time + time_range):
+        time, stoptime, tp = trip.GetTimeInterpolatedStops()[index]
+        if time > requested_time and time < (requested_time + time_range):
+          bisect.insort(filtered_time_trips, (time, (trip, index), tp))
+    
     result = []
-    for time, (trip, index), tp in time_trips:
+    for time, (trip, index), tp in filtered_time_trips:
       if len(result) > limit:
         break
       headsign = None
