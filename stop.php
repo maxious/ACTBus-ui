@@ -1,6 +1,7 @@
 <?php
 include('common.inc.php');
-$url = $APIurl."/json/stop?stop_id=".$_REQUEST['stopid'];
+$stopid = filter_var($_REQUEST['stopid'],FILTER_SANITIZE_NUMBER_INT);
+$url = $APIurl."/json/stop?stop_id=".$stopid;
 $stop = json_decode(getPage($url));
 
 include_header($stop[1],"stop");
@@ -14,22 +15,22 @@ $event = $owa->makeEvent();
 // Set the Event Type, in this case a "video_play"
 $event->setEventType('view_stop');
 // Set a property
-$event->set('stop_id',$_REQUEST['stopid']);
+$event->set('stop_id',$stopid);
 // Track the event
 $owa->trackEvent($event);
     }
 timePlaceSettings();
 echo '<div data-role="content" class="ui-content" role="main"><p>'.staticmap(Array(0 => Array($stop[2],$stop[3]))).'</p>';
 echo '  <ul data-role="listview"  data-inset="true">';
-$url = $APIurl."/json/stoptrips?stop=".$_REQUEST['stopid']."&time=".midnight_seconds()."&service_period=".service_period();
+$url = $APIurl."/json/stoptrips?stop=".$stopid."&time=".midnight_seconds()."&service_period=".service_period();
 $trips = json_decode(getPage($url));
 debug(print_r($trips,true));
 foreach ($trips as $row)
 {
 echo  '<li>';
-echo '<h3><a href="trip.php?stopid='.$_REQUEST['stopid'].'&tripid='.$row[1][0].'">'.$row[1][1];
+echo '<h3><a href="trip.php?stopid='.$stopid.'&tripid='.$row[1][0].'">'.$row[1][1];
 if (isFastDevice()) {
-    $viaPoints = viaPointNames($row[1][0],$_REQUEST['stopid']);
+    $viaPoints = viaPointNames($row[1][0],$stopid);
     if ($viaPoints != "") echo '<br><small>Via: '.$viaPoints.'</small> </a></h3>';
 }
 echo '<p class="ui-li-aside"><strong>'.midnight_seconds_to_time($row[0]).'</strong></p>';

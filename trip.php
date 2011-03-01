@@ -2,8 +2,9 @@
 include('common.inc.php');
 $tripid = filter_var($_REQUEST['tripid'],FILTER_SANITIZE_NUMBER_INT);
 $stopid = filter_var($_REQUEST['stopid'],FILTER_SANITIZE_NUMBER_INT);
+$routeid = filter_var($_REQUEST['routeid'],FILTER_SANITIZE_NUMBER_INT);
 if ($_REQUEST['routeid']) {
-    $url = $APIurl."/json/routetrips?route_id=".filter_var($_REQUEST['routeid'],FILTER_SANITIZE_NUMBER_INT);
+    $url = $APIurl."/json/routetrips?route_id=".$routeid;
     $trips = json_decode(getPage($url));
     debug(print_r($trips,true));
     foreach ($trips as $trip)
@@ -31,6 +32,7 @@ $event->setEventType('view_trip');
 // Set a property
 $event->set('trip_id',$tripid);
 $event->set('route_id',$routeid);
+$event->set('stop_id',$stopid);
 // Track the event
 $owa->trackEvent($event);
     }

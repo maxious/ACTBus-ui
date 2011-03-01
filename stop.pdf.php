@@ -1,19 +1,20 @@
 <?php
 include('common.inc.php');
-$url = $APIurl."/json/stop?stop_id=".$_REQUEST['stopid'];
+$stopid = filter_var($_REQUEST['stopid'],FILTER_SANITIZE_NUMBER_INT);
+$url = $APIurl."/json/stop?stop_id=".$stopid;
 $stop = json_decode(getPage($url));
 
 $html .= '<div data-role="content" class="ui-content" role="main"><p>'.staticmap(Array(0 => Array($stop[2],$stop[3])), 0,"iconb", false).'</p>';
 $html .= '  <ul data-role="listview"  data-inset="true">';
-$url = $APIurl."/json/stoptrips?stop=".$_REQUEST['stopid']."&time=".midnight_seconds()."&service_period=".service_period();
+$url = $APIurl."/json/stoptrips?stop=".$stopid."&time=".midnight_seconds()."&service_period=".service_period();
 $trips = json_decode(getPage($url));
 debug(print_r($trips,true));
 foreach ($trips as $row)
 {
 $html .=  '<li>';
-$html .= '<h3><a href="trip.php?stopid='.$_REQUEST['stopid'].'&tripid='.$row[1][0].'">'.$row[1][1];
+$html .= '<h3><a href="trip.php?stopid='.$stopid.'&tripid='.$row[1][0].'">'.$row[1][1];
 if (isFastDevice()) {
-    $viaPoints = viaPointNames($row[1][0],$_REQUEST['stopid']);
+    $viaPoints = viaPointNames($row[1][0],$stopid);
     if ($viaPoints != "") $html .= '<br><small>Via: '.$viaPoints.'</small> </a></h3>';
 }
 $html .= '<p class="ui-li-aside"><strong>'.midnight_seconds_to_time($row[0]).'</strong></p>';

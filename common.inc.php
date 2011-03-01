@@ -23,8 +23,8 @@ session_start();
  if (isset($_REQUEST['geolocate'])) {
    $geocoded = false;
    if (isset($_REQUEST['lat']) && isset($_REQUEST['lon'])) {
-      $_SESSION['lat'] = $_REQUEST['lat'];
-        $_SESSION['lon'] = $_REQUEST['lon'];
+      $_SESSION['lat'] = filter_var($_REQUEST['lat'],FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $_SESSION['lon'] = filter_var($_REQUEST['lon'],FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
    } else {
     $contents = geocode(filter_var($_REQUEST['geolocate'],FILTER_SANITIZE_URL),true);
     if (isset($contents[0]->centroid)) {
