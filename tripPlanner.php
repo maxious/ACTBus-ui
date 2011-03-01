@@ -54,7 +54,7 @@ $('#fromHere').show();
       foreach ($itinerary->legs->leg as $legNumber => $leg) {
           $legMarkers[] = array($leg->from->lat, $leg->from->lon);
       }
-      echo '' . staticmap($legMarkers) . "<br>\n";
+      echo '' . staticmap($legMarkers, 0,"iconb", false) . "<br>\n";
           echo '<ul>';
           foreach ($itinerary->legs->leg as $legNumber => $leg) {
               echo '<li>';
@@ -63,7 +63,7 @@ $('#fromHere').show();
           }
           echo "</ul>";
       } else {
-              echo '' . staticmap(array(array($itinerary->legs->leg->from->lat, $itinerary->legs->leg->from->lon))) . "<br>\n";
+              echo '' . staticmap(array(array($itinerary->legs->leg->from->lat, $itinerary->legs->leg->from->lon)), 0,"iconb", false) . "<br>\n";
           processLeg(0, $itinerary->legs->leg);
       }
      
@@ -80,7 +80,7 @@ $('#fromHere').show();
               foreach ($leg->steps->walkSteps as $stepNumber => $step) {
                   $walkStepMarkers[] = array($step->lat, $step->lon);
               }
-              echo "" . staticmap($walkStepMarkers, "icong") . "<br>\n";
+              echo "" . staticmap($walkStepMarkers, 0,"icong", false) . "<br>\n";
               foreach ($leg->steps->walkSteps as $stepNumber => $step) {
                   echo "Walking step " . ($stepNumber + 1) . " $step->absoluteDirection / $step->relativeDirection on $step->streetName for " . floor($step->distance) . " meters<br>\n";
               }

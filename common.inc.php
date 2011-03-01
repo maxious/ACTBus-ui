@@ -5,7 +5,9 @@ $cloudmadeAPIkey="daa03470bb8740298d4b10e3f03d63e6";
 $googleMapsAPIkey="ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q";
 $otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
 $owaSiteID = 'fe5b819fa8c424a99ff0764d955d23f3';
-if (isDebug()) error_reporting(E_ALL ^ E_NOTICE);
+//$debugOkay = Array("session","json","phperror","other");
+$debugOkay = Array("session","json","phperror");
+if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
 
 // SELECT array_to_string(array(SELECT REPLACE(name_2006, ',', '\,') as name FROM suburbs order by name), ',')
 $suburbs = explode(",","Acton,Ainslie,Amaroo,Aranda,Banks,Barton,Belconnen,Bonner,Bonython,Braddon,Bruce,Calwell,Campbell,Chapman,Charnwood,Chifley,Chisholm,City,Conder,Cook,Curtin,Deakin,Dickson,Downer,Duffy,Dunlop,Evatt,Fadden,Farrer,Fisher,Florey,Flynn,Forrest,Franklin,Fraser,Fyshwick,Garran,Gilmore,Giralang,Gordon,Gowrie,Greenway,Griffith,Gungahlin,Hackett,Hall,Harrison,Hawker,Higgins,Holder,Holt,Hughes,Hume,Isaacs,Isabella Plains,Kaleen,Kambah,Kingston,Latham,Lawson,Lyneham,Lyons,Macarthur,Macgregor,Macquarie,Mawson,McKellar,Melba,Mitchell,Monash,Narrabundah,Ngunnawal,Nicholls,Oaks Estate,O'Connor,O'Malley,Oxley,Page,Palmerston,Parkes,Pearce,Phillip,Pialligo,Red Hill,Reid,Richardson,Rivett,Russell,Scullin,Spence,Stirling,Symonston,Tharwa,Theodore,Torrens,Turner,Wanniassa,Waramanga,Watson,Weetangera,Weston,Yarralumla");
@@ -53,9 +55,10 @@ $owa->trackEvent($event);
     }
  }
 debug(print_r($_SESSION,true));
-function isDebug()
+function isDebug($debugReason = "other")
 {
-    return $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" || !$_SERVER['SERVER_NAME'];
+    global $debugOkay;
+    return in_array($debugReason,$debugOkay,false) && $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" || !$_SERVER['SERVER_NAME'];
 }
 
 function isMetricsOn()
@@ -63,8 +66,8 @@ function isMetricsOn()
     return !isDebug();
 }
 
-function debug($msg) {
-    if (isDebug()) echo "\n<!-- ".date(DATE_RFC822)."\n $msg -->\n";
+function debug($msg, $debugReason = "other") {
+    if (isDebug($debugReason)) echo "\n<!-- ".date(DATE_RFC822)."\n $msg -->\n";
 }
 function isFastDevice() {
    $ua = $_SERVER['HTTP_USER_AGENT']; 
@@ -243,7 +246,15 @@ function array_flatten($a,$f=array()){
   return $f;
 }
 
-function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb")
+function curPageURL() {
+$isHTTPS = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on");
+$port = (isset($_SERVER["SERVER_PORT"]) && ((!$isHTTPS && $_SERVER["SERVER_PORT"] != "80") || ($isHTTPS && $_SERVER["SERVER_PORT"] != "443")));
+$port = ($port) ? ':'.$_SERVER["SERVER_PORT"] : '';
+$url = ($isHTTPS ? 'https://' : 'http://').$_SERVER["SERVER_NAME"].$port.dirname($_SERVER['PHP_SELF'])."/";
+return $url;
+}
+
+function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible = true)
 {
 $width = 300;
 $height = 300;
@@ -267,7 +278,7 @@ $maxlon = 0;
     if (sizeof($mapPoints) === 1) {
          if ($zoom == 0) $zoom = 14;
             $markers .= "{$mapPoints[0][0]},{$mapPoints[0][1]},$markerimage";
-            $center = "{$mapPoints[0][0]},{$mapPoints[0][1]}";        
+            $center = "{$mapPoints[0][0]},{$mapPoints[0][1]}";
     } else {
         foreach ($mapPoints as $index => $mapPoint) {
             $markers .= $mapPoint[0].",".$mapPoint[1].",".$markerImage.($index+1);
@@ -289,9 +300,9 @@ $maxlon = 0;
        $center = $totalLat/sizeof($mapPoints).",".$totalLon/sizeof($mapPoints);
     }
     $output = "";
-   if(basename($_SERVER['PHP_SELF']) != "tripPlanner.php") $output .= '<div data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
-    $output .= '<center><img src="staticmaplite/staticmap.php?center='.$center.'&zoom='.$zoom.'&size='.$width.'x'.$height.'&maptype=mapnik&markers='.$markers.'" width='.$width.' height='.$height.'></center>';
-   if(basename($_SERVER['PHP_SELF']) != "tripPlanner.php") $output .= '</div>';
+   if ($collapsible) $output .= '<div data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
+    $output .= '<center><img src="'.curPageURL().'staticmaplite/staticmap.php?center='.$center.'&zoom='.$zoom.'&size='.$width.'x'.$height.'&maptype=mapnik&markers='.$markers.'" width='.$width.' height='.$height.'></center>';
+   if ($collapsible) $output .= '</div>';
     return $output;
 }
 
@@ -497,4 +508,6 @@ function timePlaceSettings($geolocate = false) {
                 </form>
             </div></div>';
 }
+
+
 ?>

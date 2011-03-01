@@ -421,6 +421,18 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       if s.stop_id.lower() == query:
         return StopToTuple(s)
     return []
+  def handle_json_GET_stoproutes(self, params):
+    """Given a stop_id return all routes to visit the stop."""
+    schedule = self.server.schedule
+    stop = schedule.GetStop(params.get('stop', None))
+    service_period = params.get('service_period', None)
+    trips = stop.GetTrips(schedule)
+    result = {}
+    for trip in trips:
+      route = schedule.GetRoute(trip.route_id)
+      if not trip.route_id in result:
+        result[trip.route_id] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id)
+    return result
     
   def handle_json_GET_stopalltrips(self, params):
     """Given a stop_id return all trips to visit the stop."""
