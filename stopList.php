@@ -86,7 +86,9 @@ foreach ($contents as $row)
         echo "<a name=$firstletter></a>";
         $firstletter = substr($row[1],0,1);
     }
-      echo  '<li><a href="stop.php?stopid='.$row[0].'">';
+      echo  '<li>';
+   if (!startsWith($row[5],"Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
+      echo '<a href="stop.php?stopid='.$row[0].(startsWith($row[5],"Wj") ? '&stopcode='. $row[5] : "") .'">';
       if (isset($_SESSION['lat']) && isset($_SESSION['lon'])){
 	 echo '<span class="ui-li-count">'.floor(distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'])).'m away</span>';
       }

@@ -286,7 +286,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     schedule = self.server.schedule
     route = schedule.GetRoute(params.get('route', None))
     return [transitfeed.Route._FIELD_NAMES, route.GetFieldValuesTuple()]
-    
+  
   def handle_json_GET_routetrips(self, params):
     """ Get a trip for a route_id (preferablly the next one) """
     schedule = self.server.schedule
@@ -294,7 +294,12 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     result = []
     for t in schedule.GetTripList():
       if t.route_id == query:
-        result.append ( (t.GetStartTime(), t.trip_id) )
+        try:
+          starttime = t.GetStartTime()  
+        except:
+          print "Error for GetStartTime of trip #" + t.trip_id + sys.exc_info()[0]
+        else:
+            result.append ( (starttime, t.trip_id) )
     return sorted(result, key=lambda trip: trip[0])
   
   def handle_json_GET_triprows(self, params):
@@ -430,8 +435,8 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     result = {}
     for trip in trips:
       route = schedule.GetRoute(trip.route_id)
-      if not trip.route_id in result:
-        result[trip.route_id] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id)
+      if not trip.route_short_name+route.route_long_name in result:
+        result[trip.route_short_name+route.route_long_name] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id)
     return result
     
   def handle_json_GET_stopalltrips(self, params):

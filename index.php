@@ -1,13 +1,13 @@
-<?php 
-include('common.inc.php');
-include_header("bus.lambdacomplex.org","index",false, true)
+<?php
+include ('common.inc.php');
+include_header("bus.lambdacomplex.org", "index", false, true)
 ?>
 <div data-role="page">
 	<div data-role="content">
 			<div id="jqm-homeheader">
 	    	<center><h3>busness time</h3><br><small>Canberra Bus Timetables and Trip Planner</small></center>
 	</div> 
-	    <a href="tripPlanner.php" data-role="button">Launch Trip Planner...</a>
+	    <a href="tripPlanner.php" data-role="button" data-icon="navigation">Launch Trip Planner...</a>
             <ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
                 <li data-role="list-divider">Timetables - Stops</li>
                 <li><a href="stopList.php">Major (Timing Point) Stops</a></li>
