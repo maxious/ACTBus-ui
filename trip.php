@@ -61,7 +61,7 @@ foreach ($stops as $key => $row) {
 			// subsequent duplicates
 			$stopsGrouped["stop_ids"][] = $row[0];
 			$stopsGrouped["endTime"] = $times[$key];
-			echo '<a href="stop.php?stopids=' . $stopsGrouped['stop_ids'] . '">';
+			echo '<a href="stop.php?stopids=' . implode(",",$stopsGrouped['stop_ids']) . '">';
 			echo '<p class="ui-li-aside">' . midnight_seconds_to_time($stopsGrouped['startTime']) . ' to ' . midnight_seconds_to_time($stopsGrouped['endTime']) . '</p>';
 			echo bracketsMeanNewLine($row[1]);
 			echo '</a></li>';

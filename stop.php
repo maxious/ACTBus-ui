@@ -1,17 +1,48 @@
 <?php
 include ('common.inc.php');
 $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
-$stopcode = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_STRING);
+$stopcode = filter_var($_REQUEST['stopcode'], FILTER_SANITIZE_STRING);
 $url = $APIurl . "/json/stop?stop_id=" . $stopid;
 $stop = json_decode(getPage($url));
-if ($stop[5] != $stopcode) {
+if ($stopcode != ""  && $stop[5] != $stopcode) {
 	$url = $APIurl . "/json/stopcodesearch?q=" . $stopcode;
 	$stopsearch = json_decode(getPage($url));
 	$stopid = $stopsearch[0][0];
 	$url = $APIurl . "/json/stop?stop_id=" . $stopid;
 	$stop = json_decode(getPage($url));
 }
+if (!startsWith($stop[5], "Wj") && strpos($stop[1],"Platform") === false) {
+    // expand out to all platforms
+}
+$stops = Array();
+$stopPositions = Array();
+$tripStopNumbers = Array();
+$allStopsTrips = Array();
+$stopLinks = "";
+if (isset($_REQUEST['stopids'])) {
+    $stopids = explode(",",filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
+    foreach ($stopids as $sub_stopid) {
+        $url = $APIurl . "/json/stop?stop_id=" . $sub_stopid;
+        $stop = json_decode(getPage($url));
+        $stops[] = $stop;
+    }
+    $stop = $stops[0];
+    $stopid = $stops[0][0];
+    $stopLinks .= "Individual stop pages: ";
+    foreach ($stops as $key => $sub_stop) {
+        $stopLinks .= '<a href="stop.php?stopid='.$sub_stop[0].'&stopcode='.$sub_stop[5].'">'.$sub_stop[1].' Stop #'.($key+1).'</a> ';
+        $stopPositions[$key] = Array($sub_stop[2],$sub_stop[3]);
+        $url = $APIurl . "/json/stoptrips?stop=" . $sub_stop[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period();
+        $trips = json_decode(getPage($url));
+        foreach ($trips as $trip) {
+            if (!isset($allStopTrips[$row[1][0]])) $allStopTrips[$row[1][0]] = $trip;
+            $tripStopNumbers[$row[1][0]][] = $key;
+        }
+    }
+}
+
 include_header($stop[1], "stop");
+
 if (isMetricsOn()) {
 	// Create a new Instance of the tracker
 	$owa = new owa_php();
@@ -27,12 +58,18 @@ if (isMetricsOn()) {
 	$owa->trackEvent($event);
 }
 timePlaceSettings();
-echo '<div data-role="content" class="ui-content" role="main"><p>' . staticmap(Array(
+echo '<div data-role="content" class="ui-content" role="main">';
+echo $stopLinks;
+if (sizeof($stops) > 0) {
+    echo '<p>' . staticmap($stopPositions) . '</p>';
+} else {
+    echo '<p>' . staticmap(Array(
 	0 => Array(
 		$stop[2],
 		$stop[3]
 	)
 )) . '</p>';
+}
 echo '  <ul data-role="listview"  data-inset="true">';
 $url = $APIurl . "/json/stoptrips?stop=" . $stopid . "&time=" . midnight_seconds() . "&service_period=" . service_period();
 $trips = json_decode(getPage($url));

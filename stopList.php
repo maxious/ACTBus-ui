@@ -72,29 +72,64 @@ else {
 $('.noscriptnav').hide();
         </script>";
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-	$contents = json_decode(getPage($url));
-	foreach ($contents as $key => $row) {
+	$stops = json_decode(getPage($url));
+	foreach ($stops as $key => $row) {
 		$stopName[$key] = $row[1];
 	}
 	// Sort the stops by name
-	array_multisort($stopName, SORT_ASC, $contents);
+	array_multisort($stopName, SORT_ASC, $stops);
 	$firstletter = "";
-	foreach ($contents as $row) {
+	$stopsGrouped = Array();
+	foreach ($stops as $key => $row) {
 		if (substr($row[1], 0, 1) != $firstletter) {
 			echo "<a name=$firstletter></a>";
 			$firstletter = substr($row[1], 0, 1);
 		}
-		echo '<li>';
-		if (!startsWith($row[5], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
-		echo '<a href="stop.php?stopid=' . $row[0] . (startsWith($row[5], "Wj") ? '&stopcode=' . $row[5] : "") . '">';
-		if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
-			echo '<span class="ui-li-count">' . floor(distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'])) . 'm away</span>';
+		if (($stops[$key][1] != $stops[$key + 1][1]) || $key + 1 >= sizeof($stops)) {
+			if (sizeof($stopsGrouped) > 0) {
+				// print and empty grouped stops
+				// subsequent duplicates
+				$stopsGrouped["stop_ids"][] = $row[0];
+				echo '<li><a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
+				if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
+					echo '<span class="ui-li-count">' . floor(distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'])) . 'm away</span>';
+				}
+				echo bracketsMeanNewLine($row[1].'('.sizeof($stopsGrouped["stop_ids"]).' stops)');
+				echo "</a></li>\n";
+				$stopsGrouped = Array();
+			}
+			else {
+				// just a normal stop
+					echo '<li>';
+			if (!startsWith($row[5], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
+		
+				if (!startsWith($row[5], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
+				echo '<a href="stop.php?stopid=' . $row[0] . (startsWith($row[5], "Wj") ? '&stopcode=' . $row[5] : "") . '">';
+				if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
+					echo '<span class="ui-li-count">' . floor(distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'])) . 'm away</span>';
+				}
+				echo bracketsMeanNewLine($row[1]);
+				echo "</a></li>\n";
+			}
 		}
-		echo bracketsMeanNewLine($row[1]);
-		echo '</a></li>';
+		else {
+			// this is a duplicated line item
+			if ($key - 1 <= 0 || ($stops[$key][1] != $stops[$key - 1][1])) {
+				// first duplicate
+				$stopsGrouped = Array(
+					"name" => $row[1],
+					"stop_ids" => Array(
+						$row[0]
+					)
+				);
+			}
+			else {
+				// subsequent duplicates
+				$stopsGrouped["stop_ids"][] = $row[0];
+			}
+		}
 	}
 	echo '</ul>';
 }
 include_footer();
 ?>
-
