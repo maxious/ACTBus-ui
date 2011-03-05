@@ -14,7 +14,6 @@ echo '
 echo '  <ul data-role="listview"  data-inset="true">';
 $url = $APIurl . "/json/routes";
 $contents = json_decode(getPage($url));
-debug(print_r($contents, true));
 function printRoutes($routes)
 {
 	foreach ($routes as $row) {

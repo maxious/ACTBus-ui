@@ -36,7 +36,6 @@ echo '<div data-role="content" class="ui-content" role="main"><p>' . staticmap(A
 echo '  <ul data-role="listview"  data-inset="true">';
 $url = $APIurl . "/json/stoptrips?stop=" . $stopid . "&time=" . midnight_seconds() . "&service_period=" . service_period();
 $trips = json_decode(getPage($url));
-debug(print_r($trips, true));
 foreach ($trips as $row) {
 	echo '<li>';
 	echo '<h3><a href="trip.php?stopid=' . $stopid . '&tripid=' . $row[1][0] . '">' . $row[1][1];

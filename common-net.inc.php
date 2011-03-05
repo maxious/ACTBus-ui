@@ -9,6 +9,7 @@ function getPage($url)
 	$page = curl_exec($ch);
 	if (curl_errno($ch)) echo "<font color=red> Database temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) . "</font><br>";
 	curl_close($ch);
+	debug(print_r($page,true),"json");
 	return $page;
 }
 function curPageURL()
