@@ -72,6 +72,7 @@ if (!isset($return['error'])) {
 	//close connection
 	curl_close($ch);
 }
+
 if (!isset($return['error'])) {
 	include_once ('simple_html_dom.php');
 	$page = str_get_html($pageHTML);
@@ -97,7 +98,8 @@ if (!isset($return['error'])) {
 			foreach ($table->find("tr") as $tr) {
 				$tableColumnNum = 0;
 				foreach ($tr->find("td") as $td) {
-					$return[$tableName[$tableNum]][$tableRowNum][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+					if ($tableNum == 1) $return[$tableName[$tableNum]][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+					else $return[$tableName[$tableNum]][$tableRowNum][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
 					$tableColumnNum++;
 				}
 				$tableRowNum++;
@@ -107,8 +109,8 @@ if (!isset($return['error'])) {
 }
 if (sizeof($return) == 0) {
 $return['error'][] = "No data extracted from MyWay website - API may be out of date";
-print $pageHTML;
 }
+
 header('Content-Type: text/javascript; charset=utf8');
 // header('Access-Control-Allow-Origin: http://bus.lambdacomplex.org/');
 header('Access-Control-Max-Age: 3628800');
