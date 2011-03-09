@@ -9,14 +9,15 @@ $page_start = 0 + filter_var($_REQUEST['pageKey'], FILTER_SANITIZE_NUMBER_INT);
 $page_end = $max_page + filter_var($_REQUEST['pageKey'], FILTER_SANITIZE_NUMBER_INT);
 $lat = filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 $lon = filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-if (isset($_REQUEST['radius'])) $radius = filter_var($_REQUEST['radius'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 $url = $APIurl . "/json/neareststops?lat=$lat&lon=$lon&limit=50";
 $contents = json_decode(getPage($url));
 debug(print_r($contents, true));
 $stopNum = 0;
 foreach ($contents as $row) {
+    
 	$stopNum++;
 	if ($stopNum > $page_start && $stopNum <= $page_end) {
+            
 		$hotspot = Array();
 		$hotspot['id'] = $row[0];
 		$hotspot['title'] = $row[1];
@@ -25,13 +26,14 @@ foreach ($contents as $row) {
 		$hotspot['lon'] = floor($row[3] * 1000000);
 		$hotspot['distance'] = distance($row[2], $row[3], $_REQUEST['lat'], $_REQUEST['lon']);
 		if (!isset($_REQUEST['radius']) || $hotspot['distance'] < $radius) {
+                    
 			$hotspot['actions'] = Array(
 				Array(
 					"label" => 'View more trips/information',
 					'uri' => 'http://bus.lambdacomplex.org/' . 'stop.php?stopid=' . $row[0]
 				)
 			);
-			$url = $APIurl . "/json/stoptrips?stop=" . $row[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period() . "&limit=4&time_range=" . str(90 * 60);
+			$url = $APIurl . "/json/stoptrips?stop=" . $row[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period() . "&limit=4&time_range=" . strval(90 * 60);
 			$trips = json_decode(getPage($url));
 			debug(print_r($trips, true));
 			foreach ($trips as $key => $row) {

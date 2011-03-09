@@ -361,7 +361,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     schedule = self.server.schedule
     lat = float(params.get('lat'))
     lon = float(params.get('lon'))
-    limit = int(params.get('limit'))
+    limit = int(params.get('limit',5))
     scale = int(params.get('scale',5)) # 5 = neighbourhood ~ 1km, 4= town 5 by 7km
     stops = []
     
@@ -396,7 +396,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         elif dist < dist_stop_list[-1][0]:
           bisect.insort(dist_stop_list, (dist, s))
           dist_stop_list.pop()  # Remove stop with greatest distance
-      return [StopToTuple(s) for s in dist_stop_list]
+      return [StopToTuple(s) for dist, s in dist_stop_list]
 
   def handle_json_GET_boundboxstops(self, params):
     """Return a list of up to 'limit' stops within bounding box with 'n','e'
@@ -516,7 +516,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     requested_time = int(params.get('time', 0))
     limit = int(params.get('limit', 15))
     service_period = params.get('service_period', None)
-    time_range = params.get('time_range', 24*60*60)
+    time_range = int(params.get('time_range', 24*60*60))
     
     
     filtered_time_trips = []
