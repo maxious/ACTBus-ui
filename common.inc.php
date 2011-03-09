@@ -9,7 +9,8 @@ $owaSiteID = 'fe5b819fa8c424a99ff0764d955d23f3';
 $debugOkay = Array(
 	"session",
 	"json",
-	"phperror"
+	"phperror",
+	"other"
 );
 if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
 include_once ("common-geo.inc.php");
@@ -25,13 +26,22 @@ if (isset($_REQUEST['time'])) {
 	$_SESSION['time'] = filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING);
 }
 if (isset($_REQUEST['geolocate'])) {
+   
 	$geocoded = false;
 	if (isset($_REQUEST['lat']) && isset($_REQUEST['lon'])) {
-		$_SESSION['lat'] = filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-		$_SESSION['lon'] = filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+		$_SESSION['lat'] = trim(filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
+		$_SESSION['lon'] = trim(filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
 	}
 	else {
-		$contents = geocode(filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL) , true);
+	 $geolocate = filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL);
+	 echo $_REQUEST['geolocate'];
+   	 if (startsWith($geolocate, "-")) {
+		  $locateparts = explode(",",$geolocate);
+		  $_SESSION['lat'] = $locateparts[0];
+			$_SESSION['lon'] =$locateparts[1];
+		} else {
+		$contents = geocode($geolocate, true);
+		print_r($contents);
 		if (isset($contents[0]->centroid)) {
 			$geocoded = true;
 			$_SESSION['lat'] = $contents[0]->centroid->coordinates[0];
@@ -40,6 +50,7 @@ if (isset($_REQUEST['geolocate'])) {
 		else {
 			$_SESSION['lat'] = "";
 			$_SESSION['lon'] = "";
+		}
 		}
 	}
 	if ($_SESSION['lat'] != "" && isMetricsOn()) {

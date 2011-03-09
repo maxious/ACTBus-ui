@@ -349,14 +349,54 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         points.append((stop.stop_lat, stop.stop_lon))
     return points
 
+#
+# GeoPo Encode in Python
+# @author : Shintaro Inagaki
+# @param location (Dictionary) [lat (Float), lng (Float), scale(Int)]
+# @return geopo (String)
+#
+     
   def handle_json_GET_neareststops(self, params):
     """Return a list of the nearest 'limit' stops to 'lat', 'lon'"""
     schedule = self.server.schedule
     lat = float(params.get('lat'))
     lon = float(params.get('lon'))
     limit = int(params.get('limit'))
-    stops = schedule.GetNearestStops(lat=lat, lon=lon, n=limit)
-    return [StopToTuple(s) for s in stops]
+    scale = int(params.get('scale',5)) # 5 = neighbourhood ~ 1km, 4= town 5 by 7km
+    stops = []
+    
+    # 64characters (number + big and small letter + hyphen + underscore)
+    chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
+
+    geopo = ""
+
+    # Change a degree measure to a decimal number
+    lat = (lat + 90.0) / 180 * 8 ** 10 # 90.0 is forced FLOAT type when lat is INT
+    lon = (lon + 180.0) / 360 * 8 ** 10 # 180.0 is same
+
+       # Compute a GeoPo code from head and concatenate
+    for i in range(scale):
+            order = int(lat / (8 ** (9 - i)) % 8) + int(lon / (8 ** (9 - i)) % 8) * 8
+            geopo = geopo + chars[order]
+
+    
+    for s in schedule.GetStopList():
+      if s.stop_code.find(geopo) != -1:
+        stops.append(s)
+        
+    if scale == 5:
+      return [StopToTuple(s) for s in stops]
+    else:
+      dist_stop_list = []
+      for s in stops:
+      # TODO: Use util.ApproximateDistanceBetweenStops?
+        dist = (s.stop_lat - lat)**2 + (s.stop_lon - lon)**2
+        if len(dist_stop_list) < limit:
+          bisect.insort(dist_stop_list, (dist, s))
+        elif dist < dist_stop_list[-1][0]:
+          bisect.insort(dist_stop_list, (dist, s))
+          dist_stop_list.pop()  # Remove stop with greatest distance
+      return [StopToTuple(s) for s in dist_stop_list]
 
   def handle_json_GET_boundboxstops(self, params):
     """Return a list of up to 'limit' stops within bounding box with 'n','e'

@@ -53,6 +53,10 @@ else {
         <label for="secret_answer"> Secret question answer </label>
         <input type="text" name="secret_answer" id="secret_answer" value="' . $secret_answer . '"  />
     </div>
+        <div data-role="fieldcontain">
+        <label for="remember"> Remember these details? </label>
+        <input type="checkbox" name="remember" id="remember"  checked="yes"  />
+    </div>
         <input type="submit" value="Go!"></form>';
 }
 include_footer();
