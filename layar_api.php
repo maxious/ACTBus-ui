@@ -14,10 +14,8 @@ $contents = json_decode(getPage($url));
 debug(print_r($contents, true));
 $stopNum = 0;
 foreach ($contents as $row) {
-    
 	$stopNum++;
 	if ($stopNum > $page_start && $stopNum <= $page_end) {
-            
 		$hotspot = Array();
 		$hotspot['id'] = $row[0];
 		$hotspot['title'] = $row[1];
@@ -25,25 +23,22 @@ foreach ($contents as $row) {
 		$hotspot['lat'] = floor($row[2] * 1000000);
 		$hotspot['lon'] = floor($row[3] * 1000000);
 		$hotspot['distance'] = distance($row[2], $row[3], $_REQUEST['lat'], $_REQUEST['lon']);
-		if (!isset($_REQUEST['radius']) || $hotspot['distance'] < $radius) {
-                    
-			$hotspot['actions'] = Array(
-				Array(
-					"label" => 'View more trips/information',
-					'uri' => 'http://bus.lambdacomplex.org/' . 'stop.php?stopid=' . $row[0]
-				)
-			);
-			$url = $APIurl . "/json/stoptrips?stop=" . $row[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period() . "&limit=4&time_range=" . strval(90 * 60);
-			$trips = json_decode(getPage($url));
-			debug(print_r($trips, true));
-			foreach ($trips as $key => $row) {
-				if ($key < 3) {
-					$hotspot['line' . strval($key + 2) ] = $row[1][1] . ' @ ' . midnight_seconds_to_time($row[0]);
-				}
+		$hotspot['actions'] = Array(
+			Array(
+				"label" => 'View more trips/information',
+				'uri' => 'http://bus.lambdacomplex.org/' . 'stop.php?stopid=' . $row[0]
+			)
+		);
+		$url = $APIurl . "/json/stoptrips?stop=" . $row[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period() . "&limit=4&time_range=" . strval(90 * 60);
+		$trips = json_decode(getPage($url));
+		debug(print_r($trips, true));
+		foreach ($trips as $key => $row) {
+			if ($key < 3) {
+				$hotspot['line' . strval($key + 2) ] = $row[1][1] . ' @ ' . midnight_seconds_to_time($row[0]);
 			}
-			if (sizeof($trips) == 0) $hotspot['line2'] = 'No trips in the near future.';
-			$output['hotspots'][] = $hotspot;
 		}
+		if (sizeof($trips) == 0) $hotspot['line2'] = 'No trips in the near future.';
+		$output['hotspots'][] = $hotspot;
 	}
 }
 if (sizeof($hotspot) > 0) {

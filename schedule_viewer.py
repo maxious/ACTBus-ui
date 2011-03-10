@@ -385,6 +385,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         stops.append(s)
         
     if scale == 5:
+      print stops
       return [StopToTuple(s) for s in stops]
     else:
       dist_stop_list = []
@@ -396,6 +397,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         elif dist < dist_stop_list[-1][0]:
           bisect.insort(dist_stop_list, (dist, s))
           dist_stop_list.pop()  # Remove stop with greatest distance
+      print dist_stop_list
       return [StopToTuple(s) for dist, s in dist_stop_list]
 
   def handle_json_GET_boundboxstops(self, params):
