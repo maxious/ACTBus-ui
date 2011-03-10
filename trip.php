@@ -4,16 +4,17 @@ $tripid = filter_var($_REQUEST['tripid'], FILTER_SANITIZE_NUMBER_INT);
 $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
 $routeid = filter_var($_REQUEST['routeid'], FILTER_SANITIZE_NUMBER_INT);
 $routetrips = Array();
-if ($_REQUEST['routeid']) {
+if ($_REQUEST['routeid'] && !$_REQUEST['tripid']) {
+    $tripid = 0;
 	$url = $APIurl . "/json/routetrips?route_id=" . $routeid;
 	$routetrips = json_decode(getPage($url));
 	foreach ($routetrips as $trip) {
-		if ($trip[0] < midnight_seconds()) {
+		if ($trip[0] > midnight_seconds()) {
 			$tripid = $trip[1];
 			break;
 		}
 	}
-	if (!($tripid > 0)) $tripid = $routetrip[0][1];
+	if ($tripid == 0) $tripid = $routetrips[0][1];
 }
 $url = $APIurl . "/json/triprows?trip=" . $tripid;
 $trips = array_flatten(json_decode(getPage($url)));
@@ -39,18 +40,30 @@ if (isMetricsOn()) {
 	// Track the event
 	$owa->trackEvent($event);
 }
-timePlaceSettings();
+$url = $APIurl . "/json/tripstoptimes?trip=" . $tripid;
+$json = json_decode(getPage($url));
+$stops = $json[0];
+$times = $json[1];
+$viaPoints = Array();
+foreach ($stops as $stop) {
+	if (!startsWith($stop[5], "Wj")) {
+		$viaPoints[] = $stop[1];
+	}
+}
+echo 'Via: ' . implode(", ",$viaPoints) . '</small>';
 echo '<p> Other Trips: ';
 foreach ($routetrips as $othertrip) {
 	echo '<a href="trip.php?tripid=' . $othertrip[1] . "&routeid=" . $routeid . '">' . midnight_seconds_to_time($othertrip[0]) . '</a> ';
 }
 echo '</p> Other directions/timing periods: ';
-echo '  <ul data-role="listview"  data-inset="true">';
-$url = $APIurl . "/json/tripstoptimes?trip=" . $tripid;
+$url = $APIurl . "/json/routesearch?routeshortname=" . $trips[1]->route_short_name;
 $json = json_decode(getPage($url));
-$stops = $json[0];
-$times = $json[1];
-echo '<li data-role="list-divider">' . midnight_seconds_to_time($times[0]) . '-' . midnight_seconds_to_time($times[sizeof($times) - 1]) . '</li>';
+foreach ($json as $row) {
+	if ($row[0] != $routeid) echo '<a href="trip.php?routeid=' . $row[0]. '">' . $row[2] . ' (' . ucwords($row[3]) . ')</a> ';
+}
+
+echo '  <ul data-role="listview"  data-inset="true">';
+echo '<li data-role="list-divider">' . midnight_seconds_to_time($times[0]) . '-' . midnight_seconds_to_time($times[sizeof($times) - 1]) . ' ' . $trips[1]->route_long_name .'</li>';
 $stopsGrouped = Array();
 foreach ($stops as $key => $row) {
 	if (($stops[$key][1] != $stops[$key + 1][1]) || $key + 1 >= sizeof($stops)) {
@@ -61,7 +74,7 @@ foreach ($stops as $key => $row) {
 			// subsequent duplicates
 			$stopsGrouped["stop_ids"][] = $row[0];
 			$stopsGrouped["endTime"] = $times[$key];
-			echo '<a href="stop.php?stopids=' . implode(",",$stopsGrouped['stop_ids']) . '">';
+			echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
 			echo '<p class="ui-li-aside">' . midnight_seconds_to_time($stopsGrouped['startTime']) . ' to ' . midnight_seconds_to_time($stopsGrouped['endTime']) . '</p>';
 			echo bracketsMeanNewLine($row[1]);
 			echo '</a></li>';

@@ -282,6 +282,23 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     result.sort(key = lambda x: x[1:3])
     return result
 
+  def handle_json_GET_routesearch(self, params):
+    """Return a list of routes with matching short name."""
+    schedule = self.server.schedule
+    routeshortname = params.get('routeshortname', None)
+    result = []
+    for r in schedule.GetRouteList():
+      if r.route_short_name == routeshortname:
+        servicep = None
+        for t in schedule.GetTripList():
+          if t.route_id == r.route_id:
+            servicep = t.service_period
+            break
+        result.append( (r.route_id, r.route_short_name, r.route_long_name, servicep.service_id) )
+    result.sort(key = lambda x: x[1:3])
+    return result
+
+
   def handle_json_GET_routerow(self, params):
     schedule = self.server.schedule
     route = schedule.GetRoute(params.get('route', None))
