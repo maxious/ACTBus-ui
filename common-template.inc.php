@@ -122,7 +122,7 @@ function timePlaceSettings($geolocate = false)
         or enter an address/co-ordinates in the box below.</div>';
 	}
 	echo '<div data-role="collapsible" data-collapsed="' . !$geoerror . '">
-        <h3>Change Time/Place (' . $_SESSION['time'] . ' '.ucwords(service_period()).')...</h3>
+        <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' '.ucwords(service_period()).')...</h3>
         <form action="" method="post">
         <div class="ui-body"> 
 		<div data-role="fieldcontain">
