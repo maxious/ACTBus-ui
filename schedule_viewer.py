@@ -494,8 +494,8 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     result = {}
     for trip in trips:
       route = schedule.GetRoute(trip.route_id)
-      if not trip.route_short_name+route.route_long_name in result:
-        result[trip.route_short_name+route.route_long_name] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id)
+      if not route.route_short_name+route.route_long_name+trip.service_id in result:
+        result[route.route_short_name+route.route_long_name+trip.service_id] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id, trip.service_id)
     return result
     
   def handle_json_GET_stopalltrips(self, params):
@@ -526,6 +526,8 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       if service_period == None or trip.service_id == service_period:
         result.append((time, (trip.trip_id, trip_name, trip.service_id), tp))
     return result
+  
+
 
   def handle_json_GET_stoptrips(self, params):
     """Given a stop_id and time in seconds since midnight return the next
