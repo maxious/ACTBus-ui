@@ -71,17 +71,6 @@ if (navigator.geolocation) {
 	echo '</head>
 <body>
  ';
-	if (isMetricsOn()) {
-		require_once ('owa/owa_env.php');
-		require_once (OWA_DIR . 'owa_php.php');
-		$owa = new owa_php();
-		global $owaSiteID;
-		$owa->setSiteId($owaSiteID);
-		$owa->setPageTitle($pageTitle);
-		$owa->setPageType($pageType);
-		$owa->trackPageView();
-		$owa->placeHelperPageTags();
-	}
 	if ($opendiv) {
 		echo '<div data-role="page"> 
  <script>

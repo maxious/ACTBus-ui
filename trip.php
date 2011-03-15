@@ -23,22 +23,6 @@ if (sizeof($routetrips) == 0) {
 	$routetrips = json_decode(getPage($url));
 }
 include_header("Stops on " . $trips[1]->route_short_name . ' ' . $trips[1]->route_long_name, "trip");
-if (isMetricsOn()) {
-	// Create a new Instance of the tracker
-	$owa = new owa_php();
-	// Set the ID of the site being tracked
-	$owa->setSiteId($owaSiteID);
-	// Create a new event object
-	$event = $owa->makeEvent();
-	// Set the Event Type, in this case a "video_play"
-	$event->setEventType('view_trip');
-	// Set a property
-	$event->set('trip_id', $tripid);
-	$event->set('route_id', $routeid);
-	$event->set('stop_id', $stopid);
-	// Track the event
-	$owa->trackEvent($event);
-}
 timePlaceSettings();
 echo '<p> Other Trips: ';
 foreach ($routetrips as $othertrip) {

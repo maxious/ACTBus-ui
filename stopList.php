@@ -54,20 +54,6 @@ else {
 		$listType = "suburb=$suburb";
 		$url = $APIurl . "/json/stopzonesearch?q=" . $suburb;
 		include_header("Stops in " . ucwords($suburb) , "stopList");
-		if (isMetricsOn()) {
-			// Create a new Instance of the tracker
-			$owa = new owa_php($config);
-			// Set the ID of the site being tracked
-			$owa->setSiteId($owaSiteID);
-			// Create a new event object
-			$event = $owa->makeEvent();
-			// Set the Event Type, in this case a "video_play"
-			$event->setEventType('view_stop_list_suburb');
-			// Set a property
-			$event->set('stop_list_suburb', $suburb);
-			// Track the event
-			$owa->trackEvent($event);
-		}
 		navbar();
 	}
 	else {

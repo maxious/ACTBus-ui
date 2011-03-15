@@ -103,23 +103,6 @@ if ($_REQUEST['time']) {
 		tripPlanForm($errorMessage);
 	}
 	else {
-		if (isMetricsOn()) {
-			// Create a new Instance of the tracker
-			$owa = new owa_php();
-			// Set the ID of the site being tracked
-			$owa->setSiteId($owaSiteID);
-			// Create a new event object
-			$event = $owa->makeEvent();
-			// Set the Event Type, in this case a "video_play"
-			$event->setEventType('view_trip_plan');
-			// Set a property
-			$event->set('from', $from);
-			$event->set('to', $to);
-			$event->set('time', $time);
-			$event->set('date', $date);
-			// Track the event
-			$owa->trackEvent($event);
-		}
 		$url = $otpAPIurl . "ws/plan?date=" . urlencode($_REQUEST['date']) . "&time=" . urlencode($_REQUEST['time']) . "&mode=TRANSIT%2CWALK&optimize=QUICK&maxWalkDistance=840&wheelchair=false&toPlace=$toPlace&fromPlace=$fromPlace&intermediatePlaces=";
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
