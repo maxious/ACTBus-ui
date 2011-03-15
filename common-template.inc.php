@@ -1,27 +1,26 @@
 <?php
-function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false)
+function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false)
 {
 	echo '
 <!DOCTYPE html> 
 <html> 
 	<head> 
 	<title>' . $pageTitle . '</title>';
-	echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
+	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
 	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery-mobile-1.0a3.css" />
          <script type="text/javascript" src="js/jquery-1.5.js"></script>
         <script type="text/javascript" src="js/jquery-mobile-1.0a3.js"></script>';
 	else echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.1.min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>';
-	echo '<script> 
+	if ($datepicker) echo '<script> 
 		//reset type=date inputs to text
 		$( document ).bind( "mobileinit", function(){
 			$.mobile.page.prototype.options.degradeInputs.date = true;
 		});	
 	</script> 
-	<script src="js/jQuery.ui.datepicker.js"></script> 
-	<script src="js/jquery.ui.datepicker.mobile.js"></script> 
-     <style type="text/css">
+	<script src="js/jQuery.ui.datepicker.js"></script>';
+echo '<style type="text/css">
      .ui-navbar {
      width: 100%;
      }
