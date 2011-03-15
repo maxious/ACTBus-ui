@@ -95,4 +95,61 @@ c=this._daylightSavingAdjust(new Date(c,e+(b<0?b:f[0]*f[1]),1));b<0&&c.setDate(t
 "dayNamesShort"),dayNames:this._get(a,"dayNames"),monthNamesShort:this._get(a,"monthNamesShort"),monthNames:this._get(a,"monthNames")}},_formatDate:function(a,b,c,e){if(!b){a.currentDay=a.selectedDay;a.currentMonth=a.selectedMonth;a.currentYear=a.selectedYear}b=b?typeof b=="object"?b:this._daylightSavingAdjust(new Date(e,c,b)):this._daylightSavingAdjust(new Date(a.currentYear,a.currentMonth,a.currentDay));return this.formatDate(this._get(a,"dateFormat"),b,this._getFormatConfig(a))}});d.fn.datepicker=
 function(a){if(!d.datepicker.initialized){d(document).mousedown(d.datepicker._checkExternalClick).find("body").append(d.datepicker.dpDiv);d.datepicker.initialized=true}var b=Array.prototype.slice.call(arguments,1);if(typeof a=="string"&&(a=="isDisabled"||a=="getDate"||a=="widget"))return d.datepicker["_"+a+"Datepicker"].apply(d.datepicker,[this[0]].concat(b));if(a=="option"&&arguments.length==2&&typeof arguments[1]=="string")return d.datepicker["_"+a+"Datepicker"].apply(d.datepicker,[this[0]].concat(b));
 return this.each(function(){typeof a=="string"?d.datepicker["_"+a+"Datepicker"].apply(d.datepicker,[this].concat(b)):d.datepicker._attachDatepicker(this,a)})};d.datepicker=new L;d.datepicker.initialized=false;d.datepicker.uuid=(new Date).getTime();d.datepicker.version="1.8.5";window["DP_jQuery_"+y]=d})(jQuery);
-;
+;/*
+* jQuery Mobile Framework : temporary extension to port jQuery UI's datepicker for mobile
+* Copyright (c) jQuery Project
+* Dual licensed under the MIT or GPL Version 2 licenses.
+* http://jquery.org/license
+*/
+(function($, undefined ) {
+
+	//cache previous datepicker ui method
+	var prevDp = $.fn.datepicker;
+	
+	//rewrite datepicker
+	$.fn.datepicker = function( options ){
+		
+		var dp = this;
+	
+		//call cached datepicker plugin
+		prevDp.call( this, options );
+		
+		//extend with some dom manipulation to update the markup for jQM
+		//call immediately
+		function updateDatepicker(){
+			$( ".ui-datepicker-header", dp ).addClass("ui-body-c ui-corner-top").removeClass("ui-corner-all");
+			$( ".ui-datepicker-prev, .ui-datepicker-next", dp ).attr("href", "#");
+			$( ".ui-datepicker-prev", dp ).buttonMarkup({iconpos: "notext", icon: "arrow-l", shadow: true, corners: true});
+			$( ".ui-datepicker-next", dp ).buttonMarkup({iconpos: "notext", icon: "arrow-r", shadow: true, corners: true});
+			$( ".ui-datepicker-calendar th", dp ).addClass("ui-bar-c");
+			$( ".ui-datepicker-calendar td", dp ).addClass("ui-body-c");
+			$( ".ui-datepicker-calendar a", dp ).buttonMarkup({corners: false, shadow: false}); 
+			$( ".ui-datepicker-calendar a.ui-state-active", dp ).addClass("ui-btn-active"); // selected date
+			$( ".ui-datepicker-calendar a.ui-state-highlight", dp ).addClass("ui-btn-up-e"); // today"s date
+	        $( ".ui-datepicker-calendar .ui-btn", dp ).each(function(){
+				var el = $(this);
+				// remove extra button markup - necessary for date value to be interpreted correctly
+				el.html( el.find( ".ui-btn-text" ).text() ); 
+	        });
+		};
+		
+		//update now
+		updateDatepicker();
+		
+		// and on click
+		$( dp ).click( updateDatepicker );
+		
+		//return jqm obj 
+		return this;
+	};
+		
+	//bind to pagecreate to automatically enhance date inputs	
+	$( ".ui-page" ).live( "pagecreate", function(){     
+		$( "#date, input[type='date'], input[data-type='date']" ).each(function(){
+		    if ($(this).hasClass("hasDatepicker") == false) {
+			$(this).after( $( "<div />" ).datepicker({ altField: "#" + $(this).attr( "id" ), showOtherMonths: true }) );
+			$(this).addClass("hasDatepicker");
+		    }
+		}); 
+    });
+})( jQuery );

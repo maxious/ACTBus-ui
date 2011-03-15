@@ -6,15 +6,14 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <html> 
 	<head> 
 	<title>' . $pageTitle . '</title>';
+	echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
 	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery-mobile-1.0a3.css" />
          <script type="text/javascript" src="js/jquery-1.5.js"></script>
         <script type="text/javascript" src="js/jquery-mobile-1.0a3.js"></script>';
-	else echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.css" />
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.js"></script>';
-	echo '
-<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />
-	<script> 
+	else echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.1.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>';
+	echo '<script> 
 		//reset type=date inputs to text
 		$( document ).bind( "mobileinit", function(){
 			$.mobile.page.prototype.options.degradeInputs.date = true;
