@@ -51,7 +51,7 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 	if ($collapsible) $output.= '</div>';
 	return $output;
 }
-function distance($lat1, $lng1, $lat2, $lng2)
+function distance($lat1, $lng1, $lat2, $lng2, $roundLargeValues = false)
 {
 	$pi80 = M_PI / 180;
 	$lat1*= $pi80;
@@ -64,7 +64,10 @@ function distance($lat1, $lng1, $lat2, $lng2)
 	$a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlng / 2) * sin($dlng / 2);
 	$c = 2 * atan2(sqrt($a) , sqrt(1 - $a));
 	$km = $r * $c;
-	return $km * 1000;
+	if ($roundLargeValues) {
+	  if ($km < 1) return floor($km * 1000);
+	  else return round($km,2)."k";
+	} else return floor($km * 1000);
 }
 function decodePolylineToArray($encoded)
 {

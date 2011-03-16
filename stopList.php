@@ -63,7 +63,7 @@ else {
 		timePlaceSettings();
 	}
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-	if (!isset($_REQUEST['firstLetter']) && !$_REQUEST['suburb']) {
+	if (!isset($_REQUEST['firstLetter']) && !$_REQUEST['suburb'] && !$_REQUEST['nearby']) {
 		foreach (range('A', 'Z') as $letter) {
 			echo "<li><a href=\"stopList.php?firstLetter=$letter&$listType\">$letter...</a></li>\n";
 		}
@@ -75,9 +75,9 @@ else {
 		}
 		// Sort the stops by name
 		array_multisort($stopName, SORT_ASC, $stops);
-		if (!isset($_REQUEST['suburb'])){
+		if (!isset($_REQUEST['suburb']) && !isset($_REQUEST['nearby'])){
 		  $stops = array_filter($stops, "filterByFirstLetter");
-		}
+		} 
 		$stopsGrouped = Array();
 		foreach ($stops as $key => $row) {
 				if ((trim(preg_replace("/\(Platform.*/","",$stops[$key][1])) != trim(preg_replace("/\(Platform.*/","",$stops[$key + 1][1]))) || $key + 1 >= sizeof($stops)) {
@@ -90,7 +90,7 @@ else {
 						if (!startsWith($stopsGrouped['stop_codes'][0], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
 						echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
 						if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
-							echo '<span class="ui-li-count">' . floor(distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'])) . 'm away</span>';
+							echo '<span class="ui-li-count">' . distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
 						}
 						echo bracketsMeanNewLine(trim(preg_replace("/\(Platform.*/","",$row[1])) . '(' . sizeof($stopsGrouped["stop_ids"]) . ' stops)');
 						echo "</a></li>\n";
@@ -102,7 +102,7 @@ else {
 						if (!startsWith($row[5], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
 						echo '<a href="stop.php?stopid=' . $row[0] . (startsWith($row[5], "Wj") ? '&stopcode=' . $row[5] : "") . '">';
 						if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
-							echo '<span class="ui-li-count">' . floor(distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'])) . 'm away</span>';
+							echo '<span class="ui-li-count">' . distance($row[2], $row[3], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
 						}
 						echo bracketsMeanNewLine($row[1]);
 						echo "</a></li>\n";
@@ -131,7 +131,6 @@ else {
 	       }
 	}
 	echo '</ul>';
-	var_dump ($stopsGrouped);
 }
 include_footer();
 ?>
