@@ -1,6 +1,6 @@
 <?php
 include ('common.inc.php');
-include_header("MyWay Balance", "mywayBalance");
+include_header("MyWay Balance", "mywayBalance", true, false, true);
 $return = Array();
 function printBalance($cardNumber, $date, $pwrd)
 {

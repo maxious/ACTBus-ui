@@ -4,7 +4,6 @@ $APIurl = "http://localhost:8765";
 $cloudmadeAPIkey = "daa03470bb8740298d4b10e3f03d63e6";
 $googleMapsAPIkey = "ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q";
 $otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
-$owaSiteID = 'fe5b819fa8c424a99ff0764d955d23f3';
 //$debugOkay = Array("session","json","phperror","other");
 $debugOkay = Array(
 	"session",
@@ -53,22 +52,6 @@ if (isset($_REQUEST['geolocate'])) {
 		}
 		}
 	}
-	if ($_SESSION['lat'] != "" && isMetricsOn()) {
-		// Create a new Instance of the tracker
-		$owa = new owa_php($config);
-		// Set the ID of the site being tracked
-		$owa->setSiteId($owaSiteID);
-		// Create a new event object
-		$event = $owa->makeEvent();
-		// Set the Event Type, in this case a "video_play"
-		$event->setEventType('geolocate');
-		// Set a property
-		$event->set('lat', $_SESSION['lat']);
-		$event->set('lon', $_SESSION['lon']);
-		$event->set('geocoded', $geocoded);
-		// Track the event
-		$owa->trackEvent($event);
-	}
 }
 debug(print_r($_SESSION, true) , "session");
 function isDebugServer()
@@ -79,10 +62,6 @@ function isDebug($debugReason = "other")
 {
 	global $debugOkay;
 	return in_array($debugReason, $debugOkay, false) && isDebugServer();
-}
-function isMetricsOn()
-{
-	return !isDebugServer();
 }
 function debug($msg, $debugReason = "other")
 {
