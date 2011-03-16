@@ -65,7 +65,12 @@ function error(msg) {
 }
 
 if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(success, error);
+var options = {
+      enableHighAccuracy: false,
+      timeout: 60000,
+      maximumAge: 10000
+}
+  navigator.geolocation.getCurrentPosition(success, error, options);
 }
 
 </script> ";

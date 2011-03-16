@@ -19,6 +19,7 @@ include_header("bus.lambdacomplex.org", "index", false, true)
                 <li data-role="list-divider">Timetables - Routes</li>
                 <li><a href="routeList.php">Routes By Final Destination</a></li>
 		<li><a href="routeList.php?bynumber=yes">Routes By Number</a></li>
+		<li><a href="routeList.php?bysuburb=yes">Stops By Suburb</a></li>
 		<li><a class="nearby" href="routeList.php?nearby=yes">Nearby Routes</a></li>
             </ul>
 <?php
