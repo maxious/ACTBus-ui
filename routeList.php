@@ -17,14 +17,16 @@ if ($_REQUEST['bysuburb']) {
 	include_header("Routes by Suburb", "routeList");
 	navbar();
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-	foreach ($suburbs as $suburb) {
-		if (!isset($_REQUEST['firstLetter'])) {
-			foreach (range('A', 'Z') as $letter) {
-				echo "<li><a href=\"routeList.php?firstLetter=$letter&bysuburb=yes\">$letter...</a></li>\n";
-			}
+	if (!isset($_REQUEST['firstLetter'])) {
+		foreach (range('A', 'Z') as $letter) {
+			echo "<li><a href=\"routeList.php?firstLetter=$letter&bysuburb=yes\">$letter...</a></li>\n";
 		}
-		else if (startsWith($suburb, $_REQUEST['firstLetter'])) {
-			echo '<li><a href="routeList.php?suburb=' . urlencode($suburb) . '">' . $suburb . '</a></li>';
+	}
+	else {
+		foreach ($suburbs as $suburb) {
+			if (startsWith($suburb, $_REQUEST['firstLetter'])) {
+				echo '<li><a href="routeList.php?suburb=' . urlencode($suburb) . '">' . $suburb . '</a></li>';
+			}
 		}
 	}
 	echo '</ul>';

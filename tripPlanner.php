@@ -5,7 +5,10 @@ $from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZ
 $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "Barry");
 $date = (isset($_REQUEST['date']) ? filter_var($_REQUEST['date'], FILTER_SANITIZE_STRING) : date("m/d/Y"));
 $time = (isset($_REQUEST['time']) ? filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING) : date("H:i"));
-// todo: convert date from form to h:ia?
+function formatTime($timeString) {
+  $timeParts = explode("T",$timeString);
+  return str_replace("Z","",$timeParts[1]);
+}
 function tripPlanForm($errorMessage = "")
 {
 	global $date, $time, $from, $to;
@@ -40,7 +43,7 @@ $('#fromHere').show();
 }
 function processItinerary($itineraryNumber, $itinerary)
 {
-	echo '<div data-role="collapsible" ' . ($itineraryNumber > 0 ? 'data-collapsed="true"' : "") . '> <h3> Option #' . ($itineraryNumber + 1) . ": " . floor($itinerary->duration / 60000) . " minutes ({$itinerary->startTime} to {$itinerary->endTime})</h3><p>";
+	echo '<div data-role="collapsible" ' . ($itineraryNumber > 0 ? 'data-collapsed="true"' : "") . '> <h3> Option #' . ($itineraryNumber + 1) . ": " . floor($itinerary->duration / 60000) . " minutes (".formatTime($itinerary->startTime)." to ".formatTime($itinerary->endTime).")</h3><p>";
 	echo "Walking time: " . floor($itinerary->walkTime / 60000) . " minutes (" . floor($itinerary->walkDistance) . " meters)<br>\n";
 	echo "Transit time: " . floor($itinerary->transitTime / 60000) . " minutes<br>\n";
 	echo "Waiting time: " . floor($itinerary->waitingTime / 60000) . " minutes<br>\n";
@@ -119,7 +122,7 @@ if ($_REQUEST['time']) {
 			$tripplan = json_decode($page);
 			debug(print_r($triplan, true));
 			echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";
-			echo "<h1> At: {$tripplan->plan->date} </h1>";
+			echo "<h1> At: ".formatTime($tripplan->plan->date)." </h1>";
 			if (is_array($tripplan->plan->itineraries->itinerary)) {
 				echo '<div data-role="collapsible-set">';
 				foreach ($tripplan->plan->itineraries->itinerary as $itineraryNumber => $itinerary) {

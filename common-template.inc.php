@@ -20,7 +20,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 		});	
 	</script> 
 	<script src="js/jQuery.ui.datepicker.js"></script>';
-echo '<style type="text/css">
+	echo '<style type="text/css">
      .ui-navbar {
      width: 100%;
      }
@@ -44,11 +44,13 @@ echo '<style type="text/css">
     body {
         background-color: #F0F0F0;
     }
-</style>
-<meta name="apple-mobile-web-app-capable" content="yes" />
+</style>';
+	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
+		echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
  <link rel="apple-touch-startup-image" href="startup.png" />
  <link rel="apple-touch-icon" href="apple-touch-icon.png" />';
+	}
 	if ($geolocate) {
 		echo "<script>
 
@@ -114,7 +116,7 @@ function timePlaceSettings($geolocate = false)
         or enter an address/co-ordinates in the box below.</div>';
 	}
 	echo '<div data-role="collapsible" data-collapsed="' . !$geoerror . '">
-        <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' '.ucwords(service_period()).')...</h3>
+        <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="" method="post">
         <div class="ui-body"> 
 		<div data-role="fieldcontain">
