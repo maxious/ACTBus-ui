@@ -3,8 +3,9 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 {
 	echo '
 <!DOCTYPE html> 
-<html> 
-	<head> 
+<html lang="en">
+	<head>
+        <meta charset="UTF-8">
 	<title>' . $pageTitle . '</title>';
 	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
 	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery-mobile-1.0a3.css" />
@@ -44,6 +45,27 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
     body {
         background-color: #F0F0F0;
     }
+    #jqm-homeheader {
+        text-align: center;
+    }        
+    
+    // source http://webaim.org/techniques/skipnav/
+    #skip a, #skip a:hover, #skip a:visited 
+{ 
+position:absolute; 
+left:0px; 
+top:-500px; 
+width:1px; 
+height:1px; 
+overflow:hidden;
+} 
+
+#skip a:active, #skip a:focus 
+{ 
+position:static; 
+width:auto; 
+height:auto; 
+}
 </style>';
 	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
 		echo '<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -77,6 +99,9 @@ var options = {
 	}
 	echo '</head>
 <body>
+    <div id="skip">
+    <a href="#maincontent">Skip to content</a>
+    </div>
  ';
 	if ($opendiv) {
 		echo '<div data-role="page"> 
@@ -89,6 +114,7 @@ $(document).ready(function ()
 	<div data-role="header"> 
 		<h1>' . $pageTitle . '</h1>
 	</div><!-- /header -->
+        <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
 	}
 }
@@ -117,21 +143,21 @@ function timePlaceSettings($geolocate = false)
 	}
 	echo '<div data-role="collapsible" data-collapsed="' . !$geoerror . '">
         <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
-        <form action="" method="post">
+        <form action="'.basename($_SERVER['PHP_SELF']).'" method="post">
         <div class="ui-body"> 
 		<div data-role="fieldcontain">
 	            <label for="geolocate"> Current Location: </label>
-			<input type="text" id="geolocate" name="geolocate" value="' . (isset($_SESSION['lat']) && isset($_SESSION['lon']) ? $_SESSION['lat'] . "," . $_SESSION['lon'] : "Enter co-ordinates or address here") . '"/> <a href="#" style="display:none" name="here" id="here"/>Here?</a>
+			<input type="text" id="geolocate" name="geolocate" value="' . (isset($_SESSION['lat']) && isset($_SESSION['lon']) ? $_SESSION['lat'] . "," . $_SESSION['lon'] : "Enter co-ordinates or address here") . '"/> <a href="#" style="display:none" name="here" id="here">Here?</a>
 	        </div>
     		<div data-role="fieldcontain">
 		        <label for="time"> Time: </label>
-		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/> <a href="#" name="currentTime" id="currentTime"/>Current Time?</a>
+		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/> <a href="#" name="currentTime" id="currentTime">Current Time?</a>
 	        </div>
 		<div data-role="fieldcontain">
 		    <label for="service_period"> Service Period:  </label>
-			<select name="service_period">';
+			<select name="service_period" id="service_period">';
 	foreach ($service_periods as $service_period) {
-		echo "<option value=\"$service_period\"" . (service_period() === $service_period ? "SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
+		echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
 	}
 	echo '</select>
 			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod"/>Current Period?</a>

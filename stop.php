@@ -48,7 +48,7 @@ if (isset($_REQUEST['stopids'])) {
 }
 include_header($stop[1], "stop");
 timePlaceSettings();
-echo '<div data-role="content" class="ui-content" role="main">';
+echo '<div data-role="content" class="ui-content" role="main">        <a name="maincontent" id="maincontent"></a>';
 echo $stopLinks;
 if (sizeof($stops) > 0) {
 	echo '<p>' . staticmap($stopPositions) . '</p>';
