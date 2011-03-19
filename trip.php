@@ -34,12 +34,12 @@ foreach ($stops as $stop) {
 		$viaPoints[] = $stop[1];
 	}
 }
-echo 'Via: ' . implode(", ", $viaPoints) . '</small>';
-echo '<p> Other Trips: ';
+echo '<p><h2>Via:</h2> ' . implode(", ", $viaPoints) . '</small></p>';
+echo '<p><h2>Other Trips:</h2> ';
 foreach ($routetrips as $othertrip) {
 	echo '<a href="trip.php?tripid=' . $othertrip[1] . "&routeid=" . $routeid . '">' . midnight_seconds_to_time($othertrip[0]) . '</a> ';
 }
-echo '</p> Other directions/timing periods: ';
+echo '</p><p><h2>Other directions/timing periods:</h2> ';
 $url = $APIurl . "/json/routesearch?routeshortname=" . $trips[1]->route_short_name;
 $json = json_decode(getPage($url));
 foreach ($json as $row) {
