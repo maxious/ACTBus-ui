@@ -1,4 +1,28 @@
 <?php
+  // Copyright 2009 Google Inc. All Rights Reserved.
+  $GA_ACCOUNT = "MO-22173039-1";
+  $GA_PIXEL = "/ga.php";
+
+  function googleAnalyticsGetImageUrl() {
+    global $GA_ACCOUNT, $GA_PIXEL;
+    $url = "";
+    $url .= $GA_PIXEL . "?";
+    $url .= "utmac=" . $GA_ACCOUNT;
+    $url .= "&utmn=" . rand(0, 0x7fffffff);
+    $referer = $_SERVER["HTTP_REFERER"];
+    $query = $_SERVER["QUERY_STRING"];
+    $path = $_SERVER["REQUEST_URI"];
+    if (empty($referer)) {
+      $referer = "-";
+    }
+    $url .= "&utmr=" . urlencode($referer);
+    if (!empty($path)) {
+      $url .= "&utmp=" . urlencode($path);
+    }
+    $url .= "&guid=ON";
+    return str_replace("&", "&amp;", $url);
+  }
+
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false)
 {
 	echo '
@@ -7,6 +31,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 	<head>
         <meta charset="UTF-8">
 	<title>' . $pageTitle . '</title>';
+        <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
 	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery-mobile-1.0a3.css" />
          <script type="text/javascript" src="js/jquery-1.5.js"></script>
@@ -128,6 +153,10 @@ $('#here').show();
 	}
 	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a></a>';
 	echo '</div>';
+        if (!isDebug()) {
+         $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
+  echo '<img src="' . $googleAnalyticsImageUrl . '" />';
+    }
 }
 function timePlaceSettings($geolocate = false)
 {
