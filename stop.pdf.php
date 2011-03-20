@@ -1,5 +1,5 @@
 <?php
-include ('common.inc.php');
+include ('include/common.inc.php');
 $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
 $url = $APIurl . "/json/stop?stop_id=" . $stopid;
 $stop = json_decode(getPage($url));
@@ -30,8 +30,8 @@ foreach ($trips as $row) {
 }
 $html.= '</table>';
 if (sizeof($trips) == 0) $html.= "<center>No trips in the near future.</center>";
-require_once ('tcpdf/config/lang/eng.php');
-require_once ('tcpdf/tcpdf.php');
+require_once ('lib/tcpdf/config/lang/eng.php');
+require_once ('lib/tcpdf/tcpdf.php');
 // create new PDF document
 class Custom_TCPDF extends TCPDF
 {

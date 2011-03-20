@@ -1,7 +1,7 @@
 <?php
   // Copyright 2009 Google Inc. All Rights Reserved.
   $GA_ACCOUNT = "MO-22173039-1";
-  $GA_PIXEL = "/ga.php";
+  $GA_PIXEL = "/lib/ga.php";
 
   function googleAnalyticsGetImageUrl() {
     global $GA_ACCOUNT, $GA_PIXEL;
@@ -130,7 +130,7 @@ var options = {
 </script> ";
 	}
 	echo '
-<script type="text/javascript">
+<script type="text/javascript">'."
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-22173039-1']);
@@ -145,7 +145,7 @@ var options = {
 s.parentNode.insertBefore(ga, s);
   })();
 
-</script></head>
+</script></head>".'
 <body>
     <div id="skip">
     <a href="#maincontent">Skip to content</a>

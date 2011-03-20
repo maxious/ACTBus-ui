@@ -1,11 +1,11 @@
 <?php
-include ('common.inc.php');
+include ('include/common.inc.php');
 include_header("Feedback", "feedback");
 function sendEmail($topic, $message)
 {
 	$address = "maxious@lambdacomplex.org";
 	if (file_exists("/tmp/aws.php")) {
-		include_once ('ses.php');
+		include_once ('lib/ses.php');
 		include_once ("/tmp/aws.php");
 		$con = new SimpleEmailService($accessKey, $secretKey);
 		//$con->verifyEmailAddress($address);
@@ -40,12 +40,14 @@ Please leave feedback about bugs/errors or general suggestions about improvement
 <textarea id="feedback">
 </textarea>
 <textarea id="extrainfo">
-    Referrer URL
+<?php
+  echo '  Referrer URL
     User Agent
     User host/IP
     Server host/IP
     Current date/time
-    Dump of $_SESSION
+    Dump of $_SESSION ';
+?>
 </textarea>
 
 Submit!
