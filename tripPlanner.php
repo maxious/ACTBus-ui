@@ -92,7 +92,17 @@ function processLeg($legNumber, $leg)
 		}
 		echo "" . staticmap($walkStepMarkers, 0, "icong", false) . "<br>\n";
 		foreach ($leg->steps->walkSteps as $stepNumber => $step) {
-			echo "Walking step " . ($stepNumber + 1) . " $step->absoluteDirection / $step->relativeDirection on $step->streetName for " . floor($step->distance) . " meters<br>\n";
+			echo "Walking step " . ($stepNumber + 1) . ": ";
+                        if ($step->relativeDirection == "CONTINUE") {
+                          echo "Continue, ";
+                        } else if ($step->relativeDirection) echo "Turn ".ucwords(strtolower(str_replace("_"," ",$step->relativeDirection))).", ";
+                        echo "Go ".ucwords(strtolower($step->absoluteDirection))." on ";
+                        if (strpos($step->streetName,"from") !== false && strpos($step->streetName,"way") !== false) {
+                          echo "footpath";
+                        } else {
+                          echo $step->streetName;
+                        }
+                        echo " for " . floor($step->distance) . " meters<br>\n";
 		}
 	}
 }
@@ -116,8 +126,9 @@ if ($_REQUEST['time']) {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 		$page = curl_exec($ch);
 		if (curl_errno($ch)) {
-			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch));
-		}
+			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) .(isDebug() ? $url : ""));
+		
+                }
 		else {
 			$tripplan = json_decode($page);
 			debug(print_r($triplan, true));

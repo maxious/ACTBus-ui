@@ -7,7 +7,14 @@ function getPage($url)
 	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 	$page = curl_exec($ch);
-	if (curl_errno($ch)) echo "<font color=red> Database temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) . "</font><br>";
+	if (curl_errno($ch)) {
+		echo "<font color=red> Database temporarily unavailable: ";
+		echo curl_errno($ch) . " " . curl_error($ch);
+		if (isDebug()) {
+			echo $url;
+		}
+		echo "</font><br>";
+	}
 	curl_close($ch);
 	debug(print_r($page,true),"json");
 	return $page;
