@@ -73,7 +73,13 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
     #jqm-homeheader {
         text-align: center;
     }        
-    
+    .viaPoints {
+        display: none;
+        text-size: 0.2em;
+    }
+    .min-width-480px .viaPoints {
+        display: block;
+    }
     // source http://webaim.org/techniques/skipnav/
     #skip a, #skip a:hover, #skip a:visited 
 { 

@@ -72,10 +72,8 @@ else {
 foreach ($trips as $row) {
 	echo '<li>';
 	echo '<h3><a href="trip.php?stopid=' . $stopid . '&tripid=' . $row[1][0] . '">' . $row[1][1];
-	if (isFastDevice()) {
-		$viaPoints = viaPointNames($row[1][0], $stopid);
-		if ($viaPoints != "") echo '<br><small>Via: ' . $viaPoints . '</small>';
-	}
+        $viaPoints = viaPointNames($row[1][0], $stopid);
+        if ($viaPoints != "") echo '<div class="viaPoints">Via: ' . $viaPoints . '</div>';
 	if (sizeof($tripStopNumbers) > 0) {
             echo '<br><small>Boarding At: ';
             foreach ($tripStopNumbers[$row[1][0]] as $key) {
