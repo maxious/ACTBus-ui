@@ -1,16 +1,23 @@
 <?php
 date_default_timezone_set('Australia/ACT');
 $APIurl = "http://localhost:8765";
-$cloudmadeAPIkey = "daa03470bb8740298d4b10e3f03d63e6";
-$googleMapsAPIkey = "ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q";
-$otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
-//$debugOkay = Array("session","json","phperror","other");
 $debugOkay = Array(
 	"session",
 	"json",
 	"phperror",
+	"awsgtfs",
+	"awsotp",
 	"other"
 );
+if (isDebug("awsgtfs")) {
+	$APIurl = "http://bus-main.lambdacomplex.org:8765";
+}
+$cloudmadeAPIkey = "daa03470bb8740298d4b10e3f03d63e6";
+$googleMapsAPIkey = "ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q";
+$otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
+if (isDebug("awsotp") || php_uname('n') == "maxious.xen.prgmr.com") {
+	'http://bus-main.lambdacomplex.org:8080/opentripplanner-api-webapp/';
+}
 if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
 include_once ("common-geo.inc.php");
 include_once ("common-net.inc.php");
@@ -69,28 +76,9 @@ function debug($msg, $debugReason = "other")
 }
 function isJQueryMobileDevice()
 {
-   // http://forum.jquery.com/topic/what-is-the-best-way-to-detect-all-useragents-which-can-handle-jquery-mobile#14737000002087897
-	$user_agent = $_SERVER['HTTP_USER_AGENT'];   
-	return preg_match('/iphone/i', $user_agent)
-	|| preg_match('/android/i', $user_agent)
-	|| preg_match('/webos/i', $user_agent)
-	|| preg_match('/ios/i', $user_agent)
-	|| preg_match('/bada/i', $user_agent)
-	|| preg_match('/maemo/i', $user_agent)
-	|| preg_match('/meego/i', $user_agent)
-	|| preg_match('/fennec/i', $user_agent)
-	|| (preg_match('/symbian/i', $user_agent)
-	    && preg_match('/s60/i', $user_agent)
-	    && $browser['majorver'] >= 5)
-	|| (preg_match('/symbian/i', $user_agent)
-	    && preg_match('/platform/i', $user_agent)
-	    && $browser['majorver'] >= 3)
-	|| (preg_match('/blackberry/i', $user_agent)
-	    && $browser['majorver'] >= 5)
-	|| (preg_match('/opera mobile/i', $user_agent)
-	    && $browser['majorver'] >= 10)
-	|| (preg_match('/opera mini/i', $user_agent)
-	    && $browser['majorver'] >= 5);
+	// http://forum.jquery.com/topic/what-is-the-best-way-to-detect-all-useragents-which-can-handle-jquery-mobile#14737000002087897
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	return preg_match('/iphone/i', $user_agent) || preg_match('/android/i', $user_agent) || preg_match('/webos/i', $user_agent) || preg_match('/ios/i', $user_agent) || preg_match('/bada/i', $user_agent) || preg_match('/maemo/i', $user_agent) || preg_match('/meego/i', $user_agent) || preg_match('/fennec/i', $user_agent) || (preg_match('/symbian/i', $user_agent) && preg_match('/s60/i', $user_agent) && $browser['majorver'] >= 5) || (preg_match('/symbian/i', $user_agent) && preg_match('/platform/i', $user_agent) && $browser['majorver'] >= 3) || (preg_match('/blackberry/i', $user_agent) && $browser['majorver'] >= 5) || (preg_match('/opera mobile/i', $user_agent) && $browser['majorver'] >= 10) || (preg_match('/opera mini/i', $user_agent) && $browser['majorver'] >= 5);
 }
 function isFastDevice()
 {
@@ -143,6 +131,7 @@ function startsWith($haystack, $needle, $case = true)
 	}
 	return (strcasecmp(substr($haystack, 0, strlen($needle)) , $needle) === 0);
 }
+
 function endsWith($haystack, $needle, $case = true)
 {
 	if ($case) {
