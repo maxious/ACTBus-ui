@@ -1,5 +1,5 @@
 <?php
-include ('common.inc.php');
+include ('include/common.inc.php');
 $output = Array();
 $output['hotspots'] = Array();
 $output['layer'] = "canberrabusstops";

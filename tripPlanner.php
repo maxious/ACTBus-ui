@@ -1,5 +1,5 @@
 <?php
-include ('common.inc.php');
+include ('include/common.inc.php');
 include_header("Trip Planner", "tripPlanner", true, true, true);
 $from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZE_STRING) : "Brigalow");
 $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "Barry");

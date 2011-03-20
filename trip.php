@@ -1,5 +1,5 @@
 <?php
-include ('common.inc.php');
+include ('include/common.inc.php');
 $tripid = filter_var($_REQUEST['tripid'], FILTER_SANITIZE_NUMBER_INT);
 $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
 $routeid = filter_var($_REQUEST['routeid'], FILTER_SANITIZE_NUMBER_INT);
