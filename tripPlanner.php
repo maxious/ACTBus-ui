@@ -11,6 +11,7 @@ function formatTime($timeString) {
 }
 function tripPlanForm($errorMessage = "")
 {
+
 	global $date, $time, $from, $to;
 	echo "<font color=red>$errorMessage</font>";
 	echo '<form action="tripPlanner.php" method="post">
@@ -111,8 +112,14 @@ if ($_REQUEST['time']) {
 	$fromPlace = (startsWith($from, "-") ? $from : geocode($from, false));
 	if ($toPlace == "" || $fromPlace == "") {
 		$errorMessage = "";
-		if ($toPlace === "") $errorMessage.= urlencode($to) . " not found.<br>\n";
-		if ($fromPlace === "") $errorMessage.= urlencode($from) . " not found.<br>\n";
+		if ($toPlace === "") {
+                  $errorMessage.= urlencode($to) . " not found.<br>\n";
+                  trackEvent("Trip Planner","Geocoder Failed", $to);
+                }
+		if ($fromPlace === "") {
+                  $errorMessage.= urlencode($from) . " not found.<br>\n";
+                  trackEvent("Trip Planner","Geocoder Failed", $from);
+                }
 		tripPlanForm($errorMessage);
 	}
 	else {
@@ -127,9 +134,11 @@ if ($_REQUEST['time']) {
 		$page = curl_exec($ch);
 		if (curl_errno($ch)) {
 			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) .(isDebug() ? $url : ""));
-		
+                        trackEvent("Trip Planner","Trip Planner Failed", $url);
                 }
 		else {
+                  	trackEvent("Trip Planner","Plan Trip From", $from);
+                        trackEvent("Trip Planner","Plan Trip To", $to);
 			$tripplan = json_decode($page);
 			debug(print_r($triplan, true));
 			echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";

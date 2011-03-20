@@ -51,9 +51,12 @@ timePlaceSettings();
 echo '<div data-role="content" class="ui-content" role="main">        <a name="maincontent" id="maincontent"></a>';
 echo $stopLinks;
 if (sizeof($stops) > 0) {
+    trackEvent("View Stops","View Combined Stops", $stop[1], $stop[0]);
+
 	echo '<p>' . staticmap($stopPositions) . '</p>';
 }
 else {
+        trackEvent("View Stops","View Single Stop", $stop[1], $stop[0]);
 	echo '<p>' . staticmap(Array(
 		0 => Array(
 			$stop[2],

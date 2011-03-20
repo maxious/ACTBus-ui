@@ -59,11 +59,18 @@ if (isset($_REQUEST['geolocate'])) {
 			}
 		}
 	}
+	if ($_SESSION['lat'] != "" && isMetricsOn()) {
+		trackEvent("Geolocation","Updated Location", "Geocoded - ".($geocoded ? "Yes" : "No"));
+	}
 }
 debug(print_r($_SESSION, true) , "session");
 function isDebugServer()
 {
 	return $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" || !$_SERVER['SERVER_NAME'];
+}
+function isAnalyticsOn()
+{
+	return !isDebugServer();
 }
 function isDebug($debugReason = "other")
 {

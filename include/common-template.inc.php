@@ -129,22 +129,12 @@ var options = {
 
 </script> ";
 	}
-	if (!isDebugServer()) echo '
+	if (isAnalyticsOn()) echo '
 <script type="text/javascript">'."
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-22173039-1']);
   _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 
-'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 
-'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; 
-s.parentNode.insertBefore(ga, s);
-  })();
-
 </script>";
 echo '</head>
 <body>
@@ -177,7 +167,15 @@ $('#here').show();
 	}
 	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a></a>';
 	echo '</div>';
-        if (!isDebugServer()) {
+        if (isAnalyticsOn()) {
+	echo "<script>  (function() {
+    var ga = document.createElement('script'); ga.type = 
+'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 
+'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; 
+s.parentNode.insertBefore(ga, s);
+  })();";
          $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
   echo '<img src="' . $googleAnalyticsImageUrl . '" />';
     }
@@ -219,5 +217,10 @@ function timePlaceSettings($geolocate = false)
 		<input type="submit" value="Update"/>
                 </form>
             </div></div>';
+}
+function trackEvent($category, $action, $label = "", $value = -1) {
+  if (isAnalyticsOn()) {
+    echo "<script> _gaq.push(['_trackEvent', $category, $action".($label != "" ? ", $label" : "").($value != -1 ? ", $value" : "")."]);";
+  }
 }
 ?>

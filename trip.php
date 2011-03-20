@@ -24,6 +24,7 @@ if (sizeof($routetrips) == 0) {
 	$routetrips = json_decode(getPage($url));
 }
 include_header("Stops on " . $trips[1]->route_short_name . ' ' . $trips[1]->route_long_name, "trip");
+trackEvent("Route/Trip View","View Route", $trips[1]->route_short_name . ' ' . $trips[1]->route_long_name, $trips[1]->route_id);
 $url = $APIurl . "/json/tripstoptimes?trip=" . $tripid;
 $json = json_decode(getPage($url));
 $stops = $json[0];

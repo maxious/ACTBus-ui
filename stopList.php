@@ -62,6 +62,7 @@ else {
 		$url = $APIurl . "/json/stopzonesearch?q=" . $suburb;
 		include_header("Stops in " . ucwords($suburb) , "stopList");
 		navbar();
+	       trackEvent("Stop Lists","Stops By Suburb", $suburb);
 	}
 	else {
 		$url = $APIurl . "/json/timingpoints";
