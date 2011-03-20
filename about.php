@@ -4,9 +4,14 @@ include_header("About", "about")
 ?>
 <p>
 Busness Time - An ACT bus timetable webapp<br />
-Based on the maxious-canberra-transit-feed (<a href="cbrfeed.zip">download</a>, last updated <?php
+Based on the maxious-canberra-transit-feed (<a 
+href="http://s3-ap-southeast-1.amazonaws.com/busresources/cbrfeed.zip">download</a>, 
+last updated <?php
 echo date("F d Y.", @filemtime('cbrfeed.zip')); ?>)<br />
-Source code for the transit feed and this site @ <a href="http://maxious.lambdacomplex.org/git">http://maxious.lambdacomplex.org/git</a><br />
+Source code for the <a 
+href="https://github.com/maxious/ACTBus-data">transit 
+feed</a> and <a href="https://github.com/maxious/ACTBus-ui">this 
+site</a> available from github.<br />
 Uses jQuery Mobile, PHP, Ruby, Python, Google Transit Feed Specification tools, OpenTripPlanner, OpenLayers, OpenStreetMap, Cloudmade Geocoder and Tile Service<br />
 <br />
 Feedback encouraged; contact maxious@lambdacomplex.org<br />

@@ -4,7 +4,6 @@
 #screen php-cli php-gd tomcat6-webapps tomcat6-admin-webapps svn maven2
 #http://www.how2forge.org/installing-lighttpd-with-php5-and-mysql-support-on-fedora-12
 
-cp -rfv /tmp/busui/* /var/www
 cp /root/aws.php /tmp/
 chcon -h system_u:object_r:httpd_sys_content_t /var/www
 chcon -R -h root:object_r:httpd_sys_content_t /var/www/*
@@ -14,7 +13,8 @@ wget http://s3-ap-southeast-1.amazonaws.com/busresources/cbrfeed.zip \
 -O /var/www/cbrfeed.zip
 easy_install transitfeed
 easy_install simplejson
-screen -d -m /var/www/view.sh
+screen -S viewsh -X quit
+screen -S viewsh -d -m /var/www/view.sh
 
 wget http://s3-ap-southeast-1.amazonaws.com/busresources/Graph.obj \
 -O /tmp/Graph.obj

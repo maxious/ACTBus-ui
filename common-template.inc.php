@@ -30,8 +30,9 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <html lang="en">
 	<head>
         <meta charset="UTF-8">
-	<title>' . $pageTitle . '</title>';
-        <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
+	<title>' . $pageTitle . '</title>
+        <meta name="google-site-verification" 
+content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
 	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
 	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery-mobile-1.0a3.css" />
          <script type="text/javascript" src="js/jquery-1.5.js"></script>
@@ -128,7 +129,23 @@ var options = {
 
 </script> ";
 	}
-	echo '</head>
+	echo '
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-22173039-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 
+'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 
+'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; 
+s.parentNode.insertBefore(ga, s);
+  })();
+
+</script></head>
 <body>
     <div id="skip">
     <a href="#maincontent">Skip to content</a>
