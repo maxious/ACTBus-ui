@@ -129,7 +129,7 @@ var options = {
 
 </script> ";
 	}
-	echo '
+	if (!isDebugServer()) echo '
 <script type="text/javascript">'."
 
   var _gaq = _gaq || [];
@@ -145,7 +145,8 @@ var options = {
 s.parentNode.insertBefore(ga, s);
   })();
 
-</script></head>".'
+</script>";
+echo '</head>
 <body>
     <div id="skip">
     <a href="#maincontent">Skip to content</a>
@@ -176,7 +177,7 @@ $('#here').show();
 	}
 	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a></a>';
 	echo '</div>';
-        if (!isDebug()) {
+        if (!isDebugServer()) {
          $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
   echo '<img src="' . $googleAnalyticsImageUrl . '" />';
     }
