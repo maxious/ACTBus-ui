@@ -59,7 +59,7 @@ if (isset($_REQUEST['geolocate'])) {
 			}
 		}
 	}
-	if ($_SESSION['lat'] != "" && isMetricsOn()) {
+	if ($_SESSION['lat'] != "" && isAnalyticsOn()) {
 		trackEvent("Geolocation","Updated Location", "Geocoded - ".($geocoded ? "Yes" : "No"));
 	}
 }

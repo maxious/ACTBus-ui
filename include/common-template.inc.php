@@ -36,6 +36,10 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
 	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
 	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery-mobile-1.0a3.css" />
          <script type="text/javascript" src="js/jquery-1.5.js"></script>
+	 <script>$(document).bind("mobileinit", function(){
+  $.mobile.ajaxEnabled = false;
+});
+</script>
         <script type="text/javascript" src="js/jquery-mobile-1.0a3.js"></script>';
 	else echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.1.min.js"></script>
@@ -111,13 +115,13 @@ height:auto;
 function success(position) {
 $('#geolocate').val(position.coords.latitude+','+position.coords.longitude);
 $.ajax({ url: \"common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
-$('#here').click(function(event) { $('#geolocate').val(doAJAXrequestForGeolocSessionHere()); return false;});
-$('#here').show();
+location.reload(true);
 }
 function error(msg) {
  console.log(msg);
 }
 
+function geolocate() {
 if (navigator.geolocation) {
 var options = {
       enableHighAccuracy: false,
@@ -126,8 +130,14 @@ var options = {
 }
   navigator.geolocation.getCurrentPosition(success, error, options);
 }
-
-</script> ";
+}
+$(document).ready(function() {
+        $('#here').click(function(event) { $('#geolocate').val(geolocate()); return false;});
+$('#here').show();
+});
+";
+if (!isset($_SESSION['lat']) || $_SESSION['lat'] == "") echo "geolocate();";
+echo "</script> ";
 	}
 	if (isAnalyticsOn()) echo '
 <script type="text/javascript">'."
@@ -159,12 +169,6 @@ $(document).ready(function ()
 }
 function include_footer()
 {
-	if ($geolocate && isset($_SESSION['lat'])) {
-		echo "<script>
-        $('#here').click(function(event) { $('#geolocate').val(doAJAXrequestForGeolocSessionHere()); return false;});
-$('#here').show();
-</script>";
-	}
 	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a></a>';
 	echo '</div>';
         if (isAnalyticsOn()) {
@@ -194,7 +198,7 @@ function timePlaceSettings($geolocate = false)
 	}
 	echo '<div data-role="collapsible" data-collapsed="' . !$geoerror . '">
         <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
-        <form action="'.basename($_SERVER['PHP_SELF']).'" method="post">
+        <form action="'.basename($_SERVER['PHP_SELF'])."?".$_SERVER['QUERY_STRING'].'" method="post">
         <div class="ui-body"> 
 		<div data-role="fieldcontain">
 	            <label for="geolocate"> Current Location: </label>
@@ -202,7 +206,8 @@ function timePlaceSettings($geolocate = false)
 	        </div>
     		<div data-role="fieldcontain">
 		        <label for="time"> Time: </label>
-		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/> <a href="#" name="currentTime" id="currentTime">Current Time?</a>
+		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/>
+			<a href="#" name="currentTime" id="currentTime" onClick="var d = new Date();'. "$('#time').val(d.getHours() +':'+ d.getMinutes());".'">Current Time?</a>
 	        </div>
 		<div data-role="fieldcontain">
 		    <label for="service_period"> Service Period:  </label>

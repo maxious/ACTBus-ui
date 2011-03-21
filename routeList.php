@@ -41,7 +41,7 @@ else if ($_REQUEST['nearby'] || $_REQUEST['suburb']) {
 	}
 	if ($_REQUEST['nearby']) {
 		$url = $APIurl . "/json/neareststops?lat={$_SESSION['lat']}&lon={$_SESSION['lon']}&limit=15";
-		include_header("Routes Nearby", "routeList");
+		include_header("Routes Nearby", "routeList", true, true);
 	}
 	$stops = json_decode(getPage($url));
 	$routes = Array();

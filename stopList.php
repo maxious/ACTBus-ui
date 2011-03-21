@@ -48,7 +48,7 @@ else {
 	else if ($_REQUEST['nearby']) {
 		$listType = 'nearby=yes';
 		$url = $APIurl . "/json/neareststops?lat={$_SESSION['lat']}&lon={$_SESSION['lon']}&limit=15";
-		include_header("Nearby Stops", "stopList");
+		include_header("Nearby Stops", "stopList", true, true);
 		navbar();
 		timePlaceSettings(true);
 		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
