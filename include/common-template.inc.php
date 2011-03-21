@@ -85,6 +85,10 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
     .min-width-480px .viaPoints {
         display: block;
     }
+    #extrainfo {
+    visibility: hidden;
+    display: none;
+    }
     // source http://webaim.org/techniques/skipnav/
     #skip a, #skip a:hover, #skip a:visited 
 { 
@@ -181,7 +185,7 @@ function include_footer()
 s.parentNode.insertBefore(ga, s);
   })();";
          $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
-  echo '<img src="' . $googleAnalyticsImageUrl . '" />';
+  echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
     }
 }
 function timePlaceSettings($geolocate = false)

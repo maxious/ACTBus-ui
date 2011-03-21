@@ -36,8 +36,12 @@ else if ($_REQUEST['nearby'] || $_REQUEST['suburb']) {
 		$suburb = filter_var($_REQUEST['suburb'], FILTER_SANITIZE_STRING);
 		$url = $APIurl . "/json/stopzonesearch?q=" . $suburb;
 		include_header("Routes by Suburb", "routeList");
+		timePlaceSettings(true);
 		trackEvent("Route Lists","Routes By Suburb", $suburb);
-
+		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
+			include_footer();
+			die();
+		}
 	}
 	if ($_REQUEST['nearby']) {
 		$url = $APIurl . "/json/neareststops?lat={$_SESSION['lat']}&lon={$_SESSION['lon']}&limit=15";
