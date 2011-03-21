@@ -1,6 +1,6 @@
 <?php
 include ('include/common.inc.php');
-include_header("bus.lambdacomplex.org", "index", false, true)
+include_header("bus.lambdacomplex.org", "index", false)
 ?>
 <div data-role="page">
 	<div data-role="content">

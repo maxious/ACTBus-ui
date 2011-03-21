@@ -43,6 +43,10 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
         <script type="text/javascript" src="js/jquery-mobile-1.0a3.js"></script>';
 	else echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.1.min.js"></script>
+	 <script>$(document).bind("mobileinit", function(){
+  $.mobile.ajaxEnabled = false;
+});
+</script>
         <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>';
 	if ($datepicker) echo '<script> 
 		//reset type=date inputs to text
@@ -118,7 +122,7 @@ height:auto;
 
 function success(position) {
 $('#geolocate').val(position.coords.latitude+','+position.coords.longitude);
-$.ajax({ url: \"common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
+$.ajax({ url: \"include/common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
 location.reload(true);
 }
 function error(msg) {
@@ -183,7 +187,7 @@ function include_footer()
 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; 
 s.parentNode.insertBefore(ga, s);
-  })();";
+  })();</script>";
          $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
   echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
     }
@@ -229,7 +233,7 @@ function timePlaceSettings($geolocate = false)
 }
 function trackEvent($category, $action, $label = "", $value = -1) {
   if (isAnalyticsOn()) {
-    echo "<script> _gaq.push(['_trackEvent', $category, $action".($label != "" ? ", $label" : "").($value != -1 ? ", $value" : "")."]);";
+    echo "<script> _gaq.push(['_trackEvent', $category, $action".($label != "" ? ", $label" : "").($value != -1 ? ", $value" : "")."]);</script>";
   }
 }
 ?>
