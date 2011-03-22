@@ -1,5 +1,5 @@
 <?php
-include ('include/common.inc.php');
+include ('../include/common.inc.php');
 $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
 $url = $APIurl . "/json/stop?stop_id=" . $stopid;
 $stop = json_decode(getPage($url));
