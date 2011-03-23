@@ -8,6 +8,7 @@ $debugOkay = Array(
 	"awsgtfs",
 	"awsotp",
 	"squallotp",
+	"vanilleotp",
 	"other"
 );
 if (isDebug("awsgtfs")) {
@@ -21,6 +22,9 @@ if (isDebug("awsotp") || php_uname('n') == "maxious.xen.prgmr.com") {
 }
 if (isDebug("squallotp")) {
 		$otpAPIurl = 'http://10.0.1.108:5080/opentripplanner-api-webapp/';
+}
+if (isDebug("vanilleotp")) {
+		$otpAPIurl = 'http://10.0.1.135:8080/opentripplanner-api-webapp/';
 }
 if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
 include_once ("common-geo.inc.php");

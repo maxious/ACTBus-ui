@@ -63,8 +63,8 @@ include ('../include/common.inc.php');
 // make sure to sleep(10);
 $boundingBoxes = Array(
 	"belconnen" => Array(
-		"startlat" => - 35.1828,
-		"startlon" => 149.0295,
+		"startlat" => - 35.1928,
+		"startlon" => 149.006,
 		"finishlat" => - 35.2630,
 		"finishlon" => 149.1045,
 	) ,
@@ -74,24 +74,24 @@ $boundingBoxes = Array(
 		"finishlat" => - 35.2955,
 		"finishlon" => 149.1559,
 	) ,
-	//"west duffy" => Array(
-	//	"startlat" => - 35.3252,
-	//	"startlon" => 149.0240,
-	//	"finishlat" => - 35.3997,
-	//	"finishlon" => 149.0676,
-	//) ,
-	//"central south" => Array(
-	//	"startlat" => - 35.3042,
-	//	"startlon" => 149.0762,
-	//	"finishlat" => - 35.3370,
-	//	"finishlon" => 149.1806,
-	//) ,
-	//"south" => Array(
-	//	"startlat" => - 35.3403,
-	//	"startlon" => 149.0714,
-	//	"finishlat" => - 35.4607,
-	//	"finishlon" => 149.1243,
-	//)
+	"west duffy" => Array(
+		"startlat" => - 35.3252,
+		"startlon" => 149.0240,
+		"finishlat" => - 35.3997,
+		"finishlon" => 149.0676,
+	) ,
+	"central south" => Array(
+		"startlat" => - 35.3042,
+		"startlon" => 149.0762,
+		"finishlat" => - 35.3370,
+		"finishlon" => 149.1806,
+	) ,
+	"south" => Array(
+		"startlat" => - 35.3403,
+		"startlon" => 149.0714,
+		"finishlat" => - 35.4607,
+		"finishlon" => 149.1243,
+	)
 );
 $latdeltasize = 0.01;
 $londeltasize = 0.01;
@@ -121,8 +121,7 @@ foreach ($boundingBoxes as $key => $boundingBox) {
 				if ($csv) echo "Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch);
 			}
 			else {
-				$tripplan = json_decode($page);
-				if (isset($tripplan->error)) var_dump($tripplan->error);
+				$tripplan = json_decode($page); 
 				$plans = Array();
 				if (is_array($tripplan->plan->itineraries->itinerary)) {
 					foreach ($tripplan->plan->itineraries->itinerary as $itineraryNumber => $itinerary) {
@@ -144,6 +143,10 @@ foreach ($boundingBoxes as $key => $boundingBox) {
 					else {
 						$plan .= processLeg(0, $plans[min(array_keys($plans)) ]->legs->leg);
 					}
+						if (isset($tripplan->error) && $tripplan->error->id == 404) {
+							$time = 999;
+							$plan = "Trip not possible without excessive walking from nearest bus stop";
+						}
 					$testRegions[] = Array(
 						"lat" => $i,
 						"lon" => $j,
@@ -151,7 +154,7 @@ foreach ($boundingBoxes as $key => $boundingBox) {
 						"latdeltasize" => $latdeltasize,
 						"londeltasize" => $londeltasize,
 						"regionname" => $key,
-						"plan" => $plan . "<br><a href='". htmlspecialchars($url)."'>original plan</a>"
+						"plan" => $plan . "<br/><a href='". htmlspecialchars($url)."'>original plan</a>"
 					);
 					$regionTimes[] = $time;
 				}
@@ -163,25 +166,25 @@ foreach ($boundingBoxes as $key => $boundingBox) {
 	}
 }
 if ($kml) {
-	$colorSteps = 18;
+	$colorSteps = 9;
 	//$minTime = min($regionTimes);
 	//$maxTime = max($regionTimes);
 	//$rangeTime = $maxTime - $minTime;
 	//$deltaTime = $rangeTime / $colorSteps;
-	$Gradients = Gradient("66FF00", "FF0000", $colorSteps);
+	$Gradients = Gradient(strrev("66FF00"), strrev("FF0000"), $colorSteps); // KML is BGR not RGB so strrev
 	foreach ($testRegions as $testRegion) {
 		//$band = (floor(($testRegion[time] - $minTime) / $deltaTime));
-		$band = (floor(($testRegion[time] / 10) *2));
+		$band = (floor($testRegion[time] / 10));
 		if ($band > $colorSteps) $band = $colorSteps;
 		echo "<Placemark>
   <name>" . $testRegion['regionname'] . " time {$testRegion['time']} band $band</name>
   <description> {$testRegion['plan']} </description>
     <Style>
         <PolyStyle>
-            <color>c7" . strrev($Gradients[$band]) . "</color>" . // 7f = 50% alpha, c7=78%, also KML is BGR not RGB
+            <color>c7" . $Gradients[$band] . "</color>" . // 7f = 50% alpha, c7=78%
 		"</PolyStyle>
         <LineStyle>
-            <color>c7" . strrev($Gradients[$band]) . "</color>" . "</LineStyle>
+            <color>c7" . $Gradients[$band] . "</color>" . "</LineStyle>
     </Style>
    <Polygon>
 <altitudeMode>relativeToGround</altitudeMode>
