@@ -7,6 +7,7 @@ $debugOkay = Array(
 	"phperror",
 	"awsgtfs",
 	"awsotp",
+	"squallotp",
 	"other"
 );
 if (isDebug("awsgtfs")) {
@@ -17,6 +18,9 @@ $googleMapsAPIkey = "ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRT
 $otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
 if (isDebug("awsotp") || php_uname('n') == "maxious.xen.prgmr.com") {
 	$otpAPIurl = 'http://bus-main.lambdacomplex.org:8080/opentripplanner-api-webapp/';
+}
+if (isDebug("squallotp")) {
+		$otpAPIurl = 'http://10.0.1.108:5080/opentripplanner-api-webapp/';
 }
 if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
 include_once ("common-geo.inc.php");

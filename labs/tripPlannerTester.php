@@ -33,7 +33,7 @@ var nearmap = new OpenLayers.Layer.OSM.NearMap("NearMap");
 	map.addLayers([osmtiles,tripplantest,nearmap]);
 
     var lonLat = new OpenLayers.LonLat(149.11, -35.28).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-    map.setCenter(lonLat, 13);
+    map.setCenter(lonLat, 11);
     map.addControl( new OpenLayers.Control.LayerSwitcher({'ascending':false}));
     map.addControl(new OpenLayers.Control.MousePosition(
     {
