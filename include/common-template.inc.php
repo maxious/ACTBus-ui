@@ -215,7 +215,7 @@ function timePlaceSettings($geolocate = false)
     		<div data-role="fieldcontain">
 		        <label for="time"> Time: </label>
 		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/>
-			<a href="#" name="currentTime" id="currentTime" onClick="var d = new Date();'. "$('#time').val(d.getHours() +':'+ d.getMinutes());".'">Current Time?</a>
+			<a href="#" name="currentTime" id="currentTime" onClick="var d = new Date();'. "$('#time').val(d.getHours() +':'+ (d.getMinutes().toString().length = 1 ? '0'+ d.getMinutes():  d.getMinutes()));".'">Current Time?</a>
 	        </div>
 		<div data-role="fieldcontain">
 		    <label for="service_period"> Service Period:  </label>

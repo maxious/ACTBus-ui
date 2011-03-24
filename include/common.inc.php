@@ -7,8 +7,8 @@ $debugOkay = Array(
 	"phperror",
 	"awsgtfs",
 	"awsotp",
-	"squallotp",
-	"vanilleotp",
+	//"squallotp",
+	//"vanilleotp",
 	"other"
 );
 if (isDebug("awsgtfs")) {
