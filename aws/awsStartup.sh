@@ -5,6 +5,7 @@
 #http://www.how2forge.org/installing-lighttpd-with-php5-and-mysql-support-on-fedora-12
 
 cp /root/aws.php /tmp/
+mkdir /var/www/lib/staticmaplite/cache 
 chcon -h system_u:object_r:httpd_sys_content_t /var/www
 chcon -R -h root:object_r:httpd_sys_content_t /var/www/*
 chcon -R -t httpd_sys_content_rw_t /var/www/lib/staticmaplite/cache

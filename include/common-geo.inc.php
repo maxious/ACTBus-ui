@@ -47,7 +47,7 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 	}
 	$output = "";
 	if ($collapsible) $output.= '<div data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
-	$output.= '<center><img src="' . curPageURL() . 'lib/staticmaplite/staticmap.php?center=' . $center . '&zoom=' . $zoom . '&size=' . $width . 'x' . $height . '&maptype=mapnik&markers=' . 
+	$output.= '<center><img src="' . curPageURL() . 'lib/staticmaplite/staticmap.php?center=' . $center . '&zoom=' . $zoom . '&size=' . $width . 'x' . $height . '&markers=' . 
 $markers . '" width=' . $width . ' height=' . $height . '></center>';
 	if ($collapsible) $output.= '</div>';
 	return $output;

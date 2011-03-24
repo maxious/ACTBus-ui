@@ -32,11 +32,9 @@ Class staticMapLite {
 
 	protected $tileSize = 256;
 	protected $tileSrcUrl = array(	'mapnik' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',
-									'osmarenderer' => 'http://c.tah.openstreetmap.org/Tiles/tile/{Z}/{X}/{Y}.png',
-									'cycle' => 'http://c.andy.sandbox.cloudmade.com/tiles/cycle/{Z}/{X}/{Y}.png'
-	);
+				      'cloudmade' => 'http://b.tile.cloudmade.com/daa03470bb8740298d4b10e3f03d63e6/1/256/{Z}/{X}/{Y}.png',);
 	
-	protected $tileDefaultSrc = 'mapnik';
+	protected $tileDefaultSrc = 'cloudmade';
 	protected $markerBaseDir = 'images/markers';
 	protected $osmLogo = 'images/osm_logo.png';
 
@@ -258,8 +256,10 @@ Class staticMapLite {
 		} else {
 			// no cache, make map, send headers and deliver png
 			$this->makeMap();
-			$this->sendHeader();	
-			return imagepng($this->image);		
+		//	$this->sendHeader();
+			// do some extra compression
+			imagetruecolortopalette($this->image, false, 256);
+			return imagepng($this->image, 9, PNG_ALL_FILTERS);		
 			
 		}
 	}
