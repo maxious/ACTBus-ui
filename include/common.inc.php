@@ -27,51 +27,14 @@ if (isDebug("vanilleotp")) {
 		$otpAPIurl = 'http://10.0.1.135:8080/opentripplanner-api-webapp/';
 }
 if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
+
 include_once ("common-geo.inc.php");
 include_once ("common-net.inc.php");
-include_once ("common-template.inc.php");
 include_once ("common-transit.inc.php");
-// you have to open the session to be able to modify or remove it
-session_start();
-if (isset($_REQUEST['service_period'])) {
-	$_SESSION['service_period'] = filter_var($_REQUEST['service_period'], FILTER_SANITIZE_STRING);
-}
-if (isset($_REQUEST['time'])) {
-	$_SESSION['time'] = filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING);
-}
-if (isset($_REQUEST['geolocate'])) {
-	$geocoded = false;
-	if (isset($_REQUEST['lat']) && isset($_REQUEST['lon'])) {
-		$_SESSION['lat'] = trim(filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
-		$_SESSION['lon'] = trim(filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
-	}
-	else {
-		$geolocate = filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL);
-		echo $_REQUEST['geolocate'];
-		if (startsWith($geolocate, "-")) {
-			$locateparts = explode(",", $geolocate);
-			$_SESSION['lat'] = $locateparts[0];
-			$_SESSION['lon'] = $locateparts[1];
-		}
-		else {
-			$contents = geocode($geolocate, true);
-			print_r($contents);
-			if (isset($contents[0]->centroid)) {
-				$geocoded = true;
-				$_SESSION['lat'] = $contents[0]->centroid->coordinates[0];
-				$_SESSION['lon'] = $contents[0]->centroid->coordinates[1];
-			}
-			else {
-				$_SESSION['lat'] = "";
-				$_SESSION['lon'] = "";
-			}
-		}
-	}
-	if ($_SESSION['lat'] != "" && isAnalyticsOn()) {
-		trackEvent("Geolocation","Updated Location", "Geocoded - ".($geocoded ? "Yes" : "No"));
-	}
-}
-debug(print_r($_SESSION, true) , "session");
+
+include_once ("common-session.inc.php");
+include_once ("common-template.inc.php");
+
 function isDebugServer()
 {
 	return $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" || !$_SERVER['SERVER_NAME'];
