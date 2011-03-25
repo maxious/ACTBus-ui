@@ -9,7 +9,7 @@ if ($_REQUEST['routeid'] && !$_REQUEST['tripid']) {
 	$url = $APIurl . "/json/routetrips?route_id=" . $routeid;
 	$routetrips = json_decode(getPage($url));
 	foreach ($routetrips as $trip) {
-		if ($trip[0] > midnight_seconds()) {
+		if ($trip[2] > midnight_seconds()) {
 			$tripid = $trip[1];
 			break;
 		}

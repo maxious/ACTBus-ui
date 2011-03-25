@@ -121,13 +121,13 @@ height:auto;
 		echo "<script>
 
 function success(position) {
-$('#error').val("Location now detected. Please wait for data to load.");
+$('#error').val('Location now detected. Please wait for data to load.');
 $('#geolocate').val(position.coords.latitude+','+position.coords.longitude);
 $.ajax({ url: \"include/common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
 location.reload(true);
 }
 function error(msg) {
-$('#error').val("Error: "+msg);
+$('#error').val('Error: '+msg);
 }
 
 function geolocate() {
@@ -169,7 +169,8 @@ $(document).ready(function ()
     document.title = "' . $pageTitle . '";
 });
 </script>
-	<div data-role="header"> 
+	<div data-role="header" data-position="inline">
+	<a href="'.$_SERVER["HTTP_REFERER"].'" data-icon="arrow-l" data-rel="back">Back</a> 
 		<h1>' . $pageTitle . '</h1>
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>

@@ -316,8 +316,19 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         except:
           print "Error for GetStartTime of trip #" + t.trip_id + sys.exc_info()[0]
         else:
-            result.append ( (starttime, t.trip_id) )
-    return sorted(result, key=lambda trip: trip[0])
+          cursor = t._schedule._connection.cursor()
+          cursor.execute(
+              'SELECT arrival_secs,departure_secs FROM stop_times WHERE '
+              'trip_id=? ORDER BY stop_sequence DESC LIMIT 1', (t.trip_id,))
+          (arrival_secs, departure_secs) = cursor.fetchone()
+          if arrival_secs != None:
+            endtime = arrival_secs
+          elif departure_secs != None:
+            endtime = departure_secs
+          else:
+            endtime =0
+          result.append ( (starttime, t.trip_id, endtime) )
+    return sorted(result, key=lambda trip: trip[2])
   
   def handle_json_GET_triprows(self, params):
     """Return a list of rows from the feed file that are related to this

@@ -5,7 +5,7 @@ $debugOkay = Array(
 	"session",
 	"json",
 	"phperror",
-	"awsgtfs",
+	//"awsgtfs",
 	"awsotp",
 	//"squallotp",
 	//"vanilleotp",
