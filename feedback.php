@@ -59,6 +59,8 @@ Please leave feedback about bugs/errors or general suggestions about improvement
   echo "\nUser host/IP: ".$_SERVER["HTTP_X_FORWARDED_FOR"]." ".$_SERVER["REMOTE_ADDR"]; 
   echo "\nServer host/IP: ".php_uname("n");
   echo "\nCurrent date/time: ". date("c");
+  echo "\nCurrent code revision: ".exec("git rev-parse --short HEAD");
+  echo "\nCurrent timetables version: ".@filemtime('cbrfeed.zip');
   echo "\nDump of session: ".print_r($_SESSION,true);
 ?>
 </textarea>

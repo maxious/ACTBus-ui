@@ -121,18 +121,19 @@ height:auto;
 		echo "<script>
 
 function success(position) {
+$('#error').val("Location now detected. Please wait for data to load.");
 $('#geolocate').val(position.coords.latitude+','+position.coords.longitude);
 $.ajax({ url: \"include/common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
 location.reload(true);
 }
 function error(msg) {
- console.log(msg);
+$('#error').val("Error: "+msg);
 }
 
 function geolocate() {
 if (navigator.geolocation) {
 var options = {
-      enableHighAccuracy: false,
+      enableHighAccuracy: true,
       timeout: 60000,
       maximumAge: 10000
 }
@@ -200,7 +201,7 @@ function timePlaceSettings($geolocate = false)
 		$geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
 	}
 	if ($geoerror) {
-		echo '<div class="error">Sorry, but your location could not currently be detected.
+		echo '<div id="error">Sorry, but your location could not currently be detected.
         Please allow location permission, wait for your location to be detected,
         or enter an address/co-ordinates in the box below.</div>';
 	}
