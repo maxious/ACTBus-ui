@@ -87,7 +87,7 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
         text-size: 0.2em;
     }
     .min-width-480px .viaPoints {
-        display: block;
+        display: inline;
     }
     #extrainfo {
     visibility: hidden;

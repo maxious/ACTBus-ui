@@ -32,8 +32,15 @@ if (isset($_REQUEST['stopids'])) {
 	$stopid = $stops[0][0];
 	$stopLinks.= "Individual stop pages: ";
 	foreach ($stops as $key => $sub_stop) {
-		$stopNames[$key] = $sub_stop[1] . ' Stop #' . ($key + 1);
-		$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop[0] . '&stopcode=' . $sub_stop[5] . '">' . $stopNames[$key] . '</a> ';
+	//	$stopNames[$key] = $sub_stop[1] . ' Stop #' . ($key + 1);
+        if (strpos($stop[1],
+                   "Station")) {
+		$stopNames[$key] = 'Platform ' . ($key + 1);
+		$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop[0] . '&stopcode=' . $sub_stop[5] . '">' . $sub_stop[1] . '</a> ';  
+        }         else {
+		$stopNames[$key] = '#' . ($key + 1);
+		$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop[0] . '&stopcode=' . $sub_stop[5] . '">' . $sub_stop[1] . ' Stop #' . ($key + 1) . '</a> ';
+        }
 		$stopPositions[$key] = Array(
 			$sub_stop[2],
 			$sub_stop[3]
@@ -66,6 +73,7 @@ else {
 }
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
+    sksort($allStopsTrips,0, $true);
 	$trips = $allStopsTrips;
 }
 else {
@@ -76,7 +84,7 @@ foreach ($trips as $row) {
 	echo '<li>';
 	echo '<h3><a href="trip.php?stopid=' . $stopid . '&tripid=' . $row[1][0] . '">' . $row[1][1];
         $viaPoints = viaPointNames($row[1][0], $stopid);
-        if ($viaPoints != "") echo '<div class="viaPoints">Via: ' . $viaPoints . '</div>';
+        if ($viaPoints != "") echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
 	if (sizeof($tripStopNumbers) > 0) {
             echo '<br><small>Boarding At: ';
             foreach ($tripStopNumbers[$row[1][0]] as $key) {
