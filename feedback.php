@@ -24,7 +24,10 @@ function sendEmail($topic, $message)
 		mail($address, $topic, $message);
 	}
 }
-
+if (isset($_REQUEST['feedback']) || isset($_REQUEST['newlocation'])){
+	sendEmail("bus.lambda feedback",print_r($_REQUEST,true));
+	echo "<center><h2>Thank you for your feedback!</h2></center>";
+} else {
 $stopid = "";
 $stopcode = "";
 $urlparts = explode("?",$_SERVER["HTTP_REFERER"]);
@@ -39,6 +42,7 @@ if (isset($urlparts[1])) {
 
 ?>
 <h3>Add/Move/Delete a Bus Stop Location</h3>
+<form action="feedback.php" method="post">
 StopID: <input type="text" name="stopid" value="<?php echo $stopid ?>"/><br>
 or StopCode:  <input type="text" name="stopcode" value="<?php echo $stopcode ?>"/><br>
 <small> if you click on feedback from a stop page, these will get filled in automatically. else describe the location/street of the stop in one of these boxes </small><br>
@@ -47,12 +51,13 @@ Suggested Stop Location (lat/long or words):  <input type="text" name="newlocati
 <small> if your device supports javascript, you can pick a location from the map above</small><br>
 
 <input type="submit" value="Submit!"/>
-
+</form>
 <h3>Bug Report/Feedback</h3>
 Please leave feedback about bugs/errors or general suggestions about improvements that could be made to the way the data is presented!
-<textarea id="feedback">
+<form action="feedback.php" method="post">
+<textarea name="feedback">
 </textarea>
-<textarea id="extrainfo">
+<textarea name="extrainfo" id="extrainfo">
 <?php
   echo "Referrer URL: ".$_SERVER["HTTP_REFERER"];
   echo "\nCurrent page URL: ".curPageURL();
@@ -61,10 +66,15 @@ Please leave feedback about bugs/errors or general suggestions about improvement
   echo "\nServer host/IP: ".php_uname("n");
   echo "\nCurrent date/time: ". date("c");
   echo "\nCurrent code revision: ".exec("git rev-parse --short HEAD");
-  echo "\nCurrent timetables version: ".@filemtime('cbrfeed.zip');
+  echo "\nCurrent timetables version: ".date("c",@filemtime('cbrfeed.zip'));
   echo "\nDump of session: ".print_r($_SESSION,true);
 ?>
 </textarea>
 
 <input type="submit" value="Submit!"/>
+</form>
+<?php
+}
+include_footer();
+?>
 
