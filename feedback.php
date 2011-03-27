@@ -55,6 +55,7 @@ Please leave feedback about bugs/errors or general suggestions about improvement
 <textarea id="extrainfo">
 <?php
   echo "Referrer URL: ".$_SERVER["HTTP_REFERER"];
+  echo "\nCurrent page URL: ".curPageURL();
   echo "\nUser Agent: ".$_SERVER["HTTP_USER_AGENT"];
   echo "\nUser host/IP: ".$_SERVER["HTTP_X_FORWARDED_FOR"]." ".$_SERVER["REMOTE_ADDR"]; 
   echo "\nServer host/IP: ".php_uname("n");
