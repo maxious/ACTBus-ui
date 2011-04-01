@@ -236,7 +236,7 @@ function timePlaceSettings($geolocate = false)
 }
 function trackEvent($category, $action, $label = "", $value = -1) {
   if (isAnalyticsOn()) {
-    echo "<script> _gaq.push(['_trackEvent', $category, $action".($label != "" ? ", $label" : "").($value != -1 ? ", $value" : "")."]);</script>";
+    echo "\n<script> _gaq.push(['_trackEvent', '$category', '$action'".($label != "" ? ", '$label'" : "").($value != -1 ? ", $value" : "")."]);</script>";
   }
 }
 ?>
