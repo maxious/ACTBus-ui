@@ -34,20 +34,20 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
         <meta name="google-site-verification" 
 content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
 	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
-	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery-mobile-1.0a3.css" />
+	if (isDebugServer()) echo '<link rel="stylesheet"  href="css/jquery.mobile-1.0a4.css" />
          <script type="text/javascript" src="js/jquery-1.5.js"></script>
 	 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 </script>
-        <script type="text/javascript" src="js/jquery-mobile-1.0a3.js"></script>';
-	else echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.0a4.js"></script>';
+	else echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.css" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 	 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 </script>
-        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>';
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.js"></script>';
 	if ($datepicker) echo '<script> 
 		//reset type=date inputs to text
 		$( document ).bind( "mobileinit", function(){
@@ -170,8 +170,9 @@ $(document).ready(function ()
 });
 </script>
 	<div data-role="header" data-position="inline">
-	<a href="'.$_SERVER["HTTP_REFERER"].'" data-icon="arrow-l" data-rel="back">Back</a> 
+	<a href="'.$_SERVER["HTTP_REFERER"].'" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1>' . $pageTitle . '</h1>
+		<a href="/index.php" data-icon="home" class="ui-btn-right">Home</a>
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';

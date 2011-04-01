@@ -60,7 +60,7 @@ else if ($_REQUEST['nearby'] || $_REQUEST['suburb']) {
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
 	sksort($routes, 1, true);
 	foreach ($routes as $row) {
-		echo '<li>' . $row[1] . ' <a href="trip.php?routeid=' . $row[0] . '">' . $row[2] . " (" . ucwords($row[4]) . ")</a></li>\n";
+		echo '<li><a href="trip.php?routeid=' . $row[0] . '"><h3>'. $row[1] . "</h3><p>". $row[2] . " (" . ucwords($row[4]) . ")</p></a></li>\n";
 	}
 }
 else if ($_REQUEST['bynumber'] || $_REQUEST['numberSeries']) {
@@ -91,7 +91,7 @@ else if ($_REQUEST['bynumber'] || $_REQUEST['numberSeries']) {
 		ksort($routeSeries);
 		ksort($seriesRange);
 		foreach ($routeSeries as $series => $routes) {
-			echo '<li><a href="' . curPageURL() . 'routeList.php?numberSeries=' . $series . '">';
+			echo '<li><a href="' . curPageURL() . '/routeList.php?numberSeries=' . $series . '">';
 			if ($series <= 9) echo $series;
 			else echo "{$seriesRange[$series]['min']}-{$seriesRange[$series]['max']}";
 			echo "</a></li>\n";
@@ -99,7 +99,7 @@ else if ($_REQUEST['bynumber'] || $_REQUEST['numberSeries']) {
 	}
 	else if ($_REQUEST['numberSeries']) {
 		foreach ($routeSeries[$_REQUEST['numberSeries']] as $row) {
-			echo '<li>' . $row[1] . ' <a href="trip.php?routeid=' . $row[0] . '">' . $row[2] . " (" . ucwords($row[3]) . ")</a></li>\n";
+			echo '<li> <a href="trip.php?routeid=' . $row[0] . '"><h3>' . $row[1] . "</h3><p>".  $row[2] . " (" . ucwords($row[3]) . ")</p></a></li>\n";
 		}
 	}
 }
@@ -115,12 +115,12 @@ else {
 	}
 	if ($_REQUEST['routeDestination']) {
 		foreach ($routeDestinations[urldecode($_REQUEST['routeDestination'])] as $row) {
-			echo '<li>' . $row[1] . ' <a href="trip.php?routeid=' . $row[0] . '">' . $row[2] . " (" . ucwords($row[3]) . ")</a></li>\n";
+			echo '<li><a href="trip.php?routeid=' . $row[0] . '"><h3>' . $row[1] . '</h3><p>'  . $row[2] . " (" . ucwords($row[3]) . ")</p></a></li>\n";
 		}
 	}
 	else {
 		foreach ($routeDestinations as $destination => $routes) {
-			echo '<li><a href="' . curPageURL() . 'routeList.php?routeDestination=' . urlencode($destination) . '">' . $destination . "... </a></li>\n";
+			echo '<li><a href="' . curPageURL() . '/routeList.php?routeDestination=' . urlencode($destination) . '">' . $destination . "... </a></li>\n";
 		}
 	}
 }

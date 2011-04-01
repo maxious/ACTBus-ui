@@ -82,7 +82,7 @@ else {
 }
 foreach ($trips as $row) {
 	echo '<li>';
-	echo '<h3><a href="trip.php?stopid=' . $stopid . '&tripid=' . $row[1][0] . '">' . $row[1][1];
+	echo '<a href="trip.php?stopid=' . $stopid . '&tripid=' . $row[1][0] . '"><h3>' . $row[1][1]."</h3><p>";
         $viaPoints = viaPointNames($row[1][0], $stopid);
         if ($viaPoints != "") echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
 	if (sizeof($tripStopNumbers) > 0) {
@@ -92,9 +92,9 @@ foreach ($trips as $row) {
             }
             echo '</small>';
         }
-	echo '</a></h3>';
+	echo '</p>';
 	echo '<p class="ui-li-aside"><strong>' . midnight_seconds_to_time($row[0]) . '</strong></p>';
-	echo '</li>';
+	echo '</a></li>';
 }
 if (sizeof($trips) == 0) echo "<li> <center>No trips in the near future.</center> </li>";
 echo '</ul></div>';
