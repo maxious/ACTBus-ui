@@ -22,6 +22,9 @@ You must provide a Google Maps API key.
 
 
 import BaseHTTPServer, sys, urlparse
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from SocketServer import ThreadingMixIn
+import threading
 import bisect
 from gtfsscheduleviewer.marey_graph import MareyGraph
 import gtfsscheduleviewer
@@ -57,34 +60,8 @@ class ResultEncoder(simplejson.JSONEncoder):
       return list(iterable)
     return simplejson.JSONEncoder.default(self, obj)
 
-# Code taken from
-# http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/425210/index_txt
-# An alternate approach is shown at
-# http://mail.python.org/pipermail/python-list/2003-July/212751.html
-# but it requires multiple threads. A sqlite object can only be used from one
-# thread.
-class StoppableHTTPServer(BaseHTTPServer.HTTPServer):
-  def server_bind(self):
-    BaseHTTPServer.HTTPServer.server_bind(self)
-    self.socket.settimeout(1)
-    self._run = True
-
-  def get_request(self):
-    while self._run:
-      try:
-        sock, addr = self.socket.accept()
-        sock.settimeout(None)
-        return (sock, addr)
-      except socket.timeout:
-        pass
-
-  def stop(self):
-    self._run = False
-
-  def serve(self):
-    while self._run:
-      self.handle_request()
-
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
 
 def StopToTuple(stop):
   """Return tuple as expected by javascript function addStopMarkerFromList"""
@@ -254,9 +231,11 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       parsed_params['time'] = int(round(float(parsed_params['time']),-2))
     paramkey = tuple(sorted(parsed_params.items()))
     if handler_name in self.cache and paramkey in self.cache[handler_name] :
-      print ("Cache hit for ",handler_name," params ",parsed_params)
+      print ("Cache hit for ",handler_name," params ",parsed_params, 
+		" thread ", threading.currentThread().getName())
     else:
-      print ("Cache miss for ",handler_name," params ",parsed_params)
+      print ("Cache miss for ",handler_name," params ",parsed_params, 
+               	" thread ", threading.currentThread().getName())
       result = handler(parsed_params)
       if not handler_name in self.cache:
         self.cache[handler_name] = {}
@@ -713,14 +692,13 @@ a file into the console may enter the filename.
   t0 = datetime.datetime.now()
   schedule.Load(options.feed_filename)
   print ("Loaded in", (datetime.datetime.now() - t0).seconds , "seconds")
-  server = StoppableHTTPServer(server_address=('', options.port),
+  server = ThreadedHTTPServer(server_address=('', options.port),
                                RequestHandlerClass=RequestHandlerClass)
   server.key = options.key
   server.schedule = schedule
   server.file_dir = options.file_dir
   server.host = options.host
-  server.feed_path = options.feed_filename
-  
+  server.feed_path = options.feed_filename  
 
 
   print ("To view, point your browser at http://localhost:%d/" %
