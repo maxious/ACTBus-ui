@@ -20,6 +20,7 @@ $stopPositions = Array();
 $stopNames = Array();
 $tripStopNumbers = Array();
 $allStopsTrips = Array();
+$fetchedTripSequences = Array();
 $stopLinks = "";
 if (isset($_REQUEST['stopids'])) {
 	$stopids = explode(",", filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
@@ -45,12 +46,25 @@ if (isset($_REQUEST['stopids'])) {
 			$sub_stop[2],
 			$sub_stop[3]
 		);
-		$url = $APIurl . "/json/stoptrips?stop=" . $sub_stop[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period();
-		$trips = json_decode(getPage($url));
+                
+                $url = $APIurl . "/json/stopalltrips?stop=" . $sub_stop[0];		$trips = json_decode(getPage($url));
+                $tripSequence = "";
 		foreach ($trips as $trip) {
-			if (!isset($allStopsTrips[$trip[1][0]])) $allStopsTrips[$trip[1][0]] = $trip;
-			$tripStopNumbers[$trip[1][0]][] = $key;
+                        $tripSequence .= "$trip[0],";
+			$tripStopNumbers[$trip[0]][] = $key;
 		}
+                
+                if (!in_array($tripSequence,$fetchedTripSequences)) {
+                    // only fetch new trip sequences
+                    $fetchedTripSequences[] = $tripSequence;
+                    $url = $APIurl . "/json/stoptrips?stop=" . $sub_stop[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period();
+                    $trips = json_decode(getPage($url));
+                    foreach ($trips as $trip) {
+                            if (!isset($allStopsTrips[$trip[1][0]])) $allStopsTrips[$trip[1][0]] = $trip;
+                    }
+                } else {
+                    echo "skipped sequence $tripSequence";
+                }
 	}
 }
 include_header($stop[1], "stop");

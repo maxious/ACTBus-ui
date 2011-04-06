@@ -23,8 +23,7 @@ You must provide a Google Maps API key.
 
 import BaseHTTPServer, sys, urlparse
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from SocketServer import ThreadingMixIn
-import threading
+from SocketServer import ForkingMixIn
 import bisect
 from gtfsscheduleviewer.marey_graph import MareyGraph
 import gtfsscheduleviewer
@@ -60,8 +59,8 @@ class ResultEncoder(simplejson.JSONEncoder):
       return list(iterable)
     return simplejson.JSONEncoder.default(self, obj)
 
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """Handle requests in a separate thread."""
+class ForkedHTTPServer(ForkingMixIn, HTTPServer):
+    """Handle requests in a separate forked process."""
 
 def StopToTuple(stop):
   """Return tuple as expected by javascript function addStopMarkerFromList"""
@@ -226,16 +225,14 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
   def handle_json_wrapper_GET(self, handler, parsed_params, handler_name):
     """Call handler and output the return value in JSON."""
     schedule = self.server.schedule
-    # round times to nearest 100 seconds
+    # round times to nearest 1000 seconds - up to 17 minutes out of date
     if "time" in parsed_params:
-      parsed_params['time'] = int(round(float(parsed_params['time']),-2))
+      parsed_params['time'] = int(round(float(parsed_params['time']),-3))
     paramkey = tuple(sorted(parsed_params.items()))
     if handler_name in self.cache and paramkey in self.cache[handler_name] :
-      print ("Cache hit for ",handler_name," params ",parsed_params, 
-		" thread ", threading.currentThread().getName())
+      print ("Cache hit for ",handler_name," params ",parsed_params)
     else:
-      print ("Cache miss for ",handler_name," params ",parsed_params, 
-               	" thread ", threading.currentThread().getName())
+      print ("Cache miss for ",handler_name," params ",parsed_params) 
       result = handler(parsed_params)
       if not handler_name in self.cache:
         self.cache[handler_name] = {}
@@ -475,6 +472,7 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       if s.stop_id.lower() == query:
         return StopToTuple(s)
     return []
+    
   def handle_json_GET_stoproutes(self, params):
     """Given a stop_id return all routes to visit the stop."""
     schedule = self.server.schedule
@@ -484,27 +482,32 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     result = {}
     for trip in trips:
       route = schedule.GetRoute(trip.route_id)
-      if not route.route_short_name+route.route_long_name+trip.service_id in result:
-        result[route.route_short_name+route.route_long_name+trip.service_id] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id, trip.service_id)
+      if service_period == None or trip.service_id == service_period:
+        if not route.route_short_name+route.route_long_name+trip.service_id in result:
+          result[route.route_short_name+route.route_long_name+trip.service_id] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id, trip.service_id)
     return result
     
   def handle_json_GET_stopalltrips(self, params):
-    """Given a stop_id return all trips to visit the stop."""
+    """Given a stop_id return all trips to visit the stop (without times)."""
     schedule = self.server.schedule
     stop = schedule.GetStop(params.get('stop', None))
     service_period = params.get('service_period', None)
-    time_trips = stop.GetStopTimeTrips(schedule)
+    trips = stop.GetTrips(schedule)
+    result = []
+    for trip in trips:
+      if service_period == None or trip.service_id == service_period:
+        result.append((trip.trip_id, trip.service_id))
+    return result
+  
+  def handle_json_GET_stopalltriptimes(self, params):
+    """Given a stop_id return all trips to visit the stop (with times).
+    DEPRECIATED?"""
+    schedule = self.server.schedule
+    stop = schedule.GetStop(params.get('stop', None))
+    service_period = params.get('service_period', None)
+    time_trips = stop.GetStopTrips(schedule)
     result = []
     for time, (trip, index), tp in time_trips:
-      headsign = None
-      # Find the most recent headsign from the StopTime objects
-      for stoptime in trip.GetStopTimes()[index::-1]:
-        if stoptime.stop_headsign:
-          headsign = stoptime.stop_headsign
-          break
-      # If stop_headsign isn't found, look for a trip_headsign
-      if not headsign:
-        headsign = trip.trip_headsign
       route = schedule.GetRoute(trip.route_id)
       trip_name = ''
       if route.route_short_name:
@@ -529,7 +532,6 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     service_period = params.get('service_period', None)
     time_range = int(params.get('time_range', 24*60*60))
     
-    
     filtered_time_trips = []
     for trip, index in stop._GetTripIndex(schedule):
       tripstarttime = trip.GetStartTime()
@@ -537,20 +539,10 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         time, stoptime, tp = trip.GetTimeInterpolatedStops()[index]
         if time > requested_time and time < (requested_time + time_range):
           bisect.insort(filtered_time_trips, (time, (trip, index), tp))
-    
     result = []
     for time, (trip, index), tp in filtered_time_trips:
       if len(result) > limit:
         break
-      headsign = None
-      # Find the most recent headsign from the StopTime objects
-      for stoptime in trip.GetStopTimes()[index::-1]:
-        if stoptime.stop_headsign:
-          headsign = stoptime.stop_headsign
-          break
-      # If stop_headsign isn't found, look for a trip_headsign
-      if not headsign:
-        headsign = trip.trip_headsign
       route = schedule.GetRoute(trip.route_id)
       trip_name = ''
       if route.route_short_name:
@@ -559,9 +551,6 @@ class ScheduleRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         if len(trip_name):
           trip_name += " - "
         trip_name += route.route_long_name
-        # comment out directions because we already have them in the long name
-      #if headsign:
-      #  trip_name += " (Direction: %s)" % headsign
       if service_period == None or trip.service_id == service_period:
         result.append((time, (trip.trip_id, trip_name, trip.service_id), tp))
     return result
@@ -692,7 +681,7 @@ a file into the console may enter the filename.
   t0 = datetime.datetime.now()
   schedule.Load(options.feed_filename)
   print ("Loaded in", (datetime.datetime.now() - t0).seconds , "seconds")
-  server = ThreadedHTTPServer(server_address=('', options.port),
+  server = ForkedHTTPServer(server_address=('', options.port),
                                RequestHandlerClass=RequestHandlerClass)
   server.key = options.key
   server.schedule = schedule
