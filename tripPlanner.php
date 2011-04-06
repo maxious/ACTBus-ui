@@ -62,6 +62,7 @@ function processItinerary($itineraryNumber, $itinerary)
 			echo '<li>';
 			processLeg($legNumber, $leg);
 			echo "</li>";
+                        flush(); @ob_flush();
 		}
 		echo "</ul>";
 	}

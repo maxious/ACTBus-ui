@@ -159,8 +159,7 @@ foreach ($boundingBoxes as $key => $boundingBox) {
 					$regionTimes[] = $time;
 				}
 			}
-			flush();
-			ob_flush();
+			flush(); @ob_flush();
 			curl_close($ch);
 		}
 	}

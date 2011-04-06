@@ -40,12 +40,14 @@ echo '<p><h2>Other Trips:</h2> ';
 foreach ($routetrips as $othertrip) {
 	echo '<a href="trip.php?tripid=' . $othertrip[1] . "&routeid=" . $routeid . '">' . midnight_seconds_to_time($othertrip[0]) . '</a> ';
 }
+flush(); @ob_flush();
 echo '</p><p><h2>Other directions/timing periods:</h2> ';
 $url = $APIurl . "/json/routesearch?routeshortname=" . rawurlencode($trips[1]->route_short_name);
 $json = json_decode(getPage($url));
 foreach ($json as $row) {
 	if ($row[0] != $routeid) echo '<a href="trip.php?routeid=' . $row[0] . '">' . $row[2] . ' (' . ucwords($row[3]) . ')</a> ';
 }
+flush(); @ob_flush();
 echo '  <ul data-role="listview"  data-inset="true">';
 echo '<li data-role="list-divider">' . midnight_seconds_to_time($times[0]) . '-' . midnight_seconds_to_time($times[sizeof($times) - 1]) . ' ' . $trips[1]->route_long_name . '</li>';
 $stopsGrouped = Array();
@@ -62,6 +64,7 @@ foreach ($stops as $key => $row) {
 			echo '<p class="ui-li-aside">' . midnight_seconds_to_time($stopsGrouped['startTime']) . ' to ' . midnight_seconds_to_time($stopsGrouped['endTime']) . '</p>';
 			echo bracketsMeanNewLine($row[1]);
 			echo '</a></li>';
+                        flush(); @ob_flush();
 			$stopsGrouped = Array();
 		}
 		else {
@@ -70,6 +73,7 @@ foreach ($stops as $key => $row) {
 			echo '<p class="ui-li-aside">' . midnight_seconds_to_time($times[$key]) . '</p>';
 			echo bracketsMeanNewLine($row[1]);
 			echo '</a></li>';
+                        flush(); @ob_flush();
 		}
 	}
 	else {

@@ -31,6 +31,7 @@ if (isset($_REQUEST['suburbs'])) {
 		foreach ($suburbs as $suburb) {
 			if (startsWith($suburb, $_REQUEST['firstLetter'])) {
 				echo '<li><a href="stopList.php?suburb=' . urlencode($suburb) . '">' . $suburb . '</a></li>';
+				flush(); @ob_flush();
 			}
 		}
 	}
@@ -101,6 +102,7 @@ else {
 					}
 					echo bracketsMeanNewLine(trim(preg_replace("/\(Platform.*/", "", $row[1])) . '(' . sizeof($stopsGrouped["stop_ids"]) . ' stops)');
 					echo "</a></li>\n";
+					flush(); @ob_flush();
 					$stopsGrouped = Array();
 				}
 				else {
@@ -113,6 +115,7 @@ else {
 					}
 					echo bracketsMeanNewLine($row[1]);
 					echo "</a></li>\n";
+					flush(); @ob_flush();
 				}
 			}
 			else {

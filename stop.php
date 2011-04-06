@@ -95,6 +95,7 @@ foreach ($trips as $row) {
 	echo '</p>';
 	echo '<p class="ui-li-aside"><strong>' . midnight_seconds_to_time($row[0]) . '</strong></p>';
 	echo '</a></li>';
+        flush(); @ob_flush();
 }
 if (sizeof($trips) == 0) echo "<li> <center>No trips in the near future.</center> </li>";
 echo '</ul></div>';
