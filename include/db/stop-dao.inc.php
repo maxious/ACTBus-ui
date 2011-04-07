@@ -1,9 +1,4 @@
 <?php
-/* def StopZoneToTuple(stop):
-  """Return tuple as expected by javascript function addStopMarkerFromList"""
-  return (stop.stop_id, stop.stop_name, float(stop.stop_lat),
-          float(stop.stop_lon), stop.location_type, stop.stop_code, stop.zone_id)
-*/
 function getStop($stopID)
 {
 global $conn;
@@ -70,22 +65,17 @@ global $conn;
 function getStopRoutes($stopID, $service_period)
 {
         if ($service_period == "") $service_period = service_period();
-	/*
-	 def handle_json_GET_stoproutes(self, params):
-	   """Given a stop_id return all routes to visit the stop."""
-	   schedule = self.server.schedule
-	   stop = schedule.GetStop(params.get('stop', None))
-	   service_period = params.get('service_period', None)
-	   trips = stop.GetTrips(schedule)
-	   result = {}
-	   for trip in trips:
-	     route = schedule.GetRoute(trip.route_id)
-	     if service_period == None or trip.service_id == service_period:
-	       if not route.route_short_name+route.route_long_name+trip.service_id in result:
-	         result[route.route_short_name+route.route_long_name+trip.service_id] = (route.route_id, route.route_short_name, route.route_long_name, trip.trip_id, trip.service_id)
-	   return result
-	*/
-}
+    global $conn;
+        $query = "SELECT service_id,trips.route_id,route_short_name,route_long_name
+FROM stop_times join trips on trips.trip_id =
+stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id = '$stopID' AND service_id='$service_period'";
+        debug($query,"database");
+	$result = pg_query($conn, $query);
+	if (!$result) {
+		databaseError(pg_result_error($result));
+		return Array();
+	}
+	return pg_fetch_all($result);}
 function getStopTrips($stopID, $service_period = "")
 {
     if ($service_period == "") $service_period = service_period();
