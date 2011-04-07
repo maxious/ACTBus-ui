@@ -35,39 +35,5 @@ function midnight_seconds_to_time($seconds)
 		return "";
 	}
 }
-function viaPoints($tripid, $stopid, $timingPointsOnly = false)
-{
-	global $APIurl;
-	$url = $APIurl . "/json/tripstoptimes?trip=" . $tripid;
-	$json = json_decode(getPage($url));
-	debug(print_r($json, true));
-	$stops = $json[0];
-	$times = $json[1];
-	$foundStop = false;
-	$viaPoints = Array();
-	foreach ($stops as $key => $row) {
-		if ($foundStop) {
-			if (!$timingPointsOnly || !startsWith($row[5], "Wj")) {
-				$viaPoints[] = Array(
-					"id" => $row[0],
-					"name" => $row[1],
-					"time" => $times[$key]
-				);
-			}
-		}
-		else {
-			if ($row[0] == $stopid) $foundStop = true;
-		}
-	}
-	return $viaPoints;
-}
-function viaPointNames($tripid, $stopid)
-{
-	$points = viaPoints($tripid, $stopid, true);
-	$pointNames = Array();
-	foreach ($points as $point) {
-		$pointNames[] = $point['name'];
-	}
-	return implode(", ", $pointNames);
-}
+
 ?>

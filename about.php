@@ -12,7 +12,7 @@ Source code for the <a
 href="https://github.com/maxious/ACTBus-data">transit 
 feed</a> and <a href="https://github.com/maxious/ACTBus-ui">this 
 site</a> available from github.<br />
-Uses jQuery Mobile, PHP, Ruby, Python, Google Transit Feed Specification tools, OpenTripPlanner, OpenLayers, OpenStreetMap, Cloudmade Geocoder and Tile Service<br />
+Uses jQuery Mobile, PHP, PostgreSQL, OpenTripPlanner, OpenLayers, OpenStreetMap, Cloudmade Geocoder and Tile Service<br />
 <br />
 Feedback encouraged; contact maxious@lambdacomplex.org<br />
     <br />

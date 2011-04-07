@@ -1,5 +1,5 @@
 #!/bin/bash
-#this script should be run from a fresh git checkout from http://maxious.lambdacomplex.org
+#this script should be run from a fresh git checkout from github
 #ami base must have yum install lighttpd-fastcgi, git, tomcat6 
 #screen php-cli php-gd tomcat6-webapps tomcat6-admin-webapps svn maven2
 #http://www.how2forge.org/installing-lighttpd-with-php5-and-mysql-support-on-fedora-12
@@ -12,10 +12,14 @@ chcon -R -t httpd_sys_content_rw_t /var/www/lib/staticmaplite/cache
 chmod -R 777 /var/www/lib/staticmaplite/cache 
 wget http://s3-ap-southeast-1.amazonaws.com/busresources/cbrfeed.zip \
 -O /var/www/cbrfeed.zip
-easy_install transitfeed
-easy_install simplejson
-screen -S viewsh -X quit
-screen -S viewsh -d -m /var/www/view.sh
+
+createdb transitdata
+#made with pg_dump transitdata | gzip -c >  transitdata.cbrfeed.sql.gz
+gunzip /var/www/transitdata.cbrfeed.sql.gz
+psql -d transitdata -f /var/www/transitdata.cbrfeed.sql
+createlang -d transitdata plpgsql
+psql -d transitdata -f /var/www/lib/postgis.sql
+php /var/www/updatedb.php
 
 wget http://s3-ap-southeast-1.amazonaws.com/busresources/Graph.obj \
 -O /tmp/Graph.obj
@@ -25,4 +29,3 @@ wget http://s3-ap-southeast-1.amazonaws.com/busresources/opentripplanner-webapp.
 wget http://s3-ap-southeast-1.amazonaws.com/busresources/opentripplanner-api-webapp.war \
 -O /usr/share/tomcat6/webapps/opentripplanner-api-webapp.war
 /etc/init.d/tomcat6 restart
-
