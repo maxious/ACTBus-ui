@@ -1,9 +1,10 @@
 <?php
+include('lib/common-db.inc.php');
 // Unzip cbrfeed.zip, import all csv files to database
 $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
 $tmpdir = "/tmp/cbrfeed/";
 mkdir($tmpdir);
-/*if (is_resource($zip)) {
+if (is_resource($zip)) {
 	while ($zip_entry = zip_read($zip)) {
 		$fp = fopen($tmpdir . zip_entry_name($zip_entry) , "w");
 		if (zip_entry_open($zip, $zip_entry, "r")) {
@@ -15,12 +16,7 @@ mkdir($tmpdir);
 		}
 	}
 	zip_close($zip);
-}*/
-$conn = pg_connect("dbname=transitdata user=postgres password=snmc");
-  if (!$conn) {
-      echo "An error occured.\n";
-      exit;
-  }
+}
                         
 foreach (scandir($tmpdir) as $file) {
 	if (!strpos($file, ".txt") === false) {
