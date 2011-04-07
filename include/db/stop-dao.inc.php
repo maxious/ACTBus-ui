@@ -14,7 +14,7 @@ global $conn;
 		databaseError(pg_result_error($result));
 		return Array();
 	}
-	return pg_fetch_all($result);    
+	return pg_fetch_assoc($result);    
 }
 function getStops($timingPointsOnly = false, $firstLetter = "")
 {
@@ -31,7 +31,7 @@ function getStops($timingPointsOnly = false, $firstLetter = "")
                 $query .= " Where ".$conditions[0]." ";
             }
         }
-        $query .= "order by stop_name;";
+        $query .= " order by stop_name;";
         debug($query,"database");
 	$result = pg_query($conn, $query);
 	if (!$result) {
@@ -67,8 +67,9 @@ global $conn;
 	}
 	return pg_fetch_all($result);
 }
-function stopRoutes($stopID, $service_period)
+function getStopRoutes($stopID, $service_period)
 {
+        if ($service_period == "") $service_period = service_period();
 	/*
 	 def handle_json_GET_stoproutes(self, params):
 	   """Given a stop_id return all routes to visit the stop."""
@@ -85,57 +86,46 @@ function stopRoutes($stopID, $service_period)
 	   return result
 	*/
 }
-function stopTrips($stopID)
+function getStopTrips($stopID, $service_period = "")
 {
-	/*
-	 def handle_json_GET_stopalltrips(self, params):
-	   """Given a stop_id return all trips to visit the stop (without times)."""
-	   schedule = self.server.schedule
-	   stop = schedule.GetStop(params.get('stop', None))
-	   service_period = params.get('service_period', None)
-	   trips = stop.GetTrips(schedule)
-	   result = []
-	   for trip in trips:
-	     if service_period == None or trip.service_id == service_period:
-	       result.append((trip.trip_id, trip.service_id))
-	   return result
-	*/
+    if ($service_period == "") $service_period = service_period();
+    global $conn;
+        $query = "SELECT stop_times.trip_id,arrival_time,stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
+FROM stop_times join trips on trips.trip_id =
+stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id = '$stopID' AND service_id='$service_period'";
+        debug($query,"database");
+	$result = pg_query($conn, $query);
+	if (!$result) {
+		databaseError(pg_result_error($result));
+		return Array();
+	}
+	return pg_fetch_all($result);
+
 }
-function stopTripsWithTimes($stopID, $time, $service_period)
+function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_range = "")
 {
-	/*
-	 def handle_json_GET_stoptrips(self, params):
-	   """Given a stop_id and time in seconds since midnight return the next
-	   trips to visit the stop."""
-	   schedule = self.server.schedule
-	   stop = schedule.GetStop(params.get('stop', None))
-	   requested_time = int(params.get('time', 0))
-	   limit = int(params.get('limit', 15))
-	   service_period = params.get('service_period', None)
-	   time_range = int(params.get('time_range', 24*60*60))
-	   
-	   filtered_time_trips = []
-	   for trip, index in stop._GetTripIndex(schedule):
-	     tripstarttime = trip.GetStartTime()
-	     if tripstarttime > requested_time and tripstarttime < (requested_time + time_range):
-	       time, stoptime, tp = trip.GetTimeInterpolatedStops()[index]
-	       if time > requested_time and time < (requested_time + time_range):
-	         bisect.insort(filtered_time_trips, (time, (trip, index), tp))
-	   result = []
-	   for time, (trip, index), tp in filtered_time_trips:
-	     if len(result) > limit:
-	       break
-	     route = schedule.GetRoute(trip.route_id)
-	     trip_name = ''
-	     if route.route_short_name:
-	       trip_name += route.route_short_name
-	     if route.route_long_name:
-	       if len(trip_name):
-	         trip_name += " - "
-	       trip_name += route.route_long_name
-	     if service_period == None or trip.service_id == service_period:
-	       result.append((time, (trip.trip_id, trip_name, trip.service_id), tp))
-	   return result
-	*/
+       if ($service_period == "") $service_period = service_period();
+       if ($time_range == "") $time_range = (24*60*60);
+       if ($time == "") $time = ($_SESSION['time'] ? $_SESSION['time'] : date("h:i:00"));
+       $trips = getStopTrips($stopID,$service_period);
+       $timedTrips = Array();
+	  foreach ($trips as $trip) {
+            if ($trip['arrival_time'] != "") {
+                if (strtotime($trip['arrival_time']) > strtotime($time) and strtotime($trip['arrival_time']) < (strtotime($time) + $time_range)){
+                $timedTrips[] = $trip;
+                }
+            } else {
+	     $tripstarttime = getTripStartTime($trip['trip_id']);
+	     if ($tripstarttime > $time and $tripstarttime < ($time + $time_range)) {
+	       $timedtrip = getTimeInterpolatedTripStop($trip['trip_id'], $trip['stop_sequence']);
+	       if (strtotime($timedtrip['arrival_time']) > strtotime($time) and $timedtrip['arrival_time'] < (strtotime($time) + strtotime($time_range))){
+	         $timedTrips[] = $timedTrip;
+	       }
+             }
+            }
+            if (sizeof($timedTrips) > limit) break;
+          }
+	   sktimesort($timedTrips,"arrival_time", true);
+           return $timedTrips;
 }
 ?>

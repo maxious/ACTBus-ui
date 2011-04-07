@@ -2,9 +2,8 @@
 include ('include/common.inc.php');
 $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
 $stopcode = filter_var($_REQUEST['stopcode'], FILTER_SANITIZE_STRING);
-$url = $APIurl . "/json/stop?stop_id=" . $stopid;
-$stop = json_decode(getPage($url));
-if ($stopcode != "" && $stop[5] != $stopcode) {
+if ($stopid) $stop = getStop($stopid);
+/*if ($stopcode != "" && $stop[5] != $stopcode) {
 	$url = $APIurl . "/json/stopcodesearch?q=" . $stopcode;
 	$stopsearch = json_decode(getPage($url));
 	$stopid = $stopsearch[0][0];
@@ -14,7 +13,7 @@ if ($stopcode != "" && $stop[5] != $stopcode) {
 if (!startsWith($stop[5], "Wj") && strpos($stop[1], "Platform") === false) {
 	// expand out to all platforms
 	
-}
+}*/
 $stops = Array();
 $stopPositions = Array();
 $stopNames = Array();
@@ -25,93 +24,92 @@ $stopLinks = "";
 if (isset($_REQUEST['stopids'])) {
 	$stopids = explode(",", filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
 	foreach ($stopids as $sub_stopid) {
-		$url = $APIurl . "/json/stop?stop_id=" . $sub_stopid;
-		$stop = json_decode(getPage($url));
-		$stops[] = $stop;
+		$stops[] = getStop($sub_stopid);
 	}
 	$stop = $stops[0];
-	$stopid = $stops[0][0];
+	$stopid = $stops[0]["stop_id"];
 	$stopLinks.= "Individual stop pages: ";
 	foreach ($stops as $key => $sub_stop) {
-	//	$stopNames[$key] = $sub_stop[1] . ' Stop #' . ($key + 1);
-        if (strpos($stop[1],
-                   "Station")) {
-		$stopNames[$key] = 'Platform ' . ($key + 1);
-		$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop[0] . '&stopcode=' . $sub_stop[5] . '">' . $sub_stop[1] . '</a> ';  
-        }         else {
-		$stopNames[$key] = '#' . ($key + 1);
-		$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop[0] . '&stopcode=' . $sub_stop[5] . '">' . $sub_stop[1] . ' Stop #' . ($key + 1) . '</a> ';
-        }
-		$stopPositions[$key] = Array(
-			$sub_stop[2],
-			$sub_stop[3]
-		);
-                
-                $url = $APIurl . "/json/stopalltrips?stop=" . $sub_stop[0];		$trips = json_decode(getPage($url));
-                $tripSequence = "";
-		foreach ($trips as $trip) {
-                        $tripSequence .= "$trip[0],";
-			$tripStopNumbers[$trip[0]][] = $key;
+		//	$stopNames[$key] = $sub_stop[1] . ' Stop #' . ($key + 1);
+		if (strpos($stop["stop_name"], "Station")) {
+			$stopNames[$key] = 'Platform ' . ($key + 1);
+			$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . '</a> ';
 		}
-                
-                if (!in_array($tripSequence,$fetchedTripSequences)) {
-                    // only fetch new trip sequences
-                    $fetchedTripSequences[] = $tripSequence;
-                    $url = $APIurl . "/json/stoptrips?stop=" . $sub_stop[0] . "&time=" . midnight_seconds() . "&service_period=" . service_period();
-                    $trips = json_decode(getPage($url));
-                    foreach ($trips as $trip) {
-                            if (!isset($allStopsTrips[$trip[1][0]])) $allStopsTrips[$trip[1][0]] = $trip;
-                    }
-                } else {
-                    echo "skipped sequence $tripSequence";
-                }
+		else {
+			$stopNames[$key] = '#' . ($key + 1);
+			$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . ' Stop #' . ($key + 1) . '</a> ';
+		}
+		$stopPositions[$key] = Array(
+			$sub_stop["stop_lat"],
+			$sub_stop["stop_lon"]
+		);
+		$trips = getStopTrips($sub_stop["stop_id"]);
+		$tripSequence = "";
+		foreach ($trips as $trip) {
+			$tripSequence.= "{$trip['trip_id']},";
+			$tripStopNumbers[$trip['trip_id']][] = $key;
+		}
+		if (!in_array($tripSequence, $fetchedTripSequences)) {
+			// only fetch new trip sequences
+			$fetchedTripSequences[] = $tripSequence;
+			$trips = getStopTripsWithTimes($sub_stop["stop_id"]);
+			foreach ($trips as $trip) {
+				if (!isset($allStopsTrips[$trip["trip_id"]])) $allStopsTrips[$trip["trip_id"]] = $trip;
+			}
+		}
+		else {
+			echo "skipped sequence $tripSequence";
+		}
 	}
 }
-include_header($stop[1], "stop");
+include_header($stop['stop_name'], "stop");
 timePlaceSettings();
 echo '<div data-role="content" class="ui-content" role="main">        <a name="maincontent" id="maincontent"></a>';
 echo $stopLinks;
 if (sizeof($stops) > 0) {
-    trackEvent("View Stops","View Combined Stops", $stop[1], $stop[0]);
-
+	trackEvent("View Stops", "View Combined Stops", $stop["stop_name"], $stop["stop_id"]);
 	echo '<p>' . staticmap($stopPositions) . '</p>';
 }
 else {
-        trackEvent("View Stops","View Single Stop", $stop[1], $stop[0]);
+	trackEvent("View Stops", "View Single Stop", $stop["stop_name"], $stop["stop_id"]);
 	echo '<p>' . staticmap(Array(
 		0 => Array(
-			$stop[2],
-			$stop[3]
+			$stop["stop_lat"],
+			$stop["stop_lon"]
 		)
 	)) . '</p>';
 }
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
-    sksort($allStopsTrips,0, $true);
+    sktimesort($allStopsTrips,"arrival_time", true);
 	$trips = $allStopsTrips;
 }
 else {
-	$url = $APIurl . "/json/stoptrips?stop=" . $stopid . "&time=" . midnight_seconds() . "&service_period=" . service_period();
-	$trips = json_decode(getPage($url));
+	$trips = getStopTripsWithTimes($stopid);
 }
-foreach ($trips as $row) {
-	echo '<li>';
-	echo '<a href="trip.php?stopid=' . $stopid . '&tripid=' . $row[1][0] . '"><h3>' . $row[1][1]."</h3><p>";
-        $viaPoints = viaPointNames($row[1][0], $stopid);
-        if ($viaPoints != "") echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
-	if (sizeof($tripStopNumbers) > 0) {
-            echo '<br><small>Boarding At: ';
-            foreach ($tripStopNumbers[$row[1][0]] as $key) {
-                echo $stopNames[$key] .' ';
-            }
-            echo '</small>';
-        }
-	echo '</p>';
-	echo '<p class="ui-li-aside"><strong>' . midnight_seconds_to_time($row[0]) . '</strong></p>';
-	echo '</a></li>';
-        flush(); @ob_flush();
+if (sizeof($trips) == 0) {
+	echo "<li> <center>No trips in the near future.</center> </li>";
 }
-if (sizeof($trips) == 0) echo "<li> <center>No trips in the near future.</center> </li>";
+else {
+	foreach ($trips as $trip) {
+		echo '<li>';
+		echo '<a href="trip.php?stopid=' . $stopid . '&tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " " . $trip['route_long_name'] . "</h3><p>";
+		$viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
+		if ($viaPoints != "") echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
+		if (sizeof($tripStopNumbers) > 0) {
+			echo '<br><small>Boarding At: ';
+			foreach ($tripStopNumbers[$trip['trip_id']] as $key) {
+				echo $stopNames[$key] . ' ';
+			}
+			echo '</small>';
+		}
+		echo '</p>';
+		echo '<p class="ui-li-aside"><strong>' . $trip['arrival_time'] . '</strong></p>';
+		echo '</a></li>';
+		flush();
+		@ob_flush();
+	}
+}
 echo '</ul></div>';
 include_footer();
 ?>

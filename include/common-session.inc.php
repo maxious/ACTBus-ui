@@ -9,7 +9,7 @@ if (isset($_REQUEST['time'])) {
 	$_SESSION['time'] = filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING);
 	sessionUpdated();
 }
-if (isset($_REQUEST['geolocate'])) {
+if (isset($_REQUEST['geolocate']) && $_REQUEST['geolocate'] != "Enter co-ordinates or address here") {
 	$geocoded = false;
 	if (isset($_REQUEST['lat']) && isset($_REQUEST['lon'])) {
 		$_SESSION['lat'] = trim(filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));

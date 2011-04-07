@@ -1,20 +1,15 @@
 <?php
 function getTrip($tripID) {
-    /* def handle_json_GET_triprows(self, params):
-    """Return a list of rows from the feed file that are related to this
-    trip."""
-    schedule = self.server.schedule
-    try:
-      trip = schedule.GetTrip(params.get('trip', None))
-    except KeyError:
-      # if a non-existent trip is searched for, the return nothing
-      return
-    route = schedule.GetRoute(trip.route_id)
-    trip_row = dict(trip.iteritems())
-    route_row = dict(route.iteritems())
-    return [['trips.txt', trip_row], ['routes.txt', route_row]]
-    */
-}
+    global $conn;
+        $query = "Select * from trips where trip_id = '$tripID' join routes on trips.route_id = routes.route_id LIMIT 1";
+        debug($query,"database");
+	$result = pg_query($conn, $query);
+	if (!$result) {
+		databaseError(pg_result_error($result));
+		return Array();
+	}
+	return pg_fetch_assoc($result);    
+   }
 function getTripShape() {
     /* def handle_json_GET_tripstoptimes(self, params):
     schedule = self.server.schedule
@@ -49,7 +44,7 @@ function getTripShape() {
         points.append((stop.stop_lat, stop.stop_lon))
     return points*/
 }
-function tripStopTimes($tripID, $after_time, $limit) {
+function getTimeInterpolatedTrip($tripID) {
     /*     rv = []
 
     stoptimes = self.GetStopTimes()
@@ -88,45 +83,33 @@ function tripStopTimes($tripID, $after_time, $limit) {
 
     return rv*/
 }
+function getTimeInterpolatedTripAtStop($trip_id, $stop_sequence) {
+   foreach(getTimeInterpolatedTrip($tripID) as $tripStop) {
+    if ($tripStop['stop_sequence'] == $stop_sequence) return $tripStop;
+   }
+   return Array();
+}
 
-function tripStartTime($tripID) {
+function getTripStartTime($tripID) {
     $query = 'SELECT arrival_secs,departure_secs FROM stop_times WHERE trip_id=? ORDER BY stop_sequence LIMIT 1';
     
 }
 
-function viaPoints($tripid, $stopid, $timingPointsOnly = false)
-{
-	global $APIurl;
-	$url = $APIurl . "/json/tripstoptimes?trip=" . $tripid;
-	$json = json_decode(getPage($url));
-	debug(print_r($json, true));
-	$stops = $json[0];
-	$times = $json[1];
-	$foundStop = false;
-	$viaPoints = Array();
-	foreach ($stops as $key => $row) {
-		if ($foundStop) {
-			if (!$timingPointsOnly || !startsWith($row[5], "Wj")) {
-				$viaPoints[] = Array(
-					"id" => $row[0],
-					"name" => $row[1],
-					"time" => $times[$key]
-				);
-			}
-		}
-		else {
-			if ($row[0] == $stopid) $foundStop = true;
-		}
-	}
-	return $viaPoints;
-}
 function viaPointNames($tripid, $stopid)
 {
-	$points = viaPoints($tripid, $stopid, true);
-	$pointNames = Array();
-	foreach ($points as $point) {
-		$pointNames[] = $point['name'];
+    global $conn;
+        $query = "SELECT stop_name
+FROM stop_times join stops on stops.stop_id = stop_times.stop_id
+WHERE stop_times.trip_id = '$tripid'
+AND stop_sequence > '$stop_sequence'
+AND substr(stop_code,1,2) != 'Wj' ORDER BY stop_sequence";
+        debug($query,"database");
+	$result = pg_query($conn, $query);
+	if (!$result) {
+		databaseError(pg_result_error($result));
+		return Array();
 	}
-	return implode(", ", $pointNames);
+	$pointNames = pg_fetch_all($result);
+	return r_implode(", ", $pointNames);
 }
 ?>
