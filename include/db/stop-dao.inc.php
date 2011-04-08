@@ -35,13 +35,14 @@ function getStops($timingPointsOnly = false, $firstLetter = "")
 	}
 	return pg_fetch_all($result);
 }
-function getNearbyStops($lat, $lng, $limit, $distance = 1000)
+function getNearbyStops($lat, $lng, $limit = "", $distance = 1000)
 {
    if ($lat == null || $lng == null) return Array();
+   if ($limit != "") $limit = " LIMIT $limit "; 
    global $conn;
         $query = "Select *, ST_Distance(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), FALSE) as distance
         from stops WHERE ST_DWithin(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), $distance, FALSE)
-        order by distance;";
+        order by distance $limit;";
         debug($query,"database");
 	$result = pg_query($conn, $query);
 	if (!$result) {
@@ -75,7 +76,9 @@ stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id
 		databaseError(pg_result_error($result));
 		return Array();
 	}
-	return pg_fetch_all($result);}
+	return pg_fetch_all($result);
+        }
+        
 function getStopTrips($stopID, $service_period = "")
 {
     if ($service_period == "") $service_period = service_period();

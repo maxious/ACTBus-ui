@@ -48,14 +48,16 @@ else {
 	}
 	else if ($_REQUEST['nearby']) {
 		$listType = 'nearby=yes';
-		$stops = getNearbyStops($_SESSION['lat'],$_SESSION['lon'],15);
 		include_header("Nearby Stops", "stopList", true, true);
+		trackEvent("Stop Lists","Stops Nearby", $_SESSION['lat'].",".$_SESSION['lon']);
 		navbar();
 		timePlaceSettings(true);
 		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
 			include_footer();
 			die();
 		}
+		
+		$stops = getNearbyStops($_SESSION['lat'],$_SESSION['lon'],15);
 	}
 	else if ($_REQUEST['suburb']) {
 		$suburb = filter_var($_REQUEST['suburb'], FILTER_SANITIZE_STRING);
