@@ -94,8 +94,8 @@ else {
 	foreach ($trips as $trip) {
 		echo '<li>';
 		echo '<a href="trip.php?stopid=' . $stopid . '&tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " " . $trip['route_long_name'] . "</h3><p>";
-		$viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
-		if ($viaPoints != "") echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
+		//$viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
+		//if ($viaPoints != "") echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
 		if (sizeof($tripStopNumbers) > 0) {
 			echo '<br><small>Boarding At: ';
 			foreach ($tripStopNumbers[$trip['trip_id']] as $key) {

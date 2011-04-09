@@ -70,6 +70,7 @@ function distance($lat1, $lng1, $lat2, $lng2, $roundLargeValues = false)
 	  else return round($km,2)."k";
 	} else return floor($km * 1000);
 }
+
 function decodePolylineToArray($encoded)
 {
 	// source: http://latlongeeks.com/forum/viewtopic.php?f=4&t=5

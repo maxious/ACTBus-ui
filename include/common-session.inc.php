@@ -17,7 +17,6 @@ if (isset($_REQUEST['geolocate']) && $_REQUEST['geolocate'] != "Enter co-ordinat
 	}
 	else {
 		$geolocate = filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL);
-		echo $_REQUEST['geolocate'];
 		if (startsWith($geolocate, "-")) {
 			$locateparts = explode(",", $geolocate);
 			$_SESSION['lat'] = $locateparts[0];
