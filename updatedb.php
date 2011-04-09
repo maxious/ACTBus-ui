@@ -1,9 +1,11 @@
 <?php
-include('lib/common-db.inc.php');
+include('include/common-db.inc.php');
 // Unzip cbrfeed.zip, import all csv files to database
+$unzip = true;
 $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
 $tmpdir = "/tmp/cbrfeed/";
 mkdir($tmpdir);
+if ($unzip) {
 if (is_resource($zip)) {
 	while ($zip_entry = zip_read($zip)) {
 		$fp = fopen($tmpdir . zip_entry_name($zip_entry) , "w");
@@ -16,6 +18,7 @@ if (is_resource($zip)) {
 		}
 	}
 	zip_close($zip);
+}
 }
                         
 foreach (scandir($tmpdir) as $file) {

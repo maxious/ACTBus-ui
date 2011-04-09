@@ -2,7 +2,10 @@
 function getTrip($tripID)
 {
 	global $conn;
-	$query = "Select * from trips where trip_id = '$tripID' join routes on trips.route_id = routes.route_id LIMIT 1";
+	$query = "Select * from trips
+	join routes on trips.route_id = routes.route_id
+	where trip_id = '$tripID'
+	LIMIT 1";
 	debug($query, "database");
 	$result = pg_query($conn, $query);
 	if (!$result) {
@@ -49,7 +52,7 @@ function getTripShape()
 function getTimeInterpolatedTrip($tripID)
 {
 	global $conn;
-	$query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_lat,stop_lon,
+	$query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
 	stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
@@ -129,14 +132,14 @@ function getTripStartTime($tripID)
 	$r = pg_fetch_assoc($result);
 	return $r['arrival_time'];
 }
-function viaPointNames($tripid, $stopid)
+function viaPointNames($tripid, $stop_sequence = "")
 {
 	global $conn;
 	$query = "SELECT stop_name
 FROM stop_times join stops on stops.stop_id = stop_times.stop_id
 WHERE stop_times.trip_id = '$tripid'
-AND stop_sequence > '$stop_sequence'
-AND substr(stop_code,1,2) != 'Wj' ORDER BY stop_sequence";
+".($stop_sequence != "" ? "AND stop_sequence > '$stop_sequence'" : "").
+"AND substr(stop_code,1,2) != 'Wj' ORDER BY stop_sequence";
 	debug($query, "database");
 	$result = pg_query($conn, $query);
 	if (!$result) {

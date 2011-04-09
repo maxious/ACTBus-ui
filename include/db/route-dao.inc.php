@@ -40,6 +40,7 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where rout
 }
 
 function getRouteNextTrip($routeID) {
+    global $conn;
     $query = "select * from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id where
 arrival_time > CURRENT_TIME and routes.route_id = '$routeID' order by
@@ -52,7 +53,19 @@ arrival_time limit 1";
 	}
 	return pg_fetch_assoc($result);       
   }
-
+function getRouteTrips($routeID) {
+        global $conn;
+    $query = "select * from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = '$routeID' order by
+arrival_time ";
+        debug($query,"database");
+	$result = pg_query($conn, $query);
+	if (!$result) {
+		databaseError(pg_result_error($result));
+		return Array();
+	}
+	return pg_fetch_all($result);       
+  }
 function getRoutesByDestination($destination = "", $service_period = "") {
     global $conn;
          if ($service_period == "") $service_period = service_period();
