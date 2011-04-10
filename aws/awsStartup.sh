@@ -22,7 +22,7 @@ gunzip /var/www/transitdata.cbrfeed.sql.gz
 psql -d transitdata -f /var/www/transitdata.cbrfeed.sql
 #createuser transitdata -SDRP
 #password transitdata
-#psql -c \"GRANT SELECT ON TABLE agency,calendar,calendar_dates,routes,stop_times,stops,trips TO transitdata;\"
+#psql -d transitdata -c \"GRANT SELECT ON TABLE agency,calendar,calendar_dates,routes,stop_times,stops,trips TO transitdata;\"
 php /var/www/updatedb.php
 
 wget http://s3-ap-southeast-1.amazonaws.com/busresources/Graph.obj \
