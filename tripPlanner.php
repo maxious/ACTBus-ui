@@ -131,7 +131,7 @@ if ($_REQUEST['time']) {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			"Accept: application/json"
 		));
-		curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 		$page = curl_exec($ch);
 		if (curl_errno($ch)) {
 			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) .(isDebug() ? $url : ""));

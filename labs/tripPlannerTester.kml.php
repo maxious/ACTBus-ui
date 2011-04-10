@@ -10,6 +10,50 @@ function interpolate($pBegin, $pEnd, $pStep, $pMax)
 		return (($pBegin - $pEnd) * (1 - ($pStep / $pMax))) + $pEnd;
 	}
 }
+require ("../lib/rolling-curl/RollingCurl.php");
+function processResult_cb($response, $info, $request)
+{
+	global $testRegions, $regionTimes,$csv,$kml, $latdeltasize,$londeltasize;
+	$md = $request->metadata;
+	$tripplan = json_decode($response);
+	$plans = Array();
+	//var_dump(Array($info, $request));
+	if (is_array($tripplan->plan->itineraries->itinerary)) {
+		foreach ($tripplan->plan->itineraries->itinerary as $itineraryNumber => $itinerary) {
+			$plans[floor($itinerary->duration / 60000) ] = $itinerary;
+		}
+	}
+	else {
+		$plans[floor($tripplan->plan->itineraries->itinerary->duration / 60000) ] = $tripplan->plan->itineraries->itinerary;
+	}
+	if ($csv) echo "{$md['i']},{$md['j']}," . min(array_keys($plans)) . ",$latdeltasize, $londeltasize,{$md['key']}\n";
+	if ($kml) {
+		$time = min(array_keys($plans));
+		$plan = "";
+		if (is_array($plans[min(array_keys($plans)) ]->legs->leg)) {
+			foreach ($plans[min(array_keys($plans)) ]->legs->leg as $legNumber => $leg) {
+				$plan.= processLeg($legNumber, $leg) . ",";
+			}
+		}
+		else {
+			$plan.= processLeg(0, $plans[min(array_keys($plans)) ]->legs->leg);
+		}
+		if (isset($tripplan->error) && $tripplan->error->id == 404) {
+			$time = 999;
+			$plan = "Trip not possible without excessive walking from nearest bus stop";
+		}
+		$testRegions[] = Array(
+			"lat" => $md['i'],
+			"lon" => $md['j'],
+			"time" => $time,
+			"latdeltasize" => $latdeltasize,
+			"londeltasize" => $londeltasize,
+			"regionname" => $md['key'],
+			"plan" => $plan . "<br/><a href='" . htmlspecialchars($url) . "'>original plan</a>"
+		);
+		$regionTimes[] = $time;
+	}
+}
 function Gradient($HexFrom, $HexTo, $ColorSteps)
 {
 	$theColorBegin = hexdec($HexFrom);
@@ -49,18 +93,17 @@ function processLeg($legNumber, $leg)
 		//}
 		//$walkingstep.= floor($step->distance) . "m";
 		//return $walkingstep;
+		
 	}
 }
 $csv = false;
 $kml = true;
 if ($kml) {
-	//header('Content-Type: application/vnd.google-earth.kml+xml');
+	header('Content-Type: application/vnd.google-earth.kml+xml');
 	echo '<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2"><Document>';
 }
 include ('../include/common.inc.php');
-//Test code to grab transit times
-// make sure to sleep(10);
 $boundingBoxes = Array(
 	"belconnen" => Array(
 		"startlat" => - 35.1928,
@@ -105,72 +148,29 @@ $testRegions = Array();
 $useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1";
 if ($csv) echo "<pre>";
 if ($csv) echo "lat,lon,time,latdeltasize, londeltasize, region key name\n";
+$rc = new RollingCurl("processResult_cb");
+$rc->window_size = 3;
 foreach ($boundingBoxes as $key => $boundingBox) {
 	for ($i = $boundingBox['startlat']; $i >= $boundingBox['finishlat']; $i-= $latdeltasize) {
 		for ($j = $boundingBox['startlon']; $j <= $boundingBox['finishlon']; $j+= $londeltasize) {
 			$url = $otpAPIurl . "ws/plan?date=" . urlencode($startDate) . "&time=" . urlencode($startTime) . "&mode=TRANSIT%2CWALK&optimize=QUICK&maxWalkDistance=440&wheelchair=false&toPlace=" . $i . "," . $j . "&fromPlace=$fromPlace";
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_HEADER, 0);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			$request = new RollingCurlRequest($url);
+			$request->headers = Array(
 				"Accept: application/json"
-			));
-			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-			$page = curl_exec($ch);
-			if (curl_errno($ch)) {
-				if ($csv) echo "Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch);
-			}
-			else {
-				$tripplan = json_decode($page); 
-				$plans = Array();
-				if (is_array($tripplan->plan->itineraries->itinerary)) {
-					foreach ($tripplan->plan->itineraries->itinerary as $itineraryNumber => $itinerary) {
-						$plans[floor($itinerary->duration / 60000) ] = $itinerary;
-					}
-				}
-				else {
-					$plans[floor($tripplan->plan->itineraries->itinerary->duration / 60000) ] = $tripplan->plan->itineraries->itinerary;
-				}
-				if ($csv) echo "$i,$j," . min(array_keys($plans)) . ",$latdeltasize, $londeltasize,$key\n";
-				if ($kml) {
-					$time = min(array_keys($plans));
-					$plan = "";
-					if (is_array($plans[min(array_keys($plans)) ]->legs->leg)) {
-						foreach ($plans[min(array_keys($plans)) ]->legs->leg as $legNumber => $leg) {
-							$plan .= processLeg($legNumber, $leg).",";
-						}
-					}
-					else {
-						$plan .= processLeg(0, $plans[min(array_keys($plans)) ]->legs->leg);
-					}
-						if (isset($tripplan->error) && $tripplan->error->id == 404) {
-							$time = 999;
-							$plan = "Trip not possible without excessive walking from nearest bus stop";
-						}
-					$testRegions[] = Array(
-						"lat" => $i,
-						"lon" => $j,
-						"time" => $time,
-						"latdeltasize" => $latdeltasize,
-						"londeltasize" => $londeltasize,
-						"regionname" => $key,
-						"plan" => $plan . "<br/><a href='". htmlspecialchars($url)."'>original plan</a>"
-					);
-					$regionTimes[] = $time;
-				}
-			}
-			flush(); @ob_flush();
-			curl_close($ch);
+			);
+			$request->metadata = Array( "i" => $i, "j" => $j, "key" => $key);
+			$rc->add($request);
 		}
 	}
 }
+$rc->execute();
 if ($kml) {
 	$colorSteps = 9;
 	//$minTime = min($regionTimes);
 	//$maxTime = max($regionTimes);
 	//$rangeTime = $maxTime - $minTime;
 	//$deltaTime = $rangeTime / $colorSteps;
-	$Gradients = Gradient(strrev("66FF00"), strrev("FF0000"), $colorSteps); // KML is BGR not RGB so strrev
+	$Gradients = Gradient(strrev("66FF00") , strrev("FF0000") , $colorSteps); // KML is BGR not RGB so strrev
 	foreach ($testRegions as $testRegion) {
 		//$band = (floor(($testRegion[time] - $minTime) / $deltaTime));
 		$band = (floor($testRegion[time] / 10));
