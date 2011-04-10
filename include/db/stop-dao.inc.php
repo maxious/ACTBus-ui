@@ -115,7 +115,7 @@ ORDER BY arrival_time";
 	}
 	return pg_fetch_all($result);
 }
-function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_range = "")
+function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_range = "", $limit = "")
 {
 	if ($service_period == "") $service_period = service_period();
 	if ($time_range == "") $time_range = (24 * 60 * 60);
@@ -123,7 +123,8 @@ function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_
 	if ($limit == "") $limit = 10;
 	$trips = getStopTrips($stopID, $service_period, $time);
 	$timedTrips = Array();
-	foreach ($trips as $trip) {
+	if ($trips && sizeof($trips) > 0) {
+            foreach ($trips as $trip) {
 		if ($trip['arrival_time'] != "") {
 			if (strtotime($trip['arrival_time']) > strtotime($time) and strtotime($trip['arrival_time']) < (strtotime($time) + $time_range)) {
 				$timedTrips[] = $trip;
@@ -138,6 +139,7 @@ function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_
 		if (sizeof($timedTrips) > $limit) break;
 	}
 	sktimesort($timedTrips, "arrival_time", true);
+        }
 	return $timedTrips;
 }
 ?>
