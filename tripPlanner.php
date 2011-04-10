@@ -1,8 +1,8 @@
 <?php
 include ('include/common.inc.php');
 include_header("Trip Planner", "tripPlanner", true, true, true);
-$from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZE_STRING) : "Brigalow");
-$to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "Barry");
+$from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZE_STRING) : "");
+$to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "");
 $date = (isset($_REQUEST['date']) ? filter_var($_REQUEST['date'], FILTER_SANITIZE_STRING) : date("m/d/Y"));
 $time = (isset($_REQUEST['time']) ? filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING) : date("H:i"));
 function formatTime($timeString) {
@@ -125,7 +125,8 @@ if ($_REQUEST['time']) {
 	}
 	else {
 		$url = $otpAPIurl . "ws/plan?date=" . urlencode($_REQUEST['date']) . "&time=" . urlencode($_REQUEST['time']) . "&mode=TRANSIT%2CWALK&optimize=QUICK&maxWalkDistance=840&wheelchair=false&toPlace=$toPlace&fromPlace=$fromPlace&intermediatePlaces=";
-		$ch = curl_init($url);
+		debug($url);
+                $ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -133,15 +134,15 @@ if ($_REQUEST['time']) {
 		));
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 		$page = curl_exec($ch);
-		if (curl_errno($ch)) {
-			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) .(isDebug() ? $url : ""));
+		if (curl_errno($ch) || curl_getinfo($ch, CURLINFO_HTTP_CODE) != 200) {
+			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) . " ". curl_getinfo($ch, CURLINFO_HTTP_CODE) .(isDebug() ? "<br>".$url : ""));
                         trackEvent("Trip Planner","Trip Planner Failed", $url);
                 }
 		else {
                   	trackEvent("Trip Planner","Plan Trip From", $from);
                         trackEvent("Trip Planner","Plan Trip To", $to);
 			$tripplan = json_decode($page);
-			debug(print_r($triplan, true));
+			debug(print_r($tripplan, true));
 			echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";
 			echo "<h1> At: ".formatTime($tripplan->plan->date)." </h1>";
 			if (is_array($tripplan->plan->itineraries->itinerary)) {
