@@ -78,6 +78,10 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
         background-image: url(css/images/113-navigation.png);
         background-position: 1px 0;
      }
+          .ui-icon-beaker {
+        background-image: url(css/images/91-beaker-2.png);
+        background-position: 1px 0;
+     }
     #footer {
         text-size: 0.75em;
         text-align: center;
@@ -169,12 +173,6 @@ $('#here').show();
  ';
 	if ($opendiv) {
 		echo '<div data-role="page"> 
- <script>
-$(document).ready(function ()
-{
-    document.title = "' . $pageTitle . '";
-});
-</script>
 	<div data-role="header" data-position="inline">
 	<a href="' . $_SERVER["HTTP_REFERER"] . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1>' . $pageTitle . '</h1>

@@ -74,7 +74,7 @@ if (!isset($return['error'])) {
 }
 
 if (!isset($return['error'])) {
-	include_once ('simple_html_dom.php');
+	include_once ('lib/simple_html_dom.php');
 	$page = str_get_html($pageHTML);
 	$pageAlerts = $page->find(".smartCardAlert");
 	if (sizeof($pageAlerts) > 0) {
