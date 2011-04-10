@@ -1,9 +1,13 @@
 <?php
-  if (isDebugServer()) $conn = pg_connect("dbname=transitdata user=postgres password=snmc");
-  if (php_uname('n') == "actbus-www") $conn = pg_connect("dbname=transitdata user=transitdata password=transitdata host=db.actbus.dotcloud.com port=2242");
+  if (php_uname('n') == "actbus-www") {
+    $conn = pg_connect("dbname=transitdata user=transitdata password=transitdata host=db.actbus.dotcloud.com port=2242");
+  } else if (isDebugServer()) {
+    $conn = pg_connect("dbname=transitdata user=postgres password=snmc");
+  } else {
+    $conn = pg_connect("dbname=transitdata user=transitdata password=transitdata ");
+  }
   if (!$conn) {
-      echo "An error occured.\n";
-      exit;
+      die("A database error occurred.\n");
   }
   
   function databaseError($errMsg) {
