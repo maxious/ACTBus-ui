@@ -40,10 +40,10 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where rout
 }
 
 function getRouteNextTrip($routeID) {
-    global $conn;
+     global $conn;
     $query = "select * from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id where
-arrival_time > CURRENT_TIME and routes.route_id = '$routeID' order by
+arrival_time > '".current_time()."' and routes.route_id = '$routeID' order by
 arrival_time limit 1";
         debug($query,"database");
 	$result = pg_query($conn, $query);
@@ -53,6 +53,18 @@ arrival_time limit 1";
 	}
 	return pg_fetch_assoc($result);       
   }
+  
+  function getTimeInterpolatedRouteAtStop($routeID, $stop_id)
+{
+    $nextTrip = getRouteNextTrip($routeID);
+    if ($nextTrip['trip_id']){
+    	foreach (getTimeInterpolatedTrip($nextTrip['trip_id']) as $tripStop) {
+		if ($tripStop['stop_id'] == $stop_id) return $tripStop;
+	}
+    }
+	return Array();
+}
+  
 function getRouteTrips($routeID) {
         global $conn;
     $query = "select * from routes join trips on trips.route_id = routes.route_id
@@ -112,7 +124,7 @@ function getRoutesNearby($lat, $lng, $limit = "", $distance = 500) {
                  if ($service_period == "") $service_period = service_period();
                   if ($limit != "") $limit = " LIMIT $limit "; 
     global $conn;
-        $query = "SELECT service_id,trips.route_id,route_short_name,route_long_name,
+        $query = "SELECT service_id,trips.route_id,route_short_name,route_long_name,min(stops.stop_id) as stop_id,
         min(ST_Distance(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), FALSE)) as distance
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id

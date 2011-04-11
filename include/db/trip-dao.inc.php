@@ -109,10 +109,11 @@ WHERE trips.trip_id = '$tripID' ORDER BY stop_sequence";
 	}
 	return $rv;
 }
-function getTimeInterpolatedTripAtStop($tripID, $stop_sequence)
+function getTimeInterpolatedTripAtStop($tripID, $stop_sequence, $stop_id = "")
 {
     	foreach (getTimeInterpolatedTrip($tripID) as $tripStop) {
 		if ($tripStop['stop_sequence'] == $stop_sequence) return $tripStop;
+		if ($tripStop['stop_id'] == $stop_id) return $tripStop;
 	}
 	return Array();
 }

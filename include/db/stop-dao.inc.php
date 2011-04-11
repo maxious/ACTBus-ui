@@ -119,7 +119,7 @@ function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_
 {
 	if ($service_period == "") $service_period = service_period();
 	if ($time_range == "") $time_range = (24 * 60 * 60);
-	if ($time == "") $time = ($_SESSION['time'] ? $_SESSION['time'] : date("H:i:s"));
+	if ($time == "") $time = current_time();
 	if ($limit == "") $limit = 10;
 	$trips = getStopTrips($stopID, $service_period, $time);
 	$timedTrips = Array();
