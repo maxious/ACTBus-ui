@@ -46,8 +46,11 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
 			$stopsGrouped["stop_ids"][] = $tripStopTime['stop_id'];
 			$stopsGrouped["endTime"] = $tripStopTime['arrival_time'];
 			echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
-                        
-			echo '<p class="ui-li-aside">' . $stopsGrouped['startTime'] . ' to ' . $stopsGrouped['endTime'] . '</p>';
+			echo '<p class="ui-li-aside">' . $stopsGrouped['startTime'] . ' to ' . $stopsGrouped['endTime'];
+                        echo '</p>';
+                        if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
+						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
+					}
 			echo bracketsMeanNewLine($tripStopTime["stop_name"]);
 			echo '</a></li>';
                         flush(); @ob_flush();
@@ -57,7 +60,10 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
 			// just a normal stop
 			echo '<a href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&stopcode=' . $tripStopTime['stop_code'] : "") . '">';
 			echo '<p class="ui-li-aside">' . $tripStopTime['arrival_time'] . '</p>';
-			echo bracketsMeanNewLine($tripStopTime['stop_name']);
+			if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
+						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
+					}
+                                        echo bracketsMeanNewLine($tripStopTime['stop_name']);
 			echo '</a></li>';
                         flush(); @ob_flush();
 		}

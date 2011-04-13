@@ -57,9 +57,9 @@ if (isset($_REQUEST['stopids'])) {
 				if (!isset($allStopsTrips[$trip["trip_id"]])) $allStopsTrips[$trip["trip_id"]] = $trip;
 			}
 		}
-		else {
-			echo "skipped sequence $tripSequence";
-		}
+		//else {
+		//	echo "skipped sequence $tripSequence";
+		//}
 	}
 }
 include_header($stop['stop_name'], "stop");
