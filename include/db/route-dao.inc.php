@@ -47,11 +47,25 @@ arrival_time > '".current_time()."' and routes.route_id = '$routeID' order by
 arrival_time limit 1";
         debug($query,"database");
 	$result = pg_query($conn, $query);
-	if (!$result) {
+	if (!$result) {   
 		databaseError(pg_result_error($result));
 		return Array();
 	}
-	return pg_fetch_assoc($result);       
+        $r = pg_fetch_assoc($result);   
+        // past last trip of the day special case
+       if (sizeof($r) == 0) {
+            $query = "select * from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = '$routeID' order by
+arrival_time DESC limit 1";
+        debug($query,"database");
+	$result = pg_query($conn, $query);
+	if (!$result) {   
+		databaseError(pg_result_error($result));
+		return Array();
+	}
+        $r = pg_fetch_assoc($result); 
+       }
+	return $r;       
   }
   
   function getTimeInterpolatedRouteAtStop($routeID, $stop_id)
@@ -67,8 +81,8 @@ arrival_time limit 1";
   
 function getRouteTrips($routeID) {
         global $conn;
-    $query = "select * from routes join trips on trips.route_id = routes.route_id
-join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = '$routeID' order by
+    $query = "select routes.route_id,trips.trip_id,service_id,arrival_time, stop_id, stop_sequence from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = '$routeID' and stop_sequence = '1' order by
 arrival_time ";
         debug($query,"database");
 	$result = pg_query($conn, $query);
