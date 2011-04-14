@@ -84,18 +84,17 @@ function getStopTrips($stopID, $service_period = "", $afterTime = "")
 	$afterCondition = "AND arrival_time > '$afterTime'";
 	global $conn;
 	if ($afterTime != "") {
-		$query = " SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name, start_times.arrival_time as start_time
+		$query = " SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name, end_times.arrival_time as end_time
 FROM stop_times
 join trips on trips.trip_id =
 stop_times.trip_id
-join routes on trips.route_id = routes.route_id , (SELECT trip_id,arrival_time from stop_times
-	WHERE stop_times.arrival_time IS NOT NULL
-	AND stop_sequence = '1') as start_times 
+join routes on trips.route_id = routes.route_id , (SELECT trip_id,max(arrival_time) as arrival_time from stop_times
+	WHERE stop_times.arrival_time IS NOT NULL group by trip_id) as end_times 
 WHERE stop_times.stop_id = '$stopID'
-AND stop_times.trip_id = start_times.trip_id
+AND stop_times.trip_id = end_times.trip_id
 AND service_id='$service_period'
-AND start_times.arrival_time > '$afterTime'
-ORDER BY start_time";
+AND end_times.arrival_time > '$afterTime'
+ORDER BY end_time";
 	}
 	else {
 		$query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name

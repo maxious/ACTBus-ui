@@ -143,6 +143,22 @@ function getTripStartTime($tripID)
 	$r = pg_fetch_assoc($result);
 	return $r['arrival_time'];
 }
+function getActiveTrips($time)
+{
+    	global $conn;
+	if ($time == "") $time = current_time();
+	$query = "Select distinct stop_times.trip_id, start_times.arrival_time as start_time, end_times.arrival_time as end_time from stop_times, (SELECT trip_id,arrival_time from stop_times WHERE stop_times.arrival_time IS NOT NULL
+AND stop_sequence = '1') as start_times, (SELECT trip_id,max(arrival_time) as arrival_time from stop_times WHERE stop_times.arrival_time IS NOT NULL group by trip_id) as end_times
+WHERE start_times.trip_id = end_times.trip_id AND stop_times.trip_id = end_times.trip_id AND $time > start_times.arrival_time  AND $time < end_times.arrival_time";
+	debug($query, "database");
+	$result = pg_query($conn, $query);
+	if (!$result) {
+		databaseError(pg_result_error($result));
+		return Array();
+	}
+	return pg_fetch_all($result);
+}
+
 function viaPointNames($tripid, $stop_sequence = "")
 {
 	global $conn;
