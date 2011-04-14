@@ -49,7 +49,7 @@ function getTripShape()
 	       points.append((stop.stop_lat, stop.stop_lon))
 	   return points*/
 }
-function getTimeInterpolatedTrip($tripID)
+function getTimeInterpolatedTrip($tripID, $range = "")
 {
 	global $conn;
 	$query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
@@ -58,7 +58,7 @@ FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 join stops on stops.stop_id = stop_times.stop_id
-WHERE trips.trip_id = '$tripID' ORDER BY stop_sequence";
+WHERE trips.trip_id = '$tripID' $range ORDER BY stop_sequence";
 	debug($query, "database");
 	$result = pg_query($conn, $query);
 	if (!$result) {
@@ -109,11 +109,21 @@ WHERE trips.trip_id = '$tripID' ORDER BY stop_sequence";
 	}
 	return $rv;
 }
-function getTimeInterpolatedTripAtStop($tripID, $stop_sequence, $stop_id = "")
+function getTimeInterpolatedTripAtStop($tripID, $stop_sequence)
 {
-    	foreach (getTimeInterpolatedTrip($tripID) as $tripStop) {
+    global $conn;
+    // limit interpolation to between nearest actual points.
+    $prevTimePoint = pg_fetch_assoc(pg_query($conn," SELECT trip_id,stop_id,
+	stop_sequence
+FROM stop_times
+WHERE trip_id = '$tripID' and stop_sequence < $stop_sequence and stop_times.arrival_time IS NOT NULL ORDER BY stop_sequence DESC LIMIT 1"));
+    $nextTimePoint = pg_fetch_assoc(pg_query($conn," SELECT trip_id,stop_id,
+	stop_sequence
+FROM stop_times
+WHERE trip_id = '$tripID' and stop_sequence > $stop_sequence and stop_times.arrival_time IS NOT NULL ORDER BY stop_sequence LIMIT 1"));
+    $range = "AND stop_sequence >= '{$prevTimePoint['stop_sequence']}' AND stop_sequence <= '{$nextTimePoint['stop_sequence']}'";
+    	foreach (getTimeInterpolatedTrip($tripID,$range) as $tripStop) {
 		if ($tripStop['stop_sequence'] == $stop_sequence) return $tripStop;
-		if ($tripStop['stop_id'] == $stop_id) return $tripStop;
 	}
 	return Array();
 }
