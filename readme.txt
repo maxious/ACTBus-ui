@@ -5,9 +5,18 @@ feed and https://github.com/maxious/ACTBus-ui this site available from github.
 Uses jQuery Mobile, PHP, PostgreSQL, OpenTripPlanner, OpenLayers, OpenStreetMap, Cloudmade Geocoder 
 and Tile Service
 
-See aws/awsStartup.sh for example startup steps
+See aws/awsStartup.sh for example startup steps. You need to load the included database dump; 
+for other transit networks you can use the updatedb.php script to load.
 
-For static maps, may have to do
+For openstreetmap static maps, may have to do
 /usr/sbin/setsebool -P httpd_can_network_connect=1
-on fedora
+on Fedora and other SELinux systems.
+
+To enter a service override, you can use the psql tool. eg.
+transitdata=# COPY calendar_dates (service_id, date, exception_type) FROM stdin;
+Enter data to be copied [spaced with tabs] followed by a newline.
+End with a backslash and a period on a line by itself.
+>> saturday	20110416	2 
+>> sunday	20110416	1
+>> \.
 

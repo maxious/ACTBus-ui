@@ -48,7 +48,7 @@ or StopCode:  <input type="text" name="stopcode" value="<?php echo $stopcode ?>"
 <small> if you click on feedback from a stop page, these will get filled in automatically. else describe the location/street of the stop in one of these boxes </small><br>
 
 Suggested Stop Location (lat/long or words):  <input type="text" name="newlocation"/><br>
-<small> if your device supports javascript, you can pick a location from the map above</small><br>
+<!--<small> if your device supports javascript, you can pick a location from the map above</small><br>-->
 
 <input type="submit" value="Submit!"/>
 </form>

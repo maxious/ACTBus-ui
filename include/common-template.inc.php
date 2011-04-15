@@ -74,14 +74,14 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
     .ui-listview-filter {
         margin: 0 !important;
      }
-     .ui-icon-navigation {
+    .ui-icon-navigation {
         background-image: url(css/images/113-navigation.png);
         background-position: 1px 0;
      }
-          .ui-icon-beaker {
+    .ui-icon-beaker {
         background-image: url(css/images/91-beaker-2.png);
         background-position: 1px 0;
-     }
+    }
     #footer {
         text-size: 0.75em;
         text-align: center;
@@ -102,6 +102,14 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
     #extrainfo {
     visibility: hidden;
     display: none;
+    }
+    #servicewarning {
+    padding: 1em;
+    margin-bottom: 0.5em;
+    text-size: 0.2em;
+    background-color: #FF9;
+    -moz-border-radius: 15px;
+border-radius: 15px;
     }
     // source http://webaim.org/techniques/skipnav/
     #skip a, #skip a:hover, #skip a:visited 
@@ -180,6 +188,12 @@ $('#here').show();
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
+	if (!$_SESSION['service_id']) {
+		$overrides = getServiceOverride();
+		if ($overrides['service_id']){
+		echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+	}
+	}
 	}
 }
 function include_footer()
