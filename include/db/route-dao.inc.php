@@ -1,6 +1,7 @@
 <?php
 
 function getRoute($routeID) {
+		global $conn;
         $query = "Select * from routes where route_id = '$routeID' LIMIT 1";
         debug($query,"database");
 	$result = pg_query($conn, $query);

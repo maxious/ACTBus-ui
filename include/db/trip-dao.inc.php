@@ -159,10 +159,10 @@ WHERE start_times.trip_id = end_times.trip_id AND stop_times.trip_id = end_times
 	return pg_fetch_all($result);
 }
 
-function viaPointNames($tripid, $stop_sequence = "")
+function viaPoints($tripid, $stop_sequence = "")
 {
 	global $conn;
-	$query = "SELECT stop_name
+	$query = "SELECT stops.stop_id, stop_name, arrival_time
 FROM stop_times join stops on stops.stop_id = stop_times.stop_id
 WHERE stop_times.trip_id = '$tripid'
 ".($stop_sequence != "" ? "AND stop_sequence > '$stop_sequence'" : "").
@@ -173,7 +173,14 @@ WHERE stop_times.trip_id = '$tripid'
 		databaseError(pg_result_error($result));
 		return Array();
 	}
-	$pointNames = pg_fetch_all($result);
-	return r_implode(", ", $pointNames);
+	return pg_fetch_all($result);
+}
+function viaPointNames($tripid, $stop_sequence = "")
+{
+	$viaPointNames = Array();
+	foreach(viaPoints($tripid, $stop_sequence) as $point) {
+		$viaPointNames[] = $point['stop_name'];
+	}
+	return r_implode(", ", $viaPointNames);
 }
 ?>

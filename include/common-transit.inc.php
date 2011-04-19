@@ -33,5 +33,23 @@ function service_period()
 		return 'weekday';
 	}
 }
-
+function midnight_seconds()
+{
+	// from http://www.perturb.org/display/Perlfunc__Seconds_Since_Midnight.html
+	if (isset($_SESSION['time'])) {
+		$time = strtotime($_SESSION['time']);
+		return (date("G", $time) * 3600) + (date("i", $time) * 60) + date("s", $time);
+	}
+	return (date("G") * 3600) + (date("i") * 60) + date("s");
+}
+function midnight_seconds_to_time($seconds)
+{
+	if ($seconds > 0) {
+		$midnight = mktime(0, 0, 0, date("n") , date("j") , date("Y"));
+		return date("h:ia", $midnight + $seconds);
+	}
+	else {
+		return "";
+	}
+}
 ?>
