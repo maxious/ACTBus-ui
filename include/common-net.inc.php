@@ -5,7 +5,7 @@ function getPage($url)
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 45);
 	$page = curl_exec($ch);
 	if (curl_errno($ch)) {
 		echo "<font color=red> Database temporarily unavailable: ";

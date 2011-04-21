@@ -18,5 +18,15 @@ Enter data to be copied [spaced with tabs] followed by a newline.
 End with a backslash and a period on a line by itself.
 >> saturday	20110416	2 
 >> sunday	20110416	1
+>> saturday	20110423 	2
+>> sunday	20110423 	1
+>> weekday	20110425        2
+>> sunday	20110425        1
+>> weekday	20110422        2
+>> noservice    20110422        1
+>> weekday	20110426        2
+>> noservice    20110426        1
+>> sunday	20110424 	2
+>> noservice    20110424 	1
 >> \.
 

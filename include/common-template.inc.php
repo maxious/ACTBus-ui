@@ -191,8 +191,13 @@ $('#here').show();
 	if (!$_SESSION['service_id']) {
 		$overrides = getServiceOverride();
 		if ($overrides['service_id']){
+if  ($overrides['service_id'] == "noservice") {
+		echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
+href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+		} else {
 		echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-	}
+		}
+		}
 	}
 	}
 }
