@@ -51,7 +51,7 @@ if (isset($_SESSION['lastUpdated']) && $_SESSION['lastUpdated']+$TIMEOUT_LIMIT <
 	session_destroy();
 	session_start();
 }
-debug(print_r($_SESSION, true) , "session");
+//debug(print_r($_SESSION, true) , "session");
 
 function current_time() {
 	return ($_SESSION['time']? $_SESSION['time'] : date("H:i:s"));

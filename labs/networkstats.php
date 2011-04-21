@@ -1,6 +1,6 @@
 <?php
 include ('../include/common.inc.php');
-include_header("Network/Route Statistics", "networkstats")
+include_header("Route Statistics", "networkstats")
 ?>
 <script type="text/javascript" src="js/flotr/lib/prototype-1.6.0.2.js"></script>
 
