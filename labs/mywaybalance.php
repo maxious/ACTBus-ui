@@ -27,11 +27,14 @@ function printBalance($cardNumber, $date, $pwrd)
 	else {
 		echo "<h2>Balance: " . $return['myway_carddetails']['Card Balance'] . "</h2>";
 		echo '<ul data-role="listview" data-inset="true"><li data-role="list-divider"> Recent Transactions </li>';
+		$txCount=0;
 		foreach ($return['myway_transactions'] as $transaction) {
 			echo "<li><b>" . $transaction["Date / Time"] . "</b>";
 			echo "<br><small>" . $transaction["TX Reference No / Type"] . "</small>";
 			echo '<p class="ui-li-aside">' . $transaction["TX Amount"] . '</p>';
 			echo "</li>";
+			$txCount++;
+			if ($txCount > 10) break;
 		}
 		echo "</ul>";
 	}
