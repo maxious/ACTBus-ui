@@ -46,9 +46,9 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 		$center = $totalLat / sizeof($mapPoints) . "," . $totalLon / sizeof($mapPoints);
 	}
 	$output = "";
-	if ($collapsible) $output.= '<div data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
-	$output.= '<center><img src="' . curPageURL() . '/lib/staticmaplite/staticmap.php?center=' . $center . '&zoom=' . $zoom . '&size=' . $width . 'x' . $height . '&markers=' . 
-$markers . '" width=' . $width . ' height=' . $height . '></center>';
+	if ($collapsible) $output.= '<div class="map" data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
+	$output.= '<img class="map" src="' . curPageURL() . '/lib/staticmaplite/staticmap.php?center=' . $center . '&amp;zoom=' . $zoom . '&amp;size=' . $width . 'x' . $height . '&amp;markers=' . 
+$markers . '" width=' . $width . ' height=' . $height . '>';
 	if ($collapsible) $output.= '</div>';
 	return $output;
 }

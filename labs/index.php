@@ -1,6 +1,6 @@
 <?php
 include ('../include/common.inc.php');
-include_header("Busness R&D", "index")
+include_header("Busness R&amp;D", "index")
 ?>
 	    <ul data-role="listview" data-theme="e" data-groupingtheme="e">
 		<li data-role="list-divider" > Experimental Features </li>

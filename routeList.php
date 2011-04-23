@@ -19,7 +19,7 @@ if ($_REQUEST['bysuburb']) {
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
 	if (!isset($_REQUEST['firstLetter'])) {
 		foreach (range('A', 'Z') as $letter) {
-			echo "<li><a href=\"routeList.php?firstLetter=$letter&bysuburb=yes\">$letter...</a></li>\n";
+			echo "<li><a href=\"routeList.php?firstLetter=$letter&amp;bysuburb=yes\">$letter...</a></li>\n";
 		}
 	}
 	else {
@@ -55,7 +55,7 @@ else if ($_REQUEST['nearby'] || $_REQUEST['suburb']) {
 	}
 
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-
+ if ($routes) {
 	foreach ($routes as $route) {
 		echo '<li><a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>";
 		if ($_REQUEST['nearby']) {
@@ -64,6 +64,9 @@ else if ($_REQUEST['nearby'] || $_REQUEST['suburb']) {
 		}
 		echo "</a></li>\n";
 	}
+ } else {
+	echo "<li style='text-align: center;'> No routes nearby.</li>";
+ }
 }
 else if ($_REQUEST['bynumber'] || $_REQUEST['numberSeries']) {
 	include_header("Routes by Number", "routeList");

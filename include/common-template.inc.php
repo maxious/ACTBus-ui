@@ -188,22 +188,23 @@ $('#here').show();
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
-	if (!$_SESSION['service_id']) {
-		$overrides = getServiceOverride();
-		if ($overrides['service_id']){
-if  ($overrides['service_id'] == "noservice") {
-		echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
+		if (!$_SESSION['service_id']) {
+			$overrides = getServiceOverride();
+			if ($overrides['service_id']) {
+				if ($overrides['service_id'] == "noservice") {
+					echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
 href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-		} else {
-		echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+				}
+				else {
+					echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+				}
+			}
 		}
-		}
-	}
 	}
 }
 function include_footer()
 {
-	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a></a>';
+	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a>';
 	echo '</div>';
 	if (isAnalyticsOn()) {
 		echo "<script>  (function() {
@@ -216,7 +217,9 @@ s.parentNode.insertBefore(ga, s);
   })();</script>";
 		$googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
 		echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
+
 	}
+			echo "\n</div></div></body></html>";
 }
 function timePlaceSettings($geolocate = false)
 {
@@ -250,12 +253,12 @@ function timePlaceSettings($geolocate = false)
 		echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
 	}
 	echo '</select>
-			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod"/>Current Period?</a>
+			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod">Current Period?</a>
 		</div>
 		
 		<input type="submit" value="Update"/>
-                </form>
-            </div></div>';
+                </div></form>
+            </div>';
 }
 function trackEvent($category, $action, $label = "", $value = - 1)
 {

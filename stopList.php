@@ -25,7 +25,7 @@ if (isset($_REQUEST['suburbs'])) {
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
 	if (!isset($_REQUEST['firstLetter'])) {
 		foreach (range('A', 'Z') as $letter) {
-			echo "<li><a href=\"stopList.php?firstLetter=$letter&suburbs=yes\">$letter...</a></li>\n";
+			echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;suburbs=yes\">$letter...</a></li>\n";
 		}
 	}
 	else {
@@ -75,7 +75,7 @@ else {
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
 	if (!isset($_REQUEST['firstLetter']) && !$_REQUEST['suburb'] && !$_REQUEST['nearby']) {
 		foreach (range('A', 'Z') as $letter) {
-			echo "<li><a href=\"stopList.php?firstLetter=$letter&$listType\">$letter...</a></li>\n";
+			echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;$listType\">$letter...</a></li>\n";
 		}
 	}
 	else {
@@ -102,7 +102,7 @@ else {
 					// just a normal stop
 					echo '<li>';
 					if (!startsWith($stop['stop_code'], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
-					echo '<a href="stop.php?stopid=' . $stop['stop_id'] . (startsWith($stop['stop_code'], "Wj") ? '&stopcode=' . $stop['stop_code'] : "") . '">';
+					echo '<a href="stop.php?stopid=' . $stop['stop_id'] . (startsWith($stop['stop_code'], "Wj") ? '&amp;stopcode=' . $stop['stop_code'] : "") . '">';
 					if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
 						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
 					}

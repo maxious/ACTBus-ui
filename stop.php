@@ -33,11 +33,11 @@ if (isset($_REQUEST['stopids'])) {
 		//	$stopNames[$key] = $sub_stop[1] . ' Stop #' . ($key + 1);
 		if (strpos($stop["stop_name"], "Station")) {
 			$stopNames[$key] = 'Platform ' . ($key + 1);
-			$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . '</a> ';
+			$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&amp;stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . '</a> ';
 		}
 		else {
 			$stopNames[$key] = '#' . ($key + 1);
-			$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . ' Stop #' . ($key + 1) . '</a> ';
+			$stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&amp;stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . ' Stop #' . ($key + 1) . '</a> ';
 		}
 		$stopPositions[$key] = Array(
 			$sub_stop["stop_lat"],
@@ -64,20 +64,19 @@ if (isset($_REQUEST['stopids'])) {
 }
 include_header($stop['stop_name'], "stop");
 timePlaceSettings();
-echo '<div data-role="content" class="ui-content" role="main">        <a name="maincontent" id="maincontent"></a>';
 echo $stopLinks;
 if (sizeof($stops) > 0) {
 	trackEvent("View Stops", "View Combined Stops", $stop["stop_name"], $stop["stop_id"]);
-	echo '<p>' . staticmap($stopPositions) . '</p>';
+	echo staticmap($stopPositions);
 }
 else {
 	trackEvent("View Stops", "View Single Stop", $stop["stop_name"], $stop["stop_id"]);
-	echo '<p>' . staticmap(Array(
+	echo staticmap(Array(
 		0 => Array(
 			$stop["stop_lat"],
 			$stop["stop_lon"]
 		)
-	)) . '</p>';
+	)) ;
 }
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
@@ -88,12 +87,12 @@ else {
 	$trips = getStopTripsWithTimes($stopid);
 }
 if (sizeof($trips) == 0) {
-	echo "<li> <center>No trips in the near future.</center> </li>";
+	echo "<li style='text-align: center;'>No trips in the near future.</li>";
 }
 else {
 	foreach ($trips as $trip) {
 		echo '<li>';
-		echo '<a href="trip.php?stopid=' . $stopid . '&tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " " . $trip['route_long_name'] . "</h3><p>";
+		echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " " . $trip['route_long_name'] . "</h3><p>";
 		$viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
 		if ($viaPoints != "") echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
 		if (sizeof($tripStopNumbers) > 0) {
@@ -110,6 +109,6 @@ else {
 		@ob_flush();
 	}
 }
-echo '</ul></div>';
+echo '</ul>';
 include_footer();
 ?>

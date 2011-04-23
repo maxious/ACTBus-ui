@@ -20,13 +20,13 @@ include_header("Stops on " . $trip['route_short_name'] . ' ' . $trip['route_long
 trackEvent("Route/Trip View","View Route",  $trip['route_short_name'] . ' ' . $trip['route_long_name'], $routeid);
 
 
-echo '<p><h2>Via:</h2> ' . viaPointNames($tripid) . '</small></p>';
-echo '<p><h2>Other Trips:</h2> ';
+echo '<h2>Via:</h2> <small>' . viaPointNames($tripid) . '</small>';
+echo '<h2>Other Trips:</h2> ';
 foreach (getRouteTrips($routeid) as $othertrip) {
-	echo '<a href="trip.php?tripid=' . $othertrip['trip_id'] . "&routeid=" . $routeid . '">' . str_replace("  ",":00",str_replace(":00"," ",$othertrip['arrival_time'])). '</a> ';
+	echo '<a href="trip.php?tripid=' . $othertrip['trip_id'] . "&amp;routeid=" . $routeid . '">' . str_replace("  ",":00",str_replace(":00"," ",$othertrip['arrival_time'])). '</a> ';
 }
 flush(); @ob_flush();
-echo '</p><p><h2>Other directions/timing periods:</h2> ';
+echo '<h2>Other directions/timing periods:</h2> ';
 foreach (getRoutesByNumber($trip['route_short_name']) as $row) {
 	if ($row['route_id'] != $routeid) echo '<a href="trip.php?routeid=' . $row['route_id'] . '">' . $row['route_long_name'] . ' (' . ucwords($row['service_id']) . ')</a> ';
 }
@@ -58,7 +58,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
 		}
 		else {
 			// just a normal stop
-			echo '<a href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&stopcode=' . $tripStopTime['stop_code'] : "") . '">';
+			echo '<a href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&amp;stopcode=' . $tripStopTime['stop_code'] : "") . '">';
 			echo '<p class="ui-li-aside">' . $tripStopTime['arrival_time'] . '</p>';
 			if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
 						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
