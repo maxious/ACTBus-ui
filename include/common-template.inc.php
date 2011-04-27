@@ -188,7 +188,6 @@ $('#here').show();
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
-	if (!$_SESSION['service_id']) {
 		$overrides = getServiceOverride();
 		if ($overrides['service_id']){
 if  ($overrides['service_id'] == "noservice") {
@@ -198,7 +197,6 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 		echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
 		}
 		}
-	}
 	}
 }
 function include_footer()
