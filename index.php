@@ -25,7 +25,7 @@ include_header("bus.lambdacomplex.org", "index", false)
             </ul>
 <?php
 echo timePlaceSettings();
-echo ' <a href="labs/index.php" data-role="button" data-icon="beaker">Busness R&D</a>';
+echo ' <a href="labs/index.php" data-role="button" data-icon="beaker">Busness R&amp;D</a>';
 include_footer(true)
 ?>
         

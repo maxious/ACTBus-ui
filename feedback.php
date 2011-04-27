@@ -26,7 +26,7 @@ function sendEmail($topic, $message)
 }
 if (isset($_REQUEST['feedback']) || isset($_REQUEST['newlocation'])){
 	sendEmail("bus.lambda feedback",print_r($_REQUEST,true));
-	echo "<center><h2>Thank you for your feedback!</h2></center>";
+	echo "<h2 style='text-align: center;'>Thank you for your feedback!</h2>";
 } else {
 $stopid = "";
 $stopcode = "";

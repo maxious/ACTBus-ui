@@ -25,6 +25,6 @@ express or implied concerning the topicality, correctness, completeness or quali
 All offers are not binding and without obligation. The Author expressly reserves the right, in his discretion, to suspend, 
 change, modify, add or remove portions of the Site and to restrict or terminate the use and accessibility of the Site 
 without prior notice. </small>
-<?
+<?php
 include_footer();
 ?>
