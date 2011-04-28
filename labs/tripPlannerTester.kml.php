@@ -49,7 +49,7 @@ function processResult_cb($response, $info, $request)
 			"latdeltasize" => $latdeltasize,
 			"londeltasize" => $londeltasize,
 			"regionname" => $md['key'],
-			"plan" => $plan . "<br/><a href='" . htmlspecialchars($url) . "'>original plan</a>"
+			"plan" => $plan . '<br/><a href="' . htmlspecialchars($md['url']) . '">original plan</a>'
 		);
 		$regionTimes[] = $time;
 	}
@@ -137,8 +137,8 @@ $boundingBoxes = Array(
 		"finishlon" => 149.1243,
 	)
 );
-$latdeltasize = 0.025;
-$londeltasize = 0.025;
+$latdeltasize = 0.005;
+$londeltasize = 0.005;
 $from = "Wattle Street";
 $fromPlace = (startsWith($from, "-") ? $from : geocode($from, false));
 $startTime = "9:00 am";
@@ -147,6 +147,7 @@ $counter = 0;
 $regionTimes = Array();
 $testRegions = Array();
 $useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1";
+if ($kml) echo "<name> $from at $startTime on $startDate </name>";
 if ($csv) echo "<pre>";
 if ($csv) echo "lat,lon,time,latdeltasize, londeltasize, region key name\n";
 $rc = new RollingCurl("processResult_cb");
@@ -155,11 +156,12 @@ foreach ($boundingBoxes as $key => $boundingBox) {
 	for ($i = $boundingBox['startlat']; $i >= $boundingBox['finishlat']; $i-= $latdeltasize) {
 		for ($j = $boundingBox['startlon']; $j <= $boundingBox['finishlon']; $j+= $londeltasize) {
 			$url = $otpAPIurl . "ws/plan?date=" . urlencode($startDate) . "&time=" . urlencode($startTime) . "&mode=TRANSIT%2CWALK&optimize=QUICK&maxWalkDistance=440&wheelchair=false&toPlace=" . $i . "," . $j . "&fromPlace=$fromPlace";
+			//debug($url);
 			$request = new RollingCurlRequest($url);
 			$request->headers = Array(
 				"Accept: application/json"
 			);
-			$request->metadata = Array( "i" => $i, "j" => $j, "key" => $key);
+			$request->metadata = Array( "i" => $i, "j" => $j, "key" => $key, "url" => $url);
 			$rc->add($request);
 		}
 	}
@@ -171,15 +173,14 @@ if ($kml) {
 	//$maxTime = max($regionTimes);
 	//$rangeTime = $maxTime - $minTime;
 	//$deltaTime = $rangeTime / $colorSteps;
-//	$Gradients = Gradient(strrev("66FF00") , strrev("FF0000") , $colorSteps); // KML is BGR not RGB so strrev
-	$Gradients = Gradient("66FF00" , "FF0000" , $colorSteps); // KML is BGR not RGB so strrev
+	$Gradients = Gradient(strrev("66FF00") , strrev("FF0000") , $colorSteps); // KML is BGR not RGB so strrev
 	foreach ($testRegions as $testRegion) {
 		//$band = (floor(($testRegion[time] - $minTime) / $deltaTime));
 		$band = (floor($testRegion[time] / 10));
 		if ($band > $colorSteps) $band = $colorSteps;
 		echo "<Placemark>
   <name>" . $testRegion['regionname'] . " time {$testRegion['time']} band $band</name>
-  <description> {$testRegion['plan']} </description>
+  <description> <![CDATA[ {$testRegion['plan']}  ]]> </description>
     <Style>
         <PolyStyle>
             <color>c7" . $Gradients[$band] . "</color>" . // 7f = 50% alpha, c7=78%
