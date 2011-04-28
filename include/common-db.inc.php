@@ -1,6 +1,6 @@
 <?php
   if (php_uname('n') == "actbus-www") {
-    $conn = pg_connect("dbname=transitdata user=transitdata password=transitdata host=db.actbus.dotcloud.com port=2242");
+    $conn = pg_connect("dbname=transitdata user=transitdata password=transitdata host=bus-main.lambdacomplex.org");
   } else if (isDebugServer()) {
     $conn = pg_connect("dbname=transitdata user=postgres password=snmc");
   } else {

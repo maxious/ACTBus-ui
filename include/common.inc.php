@@ -16,6 +16,9 @@ $otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
 if (isDebug("awsotp") || php_uname('n') == "maxious.xen.prgmr.com") {
 	$otpAPIurl = 'http://bus-main.lambdacomplex.org:8080/opentripplanner-api-webapp/';
 }
+if (isDebug("dotcloudotp") || php_uname('n') == "actbus-www") {
+	$otpAPIurl = 'http://otp.actbus.dotcloud.com/opentripplanner-api-webapp/';
+}
 if (isDebug("squallotp")) {
 		$otpAPIurl = 'http://10.0.1.108:5080/opentripplanner-api-webapp/';
 }
