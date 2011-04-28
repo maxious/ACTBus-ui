@@ -199,7 +199,7 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 				}
 			}
 		}
-	}
+
 }
 function include_footer()
 {

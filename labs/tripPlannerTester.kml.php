@@ -98,6 +98,7 @@ function processLeg($legNumber, $leg)
 }
 $csv = false;
 $kml = true;
+$gearthcolors = false;
 if ($kml) {
 	header('Content-Type: application/vnd.google-earth.kml+xml');
 	echo '<?xml version="1.0" encoding="UTF-8"?>
@@ -136,8 +137,8 @@ $boundingBoxes = Array(
 		"finishlon" => 149.1243,
 	)
 );
-$latdeltasize = 0.01;
-$londeltasize = 0.01;
+$latdeltasize = 0.025;
+$londeltasize = 0.025;
 $from = "Wattle Street";
 $fromPlace = (startsWith($from, "-") ? $from : geocode($from, false));
 $startTime = "9:00 am";
@@ -149,7 +150,7 @@ $useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/
 if ($csv) echo "<pre>";
 if ($csv) echo "lat,lon,time,latdeltasize, londeltasize, region key name\n";
 $rc = new RollingCurl("processResult_cb");
-$rc->window_size = 3;
+$rc->window_size = 2;
 foreach ($boundingBoxes as $key => $boundingBox) {
 	for ($i = $boundingBox['startlat']; $i >= $boundingBox['finishlat']; $i-= $latdeltasize) {
 		for ($j = $boundingBox['startlon']; $j <= $boundingBox['finishlon']; $j+= $londeltasize) {
@@ -170,7 +171,8 @@ if ($kml) {
 	//$maxTime = max($regionTimes);
 	//$rangeTime = $maxTime - $minTime;
 	//$deltaTime = $rangeTime / $colorSteps;
-	$Gradients = Gradient(strrev("66FF00") , strrev("FF0000") , $colorSteps); // KML is BGR not RGB so strrev
+//	$Gradients = Gradient(strrev("66FF00") , strrev("FF0000") , $colorSteps); // KML is BGR not RGB so strrev
+	$Gradients = Gradient("66FF00" , "FF0000" , $colorSteps); // KML is BGR not RGB so strrev
 	foreach ($testRegions as $testRegion) {
 		//$band = (floor(($testRegion[time] - $minTime) / $deltaTime));
 		$band = (floor($testRegion[time] / 10));

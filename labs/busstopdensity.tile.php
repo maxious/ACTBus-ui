@@ -42,7 +42,10 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 		$zoom = (int)$_GET['zoom'];
 	else
 		exit("zoom missing");
-
+if ($zoom < 12) { //enforce minimum zoom
+			header('Content-type: image/png');
+			echo file_get_contents(TILE_DIR.'empty.png');
+}
 	$dir = TILE_DIR.$zoom;
 	$tilename = $dir.'/'.$X.'_'.$Y.'.png';
 	//HTTP headers  (data type and caching rule)

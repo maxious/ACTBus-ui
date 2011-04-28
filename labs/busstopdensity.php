@@ -31,6 +31,7 @@ include ('../include/common.inc.php');
 		$(function($){//Called when page is loaded
 			googleMap = new google.maps.Map(document.getElementById("map_container"), {
 				zoom: 17, 
+				minZoom: 12, 
 				center: new google.maps.LatLng(-35.25,149.125), 
 				mapTypeId: google.maps.MapTypeId.SATELLITE});
 			//Set status bar
