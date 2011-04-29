@@ -42,4 +42,7 @@ if (isset($_REQUEST['stopid'])) {
 if (isset($_REQUEST['routeid'])) {
 	$routeid = filter_var($_REQUEST['routeid'], FILTER_SANITIZE_NUMBER_INT);
 }
+if (isset($_REQUEST['geolocate'])) {
+$geolocate = filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL);
+}
 ?>

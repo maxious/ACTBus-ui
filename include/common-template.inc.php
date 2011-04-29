@@ -31,8 +31,8 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
         <meta charset="UTF-8">
 	<title>' . $pageTitle . '</title>
         <meta name="google-site-verification" 
-content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
-	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
+content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
+	<link rel="stylesheet"  href="css/jquery-ui-1.8.12.custom.css" />';
 	if (isDebugServer()) {
 		echo '<link rel="stylesheet"  href="css/jquery.mobile-1.0a4.css" />
 	
@@ -52,15 +52,28 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
 </script>
         <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>';
 	}
-	if ($datepicker) {
-		echo '<script> 
-		//reset type=date inputs to text
-		$( document ).bind( "mobileinit", function(){
-			$.mobile.page.prototype.options.degradeInputs.date = true;
-		});	
-	</script> 
-	<script src="js/jQuery.ui.datepicker.js"></script>';
-	}
+	echo '
+	<script src="js/jquery.ui.autocomplete.min.js"></script>
+<script src="js/jquery.ui.core.min.js"></script>
+<script src="js/jquery.ui.position.min.js"></script>
+<script src="js/jquery.ui.widget.min.js"></script>
+  <script>
+	$(function() {
+		$( "#geolocate" ).autocomplete({
+			source: "lib/autocomplete.php",
+			minLength: 2
+		});
+		$( "#from" ).autocomplete({
+			source: "lib/autocomplete.php",
+			minLength: 2
+		});
+		$( "#to" ).autocomplete({
+			source: "lib/autocomplete.php",
+			minLength: 2
+		});
+	});
+	</script>
+	';
 	echo '<style type="text/css">
      .ui-navbar {
      width: 100%;
@@ -111,6 +124,8 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
     -moz-border-radius: 15px;
 border-radius: 15px;
     }
+ 
+
     // source http://webaim.org/techniques/skipnav/
     #skip a, #skip a:hover, #skip a:visited 
 { 
@@ -227,11 +242,13 @@ function timePlaceSettings($geolocate = false)
 	if ($geolocate == true) {
 		$geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
 	}
+	echo '<div id="error">';
 	if ($geoerror) {
-		echo '<div id="error">Sorry, but your location could not currently be detected.
+		echo 'Sorry, but your location could not currently be detected.
         Please allow location permission, wait for your location to be detected,
-        or enter an address/co-ordinates in the box below.</div>';
+        or enter an address/co-ordinates in the box below.';
 	}
+	echo '</div>';
 	echo '<div data-role="collapsible" data-collapsed="' . !$geoerror . '">
         <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'] . '" method="post">

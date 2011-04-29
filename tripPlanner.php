@@ -5,13 +5,13 @@ $from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZ
 $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "");
 $date = (isset($_REQUEST['date']) ? filter_var($_REQUEST['date'], FILTER_SANITIZE_STRING) : date("m/d/Y"));
 $time = (isset($_REQUEST['time']) ? filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING) : date("H:i"));
-function formatTime($timeString) {
-  $timeParts = explode("T",$timeString);
-  return str_replace("Z","",$timeParts[1]);
+function formatTime($timeString)
+{
+	$timeParts = explode("T", $timeString);
+	return str_replace("Z", "", $timeParts[1]);
 }
 function tripPlanForm($errorMessage = "")
 {
-
 	global $date, $time, $from, $to;
 	echo "<font color=red>$errorMessage</font>";
 	echo '<form action="tripPlanner.php" method="post">
@@ -44,7 +44,7 @@ $('#fromHere').show();
 }
 function processItinerary($itineraryNumber, $itinerary)
 {
-	echo '<div data-role="collapsible" ' . ($itineraryNumber > 0 ? 'data-collapsed="true"' : "") . '> <h3> Option #' . ($itineraryNumber + 1) . ": " . floor($itinerary->duration / 60000) . " minutes (".formatTime($itinerary->startTime)." to ".formatTime($itinerary->endTime).")</h3><p>";
+	echo '<div data-role="collapsible" ' . ($itineraryNumber > 0 ? 'data-collapsed="true"' : "") . '> <h3> Option #' . ($itineraryNumber + 1) . ": " . floor($itinerary->duration / 60000) . " minutes (" . formatTime($itinerary->startTime) . " to " . formatTime($itinerary->endTime) . ")</h3><p>";
 	echo "Walking time: " . floor($itinerary->walkTime / 60000) . " minutes (" . floor($itinerary->walkDistance) . " meters)<br>\n";
 	echo "Transit time: " . floor($itinerary->transitTime / 60000) . " minutes<br>\n";
 	echo "Waiting time: " . floor($itinerary->waitingTime / 60000) . " minutes<br>\n";
@@ -62,7 +62,8 @@ function processItinerary($itineraryNumber, $itinerary)
 			echo '<li>';
 			processLeg($legNumber, $leg);
 			echo "</li>";
-                        flush(); @ob_flush();
+			flush();
+			@ob_flush();
 		}
 		echo "</ul>";
 	}
@@ -95,38 +96,61 @@ function processLeg($legNumber, $leg)
 		echo "" . staticmap($walkStepMarkers, 0, "icong", false) . "<br>\n";
 		foreach ($leg->steps->walkSteps as $stepNumber => $step) {
 			echo "Walking step " . ($stepNumber + 1) . ": ";
-                        if ($step->relativeDirection == "CONTINUE") {
-                          echo "Continue, ";
-                        } else if ($step->relativeDirection) echo "Turn ".ucwords(strtolower(str_replace("_"," ",$step->relativeDirection))).", ";
-                        echo "Go ".ucwords(strtolower($step->absoluteDirection))." on ";
-                        if (strpos($step->streetName,"from") !== false && strpos($step->streetName,"way") !== false) {
-                          echo "footpath";
-                        } else {
-                          echo $step->streetName;
-                        }
-                        echo " for " . floor($step->distance) . " meters<br>\n";
+			if ($step->relativeDirection == "CONTINUE") {
+				echo "Continue, ";
+			}
+			else if ($step->relativeDirection) echo "Turn " . ucwords(strtolower(str_replace("_", " ", $step->relativeDirection))) . ", ";
+			echo "Go " . ucwords(strtolower($step->absoluteDirection)) . " on ";
+			if (strpos($step->streetName, "from") !== false && strpos($step->streetName, "way") !== false) {
+				echo "footpath";
+			}
+			else {
+				echo $step->streetName;
+			}
+			echo " for " . floor($step->distance) . " meters<br>\n";
 		}
 	}
 }
 if ($_REQUEST['time']) {
-	$toPlace = (startsWith($to, "-") ? $to : geocode($to, false));
-	$fromPlace = (startsWith($from, "-") ? $from : geocode($from, false));
+	if (startsWith($to, "-")) {
+		$toPlace = $to;
+	}
+	else if (strpos($to, "(") !== false) {
+		$toParts = explode("(", $to);
+                print_r($toParts);
+		$toPlace = str_replace( ")", "", $toParts[1]);
+	}
+	else {
+		$toPlace = geocode($to, false);
+	}
+        
+	if (startsWith($from, "-")) {
+		$fromPlace = $from;
+	}
+	else if (strpos($from, "(") !== false) {
+		$fromParts = explode("(", urldecode($from));
+		$fromPlace = str_replace(")", "", $fromParts[1]);
+	}
+	else {
+		$fromPlace = geocode($from, false);
+	}
+        
 	if ($toPlace == "" || $fromPlace == "") {
 		$errorMessage = "";
-		if ($toPlace === "") {
-                  $errorMessage.= urlencode($to) . " not found.<br>\n";
-                  trackEvent("Trip Planner","Geocoder Failed", $to);
-                }
-		if ($fromPlace === "") {
-                  $errorMessage.= urlencode($from) . " not found.<br>\n";
-                  trackEvent("Trip Planner","Geocoder Failed", $from);
-                }
+		if ($toPlace == "") {
+			$errorMessage.= urlencode($to) . " not found.<br>\n";
+			trackEvent("Trip Planner", "Geocoder Failed", $to);
+		}
+		if ($fromPlace == "") {
+			$errorMessage.= urlencode($from) . " not found.<br>\n";
+			trackEvent("Trip Planner", "Geocoder Failed", $from);
+		}
 		tripPlanForm($errorMessage);
 	}
 	else {
 		$url = $otpAPIurl . "ws/plan?date=" . urlencode($_REQUEST['date']) . "&time=" . urlencode($_REQUEST['time']) . "&mode=TRANSIT%2CWALK&optimize=QUICK&maxWalkDistance=840&wheelchair=false&toPlace=$toPlace&fromPlace=$fromPlace&intermediatePlaces=";
 		debug($url);
-                $ch = curl_init($url);
+		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -135,16 +159,16 @@ if ($_REQUEST['time']) {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 		$page = curl_exec($ch);
 		if (curl_errno($ch) || curl_getinfo($ch, CURLINFO_HTTP_CODE) != 200) {
-			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) . " ". curl_getinfo($ch, CURLINFO_HTTP_CODE) .(isDebug() ? "<br>".$url : ""));
-                        trackEvent("Trip Planner","Trip Planner Failed", $url);
-                }
+			tripPlanForm("Trip planner temporarily unavailable: " . curl_errno($ch) . " " . curl_error($ch) . " " . curl_getinfo($ch, CURLINFO_HTTP_CODE) . (isDebug() ? "<br>" . $url : ""));
+			trackEvent("Trip Planner", "Trip Planner Failed", $url);
+		}
 		else {
-                  	trackEvent("Trip Planner","Plan Trip From", $from);
-                        trackEvent("Trip Planner","Plan Trip To", $to);
+			trackEvent("Trip Planner", "Plan Trip From", $from);
+			trackEvent("Trip Planner", "Plan Trip To", $to);
 			$tripplan = json_decode($page);
 			debug(print_r($tripplan, true));
 			echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";
-			echo "<h1> At: ".formatTime($tripplan->plan->date)." </h1>";
+			echo "<h1> At: " . formatTime($tripplan->plan->date) . " </h1>";
 			if (is_array($tripplan->plan->itineraries->itinerary)) {
 				echo '<div data-role="collapsible-set">';
 				foreach ($tripplan->plan->itineraries->itinerary as $itineraryNumber => $itinerary) {

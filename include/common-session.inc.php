@@ -16,9 +16,14 @@ if (isset($_REQUEST['geolocate']) && $_REQUEST['geolocate'] != "Enter co-ordinat
 		$_SESSION['lon'] = trim(filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
 	}
 	else {
-		$geolocate = filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL);
 		if (startsWith($geolocate, "-")) {
 			$locateparts = explode(",", $geolocate);
+			$_SESSION['lat'] = $locateparts[0];
+			$_SESSION['lon'] = $locateparts[1];
+		}
+		else if (strpos($geolocate, "(") !== false) {
+			$geoParts = explode("(", $geolocate);
+			$locateparts = explode(",", str_replace(")", "",$geoParts[1]));
 			$_SESSION['lat'] = $locateparts[0];
 			$_SESSION['lon'] = $locateparts[1];
 		}
@@ -37,23 +42,24 @@ if (isset($_REQUEST['geolocate']) && $_REQUEST['geolocate'] != "Enter co-ordinat
 		}
 	}
 	if ($_SESSION['lat'] != "" && isAnalyticsOn()) {
-		trackEvent("Geolocation","Updated Location", "Geocoded - ".($geocoded ? "Yes" : "No"));
+		trackEvent("Geolocation", "Updated Location", "Geocoded - " . ($geocoded ? "Yes" : "No"));
 	}
 	sessionUpdated();
 }
-function sessionUpdated() {
+function sessionUpdated()
+{
 	$_SESSION['lastUpdated'] = time();
 }
 // timeoutSession
-$TIMEOUT_LIMIT = 60*5; // 5 minutes
-if (isset($_SESSION['lastUpdated']) && $_SESSION['lastUpdated']+$TIMEOUT_LIMIT < time()) {
-	debug ("Session timeout ".($_SESSION['lastUpdated']+$TIMEOUT_LIMIT).">".time(),"session");
+$TIMEOUT_LIMIT = 60 * 5; // 5 minutes
+if (isset($_SESSION['lastUpdated']) && $_SESSION['lastUpdated'] + $TIMEOUT_LIMIT < time()) {
+	debug("Session timeout " . ($_SESSION['lastUpdated'] + $TIMEOUT_LIMIT) . ">" . time() , "session");
 	session_destroy();
 	session_start();
 }
 //debug(print_r($_SESSION, true) , "session");
-
-function current_time() {
-	return ($_SESSION['time']? $_SESSION['time'] : date("H:i:s"));
+function current_time()
+{
+	return ($_SESSION['time'] ? $_SESSION['time'] : date("H:i:s"));
 }
 ?>
