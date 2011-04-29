@@ -31,7 +31,7 @@ flush(); @ob_flush();
 echo '  <ul data-role="listview"  data-inset="true">';
 $stopsGrouped = Array();
 $tripStopTimes = getTimeInterpolatedTrip($tripid);
-echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' ' . $trips[1]->route_long_name . '</li>';
+echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' ' . $trip['route_long_name'] . ' (' . ucwords($tripStopTimes[0]['service_id']).')</li>';
 
 foreach ($tripStopTimes as $key => $tripStopTime) {
 	if (($tripStopTimes[$key]["stop_name"] != $tripStopTimes[$key + 1]["stop_name"]) || $key + 1 >= sizeof($tripStopTimes)) {

@@ -39,7 +39,7 @@ if (isset($_REQUEST['tripid'])) {
 if (isset($_REQUEST['stopid'])) {
 	$stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
 }
-if (isset($_REQUEST['stopid'])) {
+if (isset($_REQUEST['routeid'])) {
 	$routeid = filter_var($_REQUEST['routeid'], FILTER_SANITIZE_NUMBER_INT);
 }
 ?>
