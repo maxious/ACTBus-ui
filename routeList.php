@@ -100,7 +100,7 @@ else if (isset($bynumber) || isset($numberSeries)) {
 		}
 	}
 	else if ($numberSeries) {
-		$routes = getRoutesByNumber($numberSeries);
+		$routes = getRoutesByNumberSeries($numberSeries);
 		foreach ($routes as $route) {
 			echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p></a></li>\n";
 		}
