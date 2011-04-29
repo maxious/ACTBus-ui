@@ -33,6 +33,7 @@ include_once ("common-transit.inc.php");
 include_once ("common-session.inc.php");
 include_once ("common-db.inc.php");
 include_once ("common-template.inc.php");
+include_once ("common-request.inc.php");
 
 function isDebugServer()
 {

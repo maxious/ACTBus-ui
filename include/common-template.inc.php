@@ -182,7 +182,7 @@ $('#here').show();
 	if ($opendiv) {
 		echo '<div data-role="page"> 
 	<div data-role="header" data-position="inline">
-	<a href="' . $_SERVER["HTTP_REFERER"] . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
+	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1>' . $pageTitle . '</h1>
 		<a href="/index.php" data-icon="home" class="ui-btn-right">Home</a>
 	</div><!-- /header -->

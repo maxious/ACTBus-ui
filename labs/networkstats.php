@@ -31,7 +31,6 @@ include_header("Route Statistics", "networkstats")
 <?php
 // middle of graph = 6am
 $adjustFactor = 0;
-$routeid = ($_REQUEST['routeid'] ? filter_var($_REQUEST['routeid'], FILTER_SANITIZE_NUMBER_INT) : 0);
 $route = getRoute($routeid);
 echo "<h1>{$route['route_short_name']} {$route['route_long_name']}</h1>";
 foreach (getRouteTrips($routeid) as $key => $trip) {

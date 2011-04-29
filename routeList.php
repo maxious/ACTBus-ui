@@ -7,72 +7,70 @@ function navbar()
 			<ul> 
 				<li><a href="routeList.php">By Final Destination...</a></li> 
 				<li><a href="routeList.php?bynumber=yes">By Number... </a></li>
-				<li><a href="routeList.php?bysuburb=yes">By Suburb... </a></li>
+				<li><a href="routeList.php?bysuburbs=yes">By Suburb... </a></li>
 				<li><a href="routeList.php?nearby=yes">Nearby... </a></li>
 			</ul>
                 </div>
 	';
 }
-if ($_REQUEST['bysuburb']) {
+if (isset($bysuburbs)) {
 	include_header("Routes by Suburb", "routeList");
 	navbar();
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-	if (!isset($_REQUEST['firstLetter'])) {
+	if (!isset($firstLetter)) {
 		foreach (range('A', 'Z') as $letter) {
-			echo "<li><a href=\"routeList.php?firstLetter=$letter&amp;bysuburb=yes\">$letter...</a></li>\n";
+			echo "<li><a href=\"routeList.php?firstLetter=$letter&amp;bysuburbs=yes\">$letter...</a></li>\n";
 		}
 	}
 	else {
 		foreach ($suburbs as $suburb) {
-			if (startsWith($suburb, $_REQUEST['firstLetter'])) {
+			if (startsWith($suburb, $firstLetter)) {
 				echo '<li><a href="routeList.php?suburb=' . urlencode($suburb) . '">' . $suburb . '</a></li>';
 			}
 		}
 	}
 	echo '</ul>';
 }
-else if ($_REQUEST['nearby'] || $_REQUEST['suburb']) {
+else if (isset($nearby) || isset($suburb)) {
 	$routes = Array();
-	if ($_REQUEST['suburb']) {
-		$suburb = filter_var($_REQUEST['suburb'], FILTER_SANITIZE_STRING);
-		include_header($suburb ." - ".ucwords(service_period()), "routeList");
-					navbar();
-					timePlaceSettings();
-				trackEvent("Route Lists", "Routes By Suburb", $suburb);
-		$routes = getRoutesBySuburb($suburb);
-		
+	if ($suburb) {
+		include_header($suburb . " - " . ucwords(service_period()) , "routeList");
+		navbar();
+		timePlaceSettings();
+		trackEvent("Route Lists", "Routes By Suburb", $suburb);
+		$routes = getRoutesbysuburbs($suburb);
 	}
-	if ($_REQUEST['nearby']) {
+	if (isset($nearby)) {
 		include_header("Routes Nearby", "routeList", true, true);
-		trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'].",".$_SESSION['lon']);
-			navbar();
-			timePlaceSettings(true);
+		trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
+		navbar();
+		timePlaceSettings(true);
 		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
 			include_footer();
 			die();
 		}
-		$routes = getRoutesNearby($_SESSION['lat'],$_SESSION['lon']);
+		$routes = getRoutesNearby($_SESSION['lat'], $_SESSION['lon']);
 	}
-
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
- if ($routes) {
-	foreach ($routes as $route) {
-		echo '<li><a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>";
-		if ($_REQUEST['nearby']) {
-			$time = getTimeInterpolatedRouteAtStop($route['route_id'], $route['stop_id']);
-				echo '<span class="ui-li-count">'.($time['arrival_time']?$time['arrival_time']:"No more trips today")."<br>" .floor($route['distance']) . 'm away</span>';
+	if ($routes) {
+		foreach ($routes as $route) {
+			echo '<li><a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>";
+			if (isset($nearby)) {
+				$time = getTimeInterpolatedRouteAtStop($route['route_id'], $route['stop_id']);
+				echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
+			}
+			echo "</a></li>\n";
 		}
-		echo "</a></li>\n";
 	}
- } else {
-	echo "<li style='text-align: center;'> No routes nearby.</li>";
- }
+	else {
+		echo "<li style='text-align: center;'> No routes nearby.</li>";
+	}
 }
-else if ($_REQUEST['bynumber'] || $_REQUEST['numberSeries']) {
+else if (isset($bynumber) || isset($numberSeries)) {
 	include_header("Routes by Number", "routeList");
 	navbar();
 	echo ' <ul data-role="listview"  data-inset="true">';
-	if ($_REQUEST['bynumber']) {
+	if (isset($bynumber)) {
 		$routes = getRoutesByNumber();
 		$routeSeries = Array();
 		$seriesRange = Array();
@@ -101,8 +99,8 @@ else if ($_REQUEST['bynumber'] || $_REQUEST['numberSeries']) {
 			echo "</a></li>\n";
 		}
 	}
-	else if ($_REQUEST['numberSeries']) {
-		$routes = getRoutesByNumber($_REQUEST['numberSeries']);
+	else if ($numberSeries) {
+		$routes = getRoutesByNumber($numberSeries);
 		foreach ($routes as $route) {
 			echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p></a></li>\n";
 		}
@@ -112,8 +110,8 @@ else {
 	include_header("Routes by Destination", "routeList");
 	navbar();
 	echo ' <ul data-role="listview"  data-inset="true">';
-	if ($_REQUEST['routeDestination']) {
-		foreach (getRoutesByDestination(urldecode($_REQUEST['routeDestination'])) as $route) {
+	if (isset($routeDestination)) {
+		foreach (getRoutesByDestination($routeDestination) as $route) {
 			echo '<li><a href="trip.php?routeid=' . $route["route_id"] . '"><h3>' . $route["route_short_name"] . '</h3><p>' . $route["route_long_name"] . " (" . ucwords($route['service_id']) . ")</p></a></li>\n";
 		}
 	}
