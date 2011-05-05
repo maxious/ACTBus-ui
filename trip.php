@@ -16,7 +16,7 @@ $routetrips = getRouteTrips($routeid);
 include_header("Stops on " . $trip['route_short_name'] . ' ' . $trip['route_long_name'], "trip");
 trackEvent("Route/Trip View","View Route",  $trip['route_short_name'] . ' ' . $trip['route_long_name'], $routeid);
 
-
+echo '<span id="leftcolumn">';
 echo '<h2>Via:</h2> <small>' . viaPointNames($tripid) . '</small>';
 echo '<h2>Other Trips:</h2> ';
 foreach (getRouteTrips($routeid) as $othertrip) {
@@ -27,6 +27,7 @@ echo '<h2>Other directions/timing periods:</h2> ';
 foreach (getRoutesByNumber($trip['route_short_name']) as $row) {
 	if ($row['route_id'] != $routeid) echo '<a href="trip.php?routeid=' . $row['route_id'] . '">' . $row['route_long_name'] . ' (' . ucwords($row['service_id']) . ')</a> ';
 }
+echo '</span><span id="rightcolumn">';
 flush(); @ob_flush();
 echo '  <ul data-role="listview"  data-inset="true">';
 $stopsGrouped = Array();
@@ -44,10 +45,11 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
 			$stopsGrouped["endTime"] = $tripStopTime['arrival_time'];
 			echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
 			echo '<p class="ui-li-aside">' . $stopsGrouped['startTime'] . ' to ' . $stopsGrouped['endTime'];
-                        echo '</p>';
+                        
                         if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
-						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
+						echo '<br>' . distance($tripStopTime['stop_lat'],$tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
 					}
+                                        echo '</p>';
 			echo bracketsMeanNewLine($tripStopTime["stop_name"]);
 			echo '</a></li>';
                         flush(); @ob_flush();
@@ -56,10 +58,11 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
 		else {
 			// just a normal stop
 			echo '<a href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&amp;stopcode=' . $tripStopTime['stop_code'] : "") . '">';
-			echo '<p class="ui-li-aside">' . $tripStopTime['arrival_time'] . '</p>';
+			echo '<p class="ui-li-aside">' . $tripStopTime['arrival_time']; 
 			if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
-						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
+						echo '<br>' . distance($tripStopTime['stop_lat'],$tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
 					}
+                                        echo '</p>';
                                         echo bracketsMeanNewLine($tripStopTime['stop_name']);
 			echo '</a></li>';
                         flush(); @ob_flush();
@@ -85,5 +88,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
 	}
 }
 echo '</ul>';
+
+echo '</span>';
 include_footer();
 ?>

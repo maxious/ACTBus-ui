@@ -200,7 +200,7 @@ AND ST_DWithin(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), :di
 	$query = $conn->prepare($query);
 	$query->bindParam(":service_period", $service_period);
 	$query->bindParam(":distance", $distance);
-	$query->bindParam(":limit", $limit);
+	if ($limit != "") $query->bindParam(":limit", $limit);
 	$query->execute();
 	if (!$query) {
 		databaseError($conn->errorInfo());

@@ -126,7 +126,25 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 border-radius: 15px;
     }
  
+/*#leftcolumn { 
+	float: none;
+}			
+.min-width-768px #leftcolumn {
+	float: left;
+	width: 30%;
+}
+#rightcolumn { 
+	float: none;
+}			
+.min-width-768px #rightcolumn {
+	float: right;
+	width: 68%;
+}*/	
 
+#footer {
+clear:both;
+text-align:center;
+}
     // source http://webaim.org/techniques/skipnav/
     #skip a, #skip a:hover, #skip a:visited 
 { 
@@ -145,7 +163,7 @@ width:auto;
 height:auto; 
 }
 </style>';
-	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
+	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
 		echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
  <link rel="apple-touch-startup-image" href="startup.png" />
@@ -176,7 +194,11 @@ var options = {
 }
 $(document).ready(function() {
         $('#here').click(function(event) { $('#geolocate').val(geolocate()); return false;});
-$('#here').show();
+        $('#here').show();
+	/*if ($.mobile.media('screen and (min-width: 768px)')) {
+	  $('map a:first').click();
+	  $('#settings a:first').click();
+	}*/
 });
 ";
 		if (!isset($_SESSION['lat']) || $_SESSION['lat'] == "") echo "geolocate();";
@@ -251,7 +273,7 @@ function timePlaceSettings($geolocate = false)
         or enter an address/co-ordinates in the box below.';
 	}
 	echo '</div>';
-	echo '<div data-role="collapsible" data-collapsed="' . !$geoerror . '">
+	echo '<div id="settings" data-role="collapsible" data-collapsed="' . !$geoerror . '">
         <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'] . '" method="post">
         <div class="ui-body"> 
