@@ -5,6 +5,7 @@ $GA_PIXEL = "/lib/ga.php";
 function googleAnalyticsGetImageUrl()
 {
 	global $GA_ACCOUNT, $GA_PIXEL;
+	//if (stristr($_SERVER['HTTP_USER_AGENT'], 'Googlebot') return "";
 	$url = "";
 	$url.= $GA_PIXEL . "?";
 	$url.= "utmac=" . $GA_ACCOUNT;
@@ -187,6 +188,7 @@ $('#here').show();
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-22173039-1']);
   _gaq.push(['_trackPageview']);
+   _gaq.push(['_trackPageLoadTime']);
 </script>";
 	echo '</head>
 <body>

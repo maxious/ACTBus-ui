@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
+User-agent: *
+Disallow: /lib/ga.php
 sitemap: http://bus.lambdacomplex.org/sitemap.xml.php
