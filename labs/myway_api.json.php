@@ -23,7 +23,7 @@ $field_mapping = Array(
 	"DOBday" => "day",
 	"DOByear" => "year",
 	"secret_answer" => "pwrd",
-	"button" => "button"
+	"button" => "Submit"
 );
 foreach (Array(
 	"card_number",
@@ -64,6 +64,7 @@ if (!isset($return['error'])) {
 	curl_setopt($ch, CURLOPT_POST, count($fields));
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_REFERER, "https://www.action.act.gov.au/ARTS/getbalance.asp");
 	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 	//execute post
@@ -75,6 +76,7 @@ if (!isset($return['error'])) {
 
 if (!isset($return['error'])) {
 	include_once ('lib/simple_html_dom.php');
+	//print_r($pageHTML);
 	$page = str_get_html($pageHTML);
 	$pageAlerts = $page->find(".smartCardAlert");
 	if (sizeof($pageAlerts) > 0) {
@@ -94,12 +96,14 @@ if (!isset($return['error'])) {
 				$tableColumns[$tableColumnNum] = cleanString($th->plaintext);
 				$tableColumnNum++;
 			}
+			//print_r($tableColumns);
 			$tableRowNum = 0;
 			foreach ($table->find("tr") as $tr) {
 				$tableColumnNum = 0;
 				foreach ($tr->find("td") as $td) {
 					if ($tableNum == 1) $return[$tableName[$tableNum]][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
 					else $return[$tableName[$tableNum]][$tableRowNum][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+					//print_r($return);
 					$tableColumnNum++;
 				}
 				$tableRowNum++;
