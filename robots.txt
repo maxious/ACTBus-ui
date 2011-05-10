@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+sitemap: http://bus.lambdacomplex.org/sitemap.xml.php

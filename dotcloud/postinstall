@@ -1,0 +1,18 @@
+#!/bin/bash
+#dotcloud postinstall
+
+curl http://s3-ap-southeast-1.amazonaws.com/busresources/cbrfeed.zip \
+-o /home/dotcloud/current/cbrfeed.zip
+wget http://s3-ap-southeast-1.amazonaws.com/busresources/Graph.obj \
+-O /tmp/Graph.obj
+
+#db setup
+#curl https://github.com/maxious/ACTBus-ui/raw/master/transitdata.cbrfeed.sql.gz -o transitdata.cbrfeed.sql.gz
+#curl https://github.com/maxious/ACTBus-ui/raw/master/lib/postgis.sql -o postgis.sql
+#createlang -d transitdata plpgsql
+#psql -d transitdata -f postgis.sql
+#gunzip /var/www/transitdata.cbrfeed.sql.gz
+#psql -d transitdata -f transitdata.cbrfeed.sql
+#createuser transitdata -SDRP
+#password transitdata
+#psql -c \"GRANT SELECT ON TABLE agency,calendar,calendar_dates,routes,stop_times,stops,trips TO transitdata;\"
