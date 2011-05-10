@@ -1,5 +1,5 @@
 <?php
-  if (php_uname('n') == "actbus-www") {
+  if (php_uname('n') == "actbus-www" || strstr(php_uname('n'),"shared")) {
     $conn = pg_connect("dbname=transitdata user=transitdata password=transitdata host=bus-main.lambdacomplex.org");
   } 
   if (isDebugServer()) {
