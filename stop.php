@@ -1,7 +1,5 @@
 <?php
 include ('include/common.inc.php');
-$stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
-$stopcode = filter_var($_REQUEST['stopcode'], FILTER_SANITIZE_STRING);
 if ($stopid) $stop = getStop($stopid);
 /*if ($stopcode != "" && $stop[5] != $stopcode) {
 	$url = $APIurl . "/json/stopcodesearch?q=" . $stopcode;
@@ -21,8 +19,7 @@ $tripStopNumbers = Array();
 $allStopsTrips = Array();
 $fetchedTripSequences = Array();
 $stopLinks = "";
-if (isset($_REQUEST['stopids'])) {
-	$stopids = explode(",", filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
+if (isset($stopids)) {
 	foreach ($stopids as $sub_stopid) {
 		$stops[] = getStop($sub_stopid);
 	}
@@ -63,6 +60,7 @@ if (isset($_REQUEST['stopids'])) {
 	}
 }
 include_header($stop['stop_name'], "stop");
+echo '<span id="leftcolumn">';
 timePlaceSettings();
 echo $stopLinks;
 if (sizeof($stops) > 0) {
@@ -78,6 +76,7 @@ else {
 		)
 	)) ;
 }
+echo '</span><span id="rightcolumn">';
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
     sktimesort($allStopsTrips,"arrival_time", true);
@@ -110,5 +109,6 @@ else {
 	}
 }
 echo '</ul>';
+echo '</span>';
 include_footer();
 ?>

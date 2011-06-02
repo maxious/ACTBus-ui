@@ -1,17 +1,13 @@
 <?php
 include ('include/common.inc.php');
 $stops = Array();
-function filterByFirstLetter($var)
-{
-	return $var[1][0] == $_REQUEST['firstLetter'];
-}
 function navbar()
 {
 	echo '
 		<div data-role="navbar">
 			<ul> 
 				<li><a href="stopList.php">Timing Points</a></li>
-				<li><a href="stopList.php?suburbs=yes">By Suburb</a></li>
+				<li><a href="stopList.php?bysuburbs=yes">By Suburb</a></li>
 				<li><a href="stopList.php?nearby=yes">Nearby Stops</a></li>
 				<li><a href="stopList.php?allstops=yes">All Stops</a></li> 
 			</ul>
@@ -19,18 +15,18 @@ function navbar()
 	';
 }
 // By suburb
-if (isset($_REQUEST['suburbs'])) {
+if (isset($bysuburbs)) {
 	include_header("Stops by Suburb", "stopList");
 	navbar();
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-	if (!isset($_REQUEST['firstLetter'])) {
+	if (!isset($firstLetter)) {
 		foreach (range('A', 'Z') as $letter) {
-			echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;suburbs=yes\">$letter...</a></li>\n";
+			echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;bysuburbs=yes\">$letter...</a></li>\n";
 		}
 	}
 	else {
 		foreach ($suburbs as $suburb) {
-			if (startsWith($suburb, $_REQUEST['firstLetter'])) {
+			if (startsWith($suburb, $firstLetter)) {
 				echo '<li><a href="stopList.php?suburb=' . urlencode($suburb) . '">' . $suburb . '</a></li>';
 			}
 		}
@@ -39,41 +35,39 @@ if (isset($_REQUEST['suburbs'])) {
 }
 else {
 	// Timing Points / All stops
-	if ($_REQUEST['allstops']) {
+	if (isset($allstops)) {
 		$listType = 'allstops=yes';
 		$stops = getStops();
 		include_header("All Stops", "stopList");
 		navbar();
 		timePlaceSettings();
 	}
-	else if ($_REQUEST['nearby']) {
+	else if (isset($nearby)) {
 		$listType = 'nearby=yes';
 		include_header("Nearby Stops", "stopList", true, true);
-		trackEvent("Stop Lists","Stops Nearby", $_SESSION['lat'].",".$_SESSION['lon']);
+		trackEvent("Stop Lists", "Stops Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
 		navbar();
 		timePlaceSettings(true);
 		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
 			include_footer();
 			die();
 		}
-		
-		$stops = getNearbyStops($_SESSION['lat'],$_SESSION['lon'],15);
+		$stops = getNearbyStops($_SESSION['lat'], $_SESSION['lon'], 15);
 	}
-	else if ($_REQUEST['suburb']) {
-		$suburb = filter_var($_REQUEST['suburb'], FILTER_SANITIZE_STRING);
+	else if (isset($suburb)) {
 		$stops = getStopsBySuburb($suburb);
 		include_header("Stops in " . ucwords($suburb) , "stopList");
 		navbar();
-	       trackEvent("Stop Lists","Stops By Suburb", $suburb);
+		trackEvent("Stop Lists", "Stops By Suburb", $suburb);
 	}
 	else {
-		$stops = getStops(true,$_REQUEST['firstLetter']);
+		$stops = getStops(true, $firstLetter);
 		include_header("Timing Points / Major Stops", "stopList");
 		navbar();
 		timePlaceSettings();
 	}
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-	if (!isset($_REQUEST['firstLetter']) && !$_REQUEST['suburb'] && !$_REQUEST['nearby']) {
+	if (!isset($firstLetter) && !isset($suburb) && !isset($nearby)) {
 		foreach (range('A', 'Z') as $letter) {
 			echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;$listType\">$letter...</a></li>\n";
 		}
@@ -91,11 +85,12 @@ else {
 					if (!startsWith($stopsGrouped['stop_codes'][0], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point: " class="ui-li-icon">';
 					echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
 					if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
-						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
+						echo '<span class="ui-li-count">' . distance($stop['stop_lat'], $stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
 					}
 					echo bracketsMeanNewLine(trim(preg_replace("/\(Platform.*/", "", $stop['stop_name'])) . '(' . sizeof($stopsGrouped["stop_ids"]) . ' stops)');
 					echo "</a></li>\n";
-					flush(); @ob_flush();
+					flush();
+					@ob_flush();
 					$stopsGrouped = Array();
 				}
 				else {
@@ -104,11 +99,12 @@ else {
 					if (!startsWith($stop['stop_code'], "Wj")) echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
 					echo '<a href="stop.php?stopid=' . $stop['stop_id'] . (startsWith($stop['stop_code'], "Wj") ? '&amp;stopcode=' . $stop['stop_code'] : "") . '">';
 					if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
-						echo '<span class="ui-li-count">' . distance($stop['stop_lat'],$stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
+						echo '<span class="ui-li-count">' . distance($stop['stop_lat'], $stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
 					}
 					echo bracketsMeanNewLine($stop['stop_name']);
 					echo "</a></li>\n";
-					flush(); @ob_flush();
+					flush();
+					@ob_flush();
 				}
 			}
 			else {

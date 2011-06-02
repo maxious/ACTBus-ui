@@ -13,14 +13,14 @@ include_header("bus.lambdacomplex.org", "index", false)
                 <li data-role="list-divider">Timetables - Stops</li>
                 <li><a href="stopList.php">Major (Timing Point) Stops</a></li>
 		<li><a href="stopList.php?allstops=yes">All Stops</a></li>
-		<li><a href="stopList.php?suburbs=yes">Stops By Suburb</a></li>
+		<li><a href="stopList.php?bysuburbs=yes">Stops By Suburb</a></li>
 		<li><a class="nearby" href="stopList.php?nearby=yes">Nearby Stops</a></li>
             </ul>
 	    <ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
                 <li data-role="list-divider">Timetables - Routes</li>
                 <li><a href="routeList.php">Routes By Final Destination</a></li>
 		<li><a href="routeList.php?bynumber=yes">Routes By Number</a></li>
-		<li><a href="routeList.php?bysuburb=yes">Routes By Suburb</a></li>
+		<li><a href="routeList.php?bysuburbs=yes">Routes By Suburb</a></li>
 		<li><a class="nearby" href="routeList.php?nearby=yes">Nearby Routes</a></li>
             </ul>
 <?php

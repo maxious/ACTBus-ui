@@ -5,11 +5,8 @@ $output['hotspots'] = Array();
 $output['layer'] = "canberrabusstops";
 $max_page = 10;
 $max_results = 50;
-$page_start = 0 + filter_var($_REQUEST['pageKey'], FILTER_SANITIZE_NUMBER_INT);
-$page_end = $max_page + filter_var($_REQUEST['pageKey'], FILTER_SANITIZE_NUMBER_INT);
-$lat = filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-$lon = filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-$max_distance = filter_var($_REQUEST['radius'], FILTER_SANITIZE_NUMBER_INT);
+$page_start = 0 + $pageKey;
+$page_end = $max_page + $pageKey;
 $contents = getNearbyStops($lat, $lon, 50, $max_distance);
 $stopNum = 0;
 foreach ($contents as $stop) {

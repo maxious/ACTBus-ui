@@ -5,6 +5,7 @@ $GA_PIXEL = "/lib/ga.php";
 function googleAnalyticsGetImageUrl()
 {
 	global $GA_ACCOUNT, $GA_PIXEL;
+	//if (stristr($_SERVER['HTTP_USER_AGENT'], 'Googlebot') return "";
 	$url = "";
 	$url.= $GA_PIXEL . "?";
 	$url.= "utmac=" . $GA_ACCOUNT;
@@ -31,8 +32,8 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
         <meta charset="UTF-8">
 	<title>' . $pageTitle . '</title>
         <meta name="google-site-verification" 
-content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
-	if ($datepicker) echo '<link rel="stylesheet"  href="css/jquery.ui.datepicker.mobile.css" />';
+content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
+	<link rel="stylesheet"  href="css/jquery-ui-1.8.12.custom.css" />';
 	if (isDebugServer()) {
 		echo '<link rel="stylesheet"  href="css/jquery.mobile-1.0a4.css" />
 	
@@ -52,15 +53,28 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
 </script>
         <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>';
 	}
-	if ($datepicker) {
-		echo '<script> 
-		//reset type=date inputs to text
-		$( document ).bind( "mobileinit", function(){
-			$.mobile.page.prototype.options.degradeInputs.date = true;
-		});	
-	</script> 
-	<script src="js/jQuery.ui.datepicker.js"></script>';
-	}
+	echo '
+	<script src="js/jquery.ui.autocomplete.min.js"></script>
+<script src="js/jquery.ui.core.min.js"></script>
+<script src="js/jquery.ui.position.min.js"></script>
+<script src="js/jquery.ui.widget.min.js"></script>
+  <script>
+	$(function() {
+		$( "#geolocate" ).autocomplete({
+			source: "lib/autocomplete.php",
+			minLength: 2
+		});
+		$( "#from" ).autocomplete({
+			source: "lib/autocomplete.php",
+			minLength: 2
+		});
+		$( "#to" ).autocomplete({
+			source: "lib/autocomplete.php",
+			minLength: 2
+		});
+	});
+	</script>
+	';
 	echo '<style type="text/css">
      .ui-navbar {
      width: 100%;
@@ -111,6 +125,26 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />';
     -moz-border-radius: 15px;
 border-radius: 15px;
     }
+ 
+/*#leftcolumn { 
+	float: none;
+}			
+.min-width-768px #leftcolumn {
+	float: left;
+	width: 30%;
+}
+#rightcolumn { 
+	float: none;
+}			
+.min-width-768px #rightcolumn {
+	float: right;
+	width: 68%;
+}*/	
+
+#footer {
+clear:both;
+text-align:center;
+}
     // source http://webaim.org/techniques/skipnav/
     #skip a, #skip a:hover, #skip a:visited 
 { 
@@ -129,7 +163,7 @@ width:auto;
 height:auto; 
 }
 </style>';
-	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
+	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
 		echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
  <link rel="apple-touch-startup-image" href="startup.png" />
@@ -160,7 +194,11 @@ var options = {
 }
 $(document).ready(function() {
         $('#here').click(function(event) { $('#geolocate').val(geolocate()); return false;});
-$('#here').show();
+        $('#here').show();
+	/*if ($.mobile.media('screen and (min-width: 768px)')) {
+	  $('map a:first').click();
+	  $('#settings a:first').click();
+	}*/
 });
 ";
 		if (!isset($_SESSION['lat']) || $_SESSION['lat'] == "") echo "geolocate();";
@@ -172,6 +210,7 @@ $('#here').show();
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-22173039-1']);
   _gaq.push(['_trackPageview']);
+   _gaq.push(['_trackPageLoadTime']);
 </script>";
 	echo '</head>
 <body>
@@ -182,7 +221,7 @@ $('#here').show();
 	if ($opendiv) {
 		echo '<div data-role="page"> 
 	<div data-role="header" data-position="inline">
-	<a href="' . $_SERVER["HTTP_REFERER"] . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
+	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1>' . $pageTitle . '</h1>
 		<a href="/index.php" data-icon="home" class="ui-btn-right">Home</a>
 	</div><!-- /header -->
@@ -227,12 +266,14 @@ function timePlaceSettings($geolocate = false)
 	if ($geolocate == true) {
 		$geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
 	}
+	echo '<div id="error">';
 	if ($geoerror) {
-		echo '<div id="error">Sorry, but your location could not currently be detected.
+		echo 'Sorry, but your location could not currently be detected.
         Please allow location permission, wait for your location to be detected,
-        or enter an address/co-ordinates in the box below.</div>';
+        or enter an address/co-ordinates in the box below.';
 	}
-	echo '<div data-role="collapsible" data-collapsed="' . !$geoerror . '">
+	echo '</div>';
+	echo '<div id="settings" data-role="collapsible" data-collapsed="' . !$geoerror . '">
         <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'] . '" method="post">
         <div class="ui-body"> 

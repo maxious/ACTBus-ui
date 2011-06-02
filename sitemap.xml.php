@@ -8,19 +8,15 @@ echo "<?xml version='1.0' encoding='UTF-8'?>";
 foreach (scandir("./") as $file) {
       if (strpos($file,".php") !== false && $file != "index.php" && $file != "sitemap.xml.php") echo " <url><loc>".curPageURL()."$file</loc><priority>0.3</priority></url>\n";
 }
-$url = $APIurl . "/json/stops";         
-$stops = json_decode(getPage($url));
-foreach ($stops as $stop) {
-      echo " <url><loc>".curPageURL()."stop.php?stopid=".htmlspecialchars ($stop[0])."</loc>";
+foreach (getStops() as $stop) {
+      echo " <url><loc>".curPageURL()."stop.php?stopid=".htmlspecialchars ($stop["stop_id"])."</loc>";
 	echo "<lastmod>" . $last_updated . "</lastmod>";
 	echo "<changefreq>monthly</changefreq>";
 	echo "<priority>0.9</priority>";
 	echo "</url>\n";
  }
-$url = $APIurl . "/json/routes";         
-$routes = json_decode(getPage($url));
-foreach ($routes as $route) {
-      echo " <url><loc>".curPageURL()."trip.php?routeid=".htmlspecialchars ($route[0])."</loc>";
+foreach (getRoutes() as $route) {
+      echo " <url><loc>".curPageURL()."trip.php?routeid=".htmlspecialchars ($route["route_id"])."</loc>";
 	echo "<lastmod>" . $last_updated . "</lastmod>";
 	echo "<changefreq>monthly</changefreq>";
 	echo "<priority>0.9</priority>";

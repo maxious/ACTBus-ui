@@ -4,17 +4,7 @@ $service_periods = Array(
 	'saturday',
 	'weekday'
 );
-function getServiceOverride() {
-	global $conn;
-	$query = "Select * from calendar_dates where date = '".date("Ymd")."' and exception_type = '1'";
-	 debug($query,"database");
-	$result = pg_query($conn, $query);
-	if (!$result) {
-		databaseError(pg_result_error($result));
-		return Array();
-	}
-	return pg_fetch_assoc($result);
-}
+
 function service_period()
 {
 	

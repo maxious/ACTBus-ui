@@ -29,8 +29,10 @@ function printBalance($cardNumber, $date, $pwrd)
 		echo '<ul data-role="listview" data-inset="true"><li data-role="list-divider"> Recent Transactions </li>';
 		$txCount=0;
 		foreach ($return['myway_transactions'] as $transaction) {
-			echo "<li><b>" . $transaction["Date / Time"] . "</b>";
-			echo "<br><small>" . $transaction["TX Reference No / Type"] . "</small>";
+			echo "<li>";
+			if ($transaction["Deduction Type"] == "DEFAULT") echo '<img src="css/images/warning.png" alt="Failed to tap off: " class="ui-li-icon">';
+			echo"<b>" . $transaction["Date / Time"] . "</b>";
+			echo "<br><small>" .$transaction["Route"] ." at " . $transaction["Stop Name"]. "<br>". $transaction["TX Reference No / Type"] . "</small>";
 			echo '<p class="ui-li-aside">' . $transaction["TX Amount"] . '</p>';
 			echo "</li>";
 			$txCount++;
