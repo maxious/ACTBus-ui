@@ -163,7 +163,7 @@ function sktimesort(&$array, $subkey = "id", $sort_ascending = false)
 			$key => $val
 		));
 	}
-	if ($sort_ascending) $array = array_reverse($temp_array);
+	if ($sort_ascending && isset($temp_array)) $array = array_reverse($temp_array);
 	else $array = $temp_array;
 }
 function r_implode( $glue, $pieces ) 

@@ -10,6 +10,8 @@ include_header("Busness R&amp;D", "index")
 		<p>Analysis of route timing points</p></a></li>
 		<li><a href="busstopdensity.php"><h3>Bus Stop Density Map</h3>
 		<p>Analysis of bus stop coverage</p></a></li>
+		<li><a href="stopBrowser.php"><h3>Bus Stop Browser Map</h3>
+		<p>Bus stop location/route browser</p></a></li>
 		<li>More coming soon!</li>
             </ul>
 	    </div>
