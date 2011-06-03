@@ -30,7 +30,7 @@ function getStops($timingPointsOnly = false, $firstLetter = "")
 	}
 	$query.= " order by stop_name;";
 	$query = $conn->prepare($query);
-        $query->bindParam(":firstLetter", $firstLetter);
+        if ($firstLetter != "") $query->bindParam(":firstLetter", $firstLetter);
 	$query->execute();
 	if (!$query) {
 		databaseError($conn->errorInfo());
