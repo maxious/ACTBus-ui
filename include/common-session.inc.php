@@ -41,9 +41,6 @@ if (isset($_REQUEST['geolocate']) && $_REQUEST['geolocate'] != "Enter co-ordinat
 			}
 		}
 	}
-	if ($_SESSION['lat'] != "" && isAnalyticsOn()) {
-		trackEvent("Geolocation", "Updated Location", "Geocoded - " . ($geocoded ? "Yes" : "No"));
-	}
 	sessionUpdated();
 }
 function sessionUpdated()
