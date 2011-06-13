@@ -13,6 +13,7 @@ function getRoute($routeID)
 	}
 	return $query->fetch(PDO::FETCH_ASSOC);
 }
+
 function getRoutes()
 {
 	global $conn;

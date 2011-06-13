@@ -22,6 +22,17 @@ foreach (getRoutes() as $route) {
 	echo "<priority>0.9</priority>";
 	echo "</url>\n";
  }
+ 
+ // geosite map
+ foreach (getRoutes() as $route) {
+      echo " <url><loc>".curPageURL()."geo/route.kml.php?routeid=".htmlspecialchars ($route["route_id"])."</loc>";
+	echo "<lastmod>" . $last_updated . "</lastmod>";
+	echo "<geo:geo>
+       <geo:format>kml</geo:format>
+   </geo:geo>";
+	echo "</url>\n";
+ }
+ 
   echo '</urlset>';
 
 ?>

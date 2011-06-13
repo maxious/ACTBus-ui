@@ -16,40 +16,25 @@ function getTrip($tripID)
 	}
 	return $query->fetch(PDO::FETCH_ASSOC);
 }
-function getTripShape()
+function getTripShape($tripID)
 {
-	/* def handle_json_GET_tripstopTimes(self, params):
-	   schedule = self.server.schedule
-	   try:
-	     trip = schedule.GetTrip(params.get('trip'))
-	   except KeyError:
-	      # if a non-existent trip is searched for, the return nothing
-	     return
-	   time_stops = trip.GetTimeInterpolatedStops()
-	   stops = []
-	   times = []
-	   for arr,ts,is_timingpoint in time_stops:
-	     stops.append(StopToTuple(ts.stop))
-	     times.append(arr)
-	   return [stops, times]
-	
-	 def handle_json_GET_tripshape(self, params):
-	   schedule = self.server.schedule
-	   try:
-	     trip = schedule.GetTrip(params.get('trip'))
-	   except KeyError:
-	      # if a non-existent trip is searched for, the return nothing
-	     return
-	   points = []
-	   if trip.shape_id:
-	     shape = schedule.GetShape(trip.shape_id)
-	     for (lat, lon, dist) in shape.points:
-	       points.append((lat, lon))
-	   else:
-	     time_stops = trip.GetTimeStops()
-	     for arr,dep,stop in time_stops:
-	       points.append((stop.stop_lat, stop.stop_lon))
-	   return points*/
+	global $conn;
+	$query = "SELECT ST_AsKML(ST_MakeLine(geometry(a.position))) as the_route
+FROM (SELECT position,
+	stop_sequence, trips.trip_id
+FROM stop_times
+join trips on trips.trip_id = stop_times.trip_id
+join stops on stops.stop_id = stop_times.stop_id
+WHERE trips.trip_id = :tripID ORDER BY stop_sequence) as a group by a.trip_id";
+	debug($query, "database");
+	$query = $conn->prepare($query);
+	$query->bindParam(":tripID", $tripID);
+	$query->execute();
+	if (!$query) {
+		databaseError($conn->errorInfo());
+		return Array();
+	}
+	return $query->fetchColumn(0);
 }
 function getTimeInterpolatedTrip($tripID, $range = "")
 {
