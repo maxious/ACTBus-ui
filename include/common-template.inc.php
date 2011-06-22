@@ -35,23 +35,23 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 	<link rel="stylesheet"  href="css/jquery-ui-1.8.12.custom.css" />';
 	if (isDebugServer()) {
-		echo '<link rel="stylesheet"  href="css/jquery.mobile-1.0a4.css" />
+		echo '<link rel="stylesheet"  href="css/jquery.mobile-1.0b1.css" />
 	
-         <script type="text/javascript" src="js/jquery-1.5.js"></script>
+         <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
 	 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 </script>
-        <script type="text/javascript" src="js/jquery.mobile-1.0a4.js"></script>';
+        <script type="text/javascript" src="js/jquery.mobile-1.0b1.js"></script>';
 	}
 	else {
-		echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+		echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 	 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 </script>
-        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>';
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>';
 	}
 	echo '
 	<script src="js/jquery.ui.autocomplete.min.js"></script>
@@ -76,6 +76,7 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 	</script>
 	';
 	echo '<style type="text/css">
+.ui-li-thumb, .ui-li-icon { position: relative; }
      .ui-navbar {
      width: 100%;
      }
