@@ -76,7 +76,17 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 	</script>
 	';
 	echo '<style type="text/css">
-.ui-li-thumb, .ui-li-icon { position: relative; }
+.ui-li-thumb, .ui-li-icon { position: relative; }';
+
+if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android') echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
+.ui-btn-down-b,.ui-bar-c,.ui-body-c,.ui-btn-up-c,.ui-btn-hover-c,.ui-btn-down-c,.ui-bar-c,.ui-body-d,
+.ui-btn-up-d,.ui-btn-hover-d,.ui-btn-down-d,.ui-bar-d,.ui-body-e,.ui-btn-up-e,.ui-btn-hover-e,
+.ui-btn-down-e,.ui-bar-e,.ui-overlay-shadow,.ui-shadow,.ui-btn-active,.ui-body-a,.ui-bar-a {
+ text-shadow: none;
+ box-shadow: none;
+ -webkit-box-shadow: none;
+}';
+echo '
      .ui-navbar {
      width: 100%;
      }
