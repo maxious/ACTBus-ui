@@ -23,8 +23,13 @@ function googleAnalyticsGetImageUrl()
 	$url.= "&guid=ON";
 	return str_replace("&", "&amp;", $url);
 }
+
+$labsPath = "";
+if (strstr($_SERVER['PHP_SELF'],"labs")) $labsPath = "../";
+
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false)
 {
+global $labsPath;
 	echo '
 <!DOCTYPE html> 
 <html lang="en">
@@ -33,16 +38,16 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 	<title>' . $pageTitle . '</title>
         <meta name="google-site-verification" 
 content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
-	<link rel="stylesheet"  href="css/jquery-ui-1.8.12.custom.css" />';
+	<link rel="stylesheet"  href="'.$labsPath.'css/jquery-ui-1.8.12.custom.css" />';
 	if (isDebugServer()) {
-		echo '<link rel="stylesheet"  href="css/jquery.mobile-1.0b1.css" />
+		echo '<link rel="stylesheet"  href="'.$labsPath.'css/jquery.mobile-1.0b1.css" />
 	
-         <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
+         <script type="text/javascript" src="'.$labsPath.'js/jquery-1.6.1.min.js"></script>
 	 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 </script>
-        <script type="text/javascript" src="js/jquery.mobile-1.0b1.js"></script>';
+        <script type="text/javascript" src="'.$labsPath.'js/jquery.mobile-1.0b1.js"></script>';
 	}
 	else {
 		echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
@@ -54,10 +59,10 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
         <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>';
 	}
 	echo '
-	<script src="js/jquery.ui.autocomplete.min.js"></script>
-<script src="js/jquery.ui.core.min.js"></script>
-<script src="js/jquery.ui.position.min.js"></script>
-<script src="js/jquery.ui.widget.min.js"></script>
+	<script src="'.$labsPath.'js/jquery.ui.autocomplete.min.js"></script>
+<script src="'.$labsPath.'js/jquery.ui.core.min.js"></script>
+<script src="'.$labsPath.'js/jquery.ui.position.min.js"></script>
+<script src="'.$labsPath.'js/jquery.ui.widget.min.js"></script>
   <script>
 	$(function() {
 		$( "#geolocate" ).autocomplete({
@@ -76,7 +81,17 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 	</script>
 	';
 	echo '<style type="text/css">
-.ui-li-thumb, .ui-li-icon { position: relative; }
+.ui-li-thumb, .ui-li-icon { position: relative; }';
+
+if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android')) echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
+.ui-btn-down-b,.ui-bar-c,.ui-body-c,.ui-btn-up-c,.ui-btn-hover-c,.ui-btn-down-c,.ui-bar-c,.ui-body-d,
+.ui-btn-up-d,.ui-btn-hover-d,.ui-btn-down-d,.ui-bar-d,.ui-body-e,.ui-btn-up-e,.ui-btn-hover-e,
+.ui-btn-down-e,.ui-bar-e,.ui-overlay-shadow,.ui-shadow,.ui-btn-active,.ui-body-a,.ui-bar-a {
+ text-shadow: none;
+ box-shadow: none;
+ -webkit-box-shadow: none;
+}';
+echo '
      .ui-navbar {
      width: 100%;
      }
@@ -90,11 +105,11 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
         margin: 0 !important;
      }
     .ui-icon-navigation {
-        background-image: url(css/images/113-navigation.png);
+        background-image: url('.$labsPath.'css/images/113-navigation.png);
         background-position: 1px 0;
      }
     .ui-icon-beaker {
-        background-image: url(css/images/91-beaker-2.png);
+        background-image: url('.$labsPath.'css/images/91-beaker-2.png);
         background-position: 1px 0;
     }
     #footer {
@@ -224,7 +239,7 @@ $(document).ready(function() {
 	<div data-role="header" data-position="inline">
 	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1>' . $pageTitle . '</h1>
-		<a href="/index.php" data-icon="home" class="ui-btn-right">Home</a>
+		<a href="'.$labsPath.'/index.php" data-icon="home" class="ui-btn-right">Home</a>
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
@@ -243,7 +258,9 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 }
 function include_footer()
 {
-	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a>&nbsp;<a href="privacy.php">Privacy Policy</a>';
+
+global $labsPath;
+	echo '<div id="footer"><a href="'.$labsPath.'about.php">About/Contact Us</a>&nbsp;<a href="'.$labsPath.'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="'.$labsPath.'privacy.php">Privacy Policy</a>';
 	echo '</div>';
 	if (isAnalyticsOn()) {
 		echo "<script>  (function() {
