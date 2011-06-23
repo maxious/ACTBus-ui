@@ -243,7 +243,7 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 }
 function include_footer()
 {
-	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a>';
+	echo '<div id="footer"><a href="about.php">About/Contact Us</a>&nbsp;<a href="feedback.php">Feedback/Bug Report</a>&nbsp;<a href="privacy.php">Privacy Policy</a>';
 	echo '</div>';
 	if (isAnalyticsOn()) {
 		echo "<script>  (function() {
