@@ -5,16 +5,16 @@ $service_periods = Array(
 	'weekday'
 );
 
-function service_period()
+function service_period($date = "")
 {
 	
 	if (isset($_SESSION['service_period'])) return $_SESSION['service_period'];
-	$override = getServiceOverride();
+	$override = getServiceOverride($date);
 	if ($override['service_id']){
 		return $override['service_id'];
 	}
 
-	switch (date('w')) {
+	switch (date('w',($date != "" ? $date : time()))) {
 	case 0:
 		return 'sunday';
 	case 6:

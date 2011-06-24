@@ -24,9 +24,6 @@ function googleAnalyticsGetImageUrl()
 	return str_replace("&", "&amp;", $url);
 }
 
-$labsPath = "";
-if (strstr($_SERVER['PHP_SELF'],"labs")) $labsPath = "../";
-
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false)
 {
 global $labsPath;

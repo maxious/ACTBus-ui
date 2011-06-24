@@ -144,7 +144,10 @@ function getTimeInterpolatedTripAtStop($tripID, $stop_sequence)
 	// limit interpolation to between nearest actual points.
 	$prevTimePoint = getTripPreviousTimePoint($tripID, $stop_sequence);
 	$nextTimePoint = getTripNextTimePoint($tripID, $stop_sequence);
-	$range = "AND stop_sequence >= '{$prevTimePoint['stop_sequence']}' AND stop_sequence <= '{$nextTimePoint['stop_sequence']}'";
+	//echo " prev {$lowestDelta['stop_sequence']} next {$nextTimePoint['stop_sequence']} ";
+	$range = "";
+	if ($prevTimePoint != "") $range .= " AND stop_sequence >= '{$prevTimePoint['stop_sequence']}'";
+	if ($nextTimePoint != "") $range .= " AND stop_sequence <= '{$nextTimePoint['stop_sequence']}'";
 	foreach (getTimeInterpolatedTrip($tripID, $range) as $tripStop) {
 		if ($tripStop['stop_sequence'] == $stop_sequence) return $tripStop;
 	}
