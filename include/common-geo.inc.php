@@ -3,6 +3,7 @@
 $suburbs = explode(",", "Acton,Ainslie,Amaroo,Aranda,Banks,Barton,Belconnen,Bonner,Bonython,Braddon,Bruce,Calwell,Campbell,Chapman,Charnwood,Chifley,Chisholm,City,Conder,Cook,Curtin,Deakin,Dickson,Downer,Duffy,Dunlop,Evatt,Fadden,Farrer,Fisher,Florey,Flynn,Forrest,Franklin,Fraser,Fyshwick,Garran,Gilmore,Giralang,Gordon,Gowrie,Greenway,Griffith,Gungahlin,Hackett,Hall,Harrison,Hawker,Higgins,Holder,Holt,Hughes,Hume,Isaacs,Isabella Plains,Kaleen,Kambah,Kingston,Latham,Lawson,Lyneham,Lyons,Macarthur,Macgregor,Macquarie,Mawson,McKellar,Melba,Mitchell,Monash,Narrabundah,Ngunnawal,Nicholls,Oaks Estate,O'Connor,O'Malley,Oxley,Page,Palmerston,Parkes,Pearce,Phillip,Pialligo,Red Hill,Reid,Richardson,Rivett,Russell,Scullin,Spence,Stirling,Symonston,Tharwa,Theodore,Torrens,Turner,Wanniassa,Waramanga,Watson,Weetangera,Weston,Yarralumla");
 function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible = true)
 {
+	global $labsPath;
 	$width = 300;
 	$height = 300;
 	$metersperpixel[9] = 305.492 * $width;
@@ -47,7 +48,7 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 	}
 	$output = "";
 	if ($collapsible) $output.= '<div class="map" data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
-	$output.= '<img class="map" src="' . curPageURL() . '/lib/staticmaplite/staticmap.php?center=' . $center . '&amp;zoom=' . $zoom . '&amp;size=' . $width . 'x' . $height . '&amp;markers=' . 
+	$output.= '<img class="map" src="' . curPageURL() . '/'. $labsPath. '/lib/staticmaplite/staticmap.php?center=' . $center . '&amp;zoom=' . $zoom . '&amp;size=' . $width . 'x' . $height . '&amp;markers=' . 
 $markers . '" width=' . $width . ' height=' . $height . '>';
 	if ($collapsible) $output.= '</div>';
 	return $output;

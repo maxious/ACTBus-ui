@@ -13,12 +13,13 @@ function getStop($stopID)
 	}
 	return $query->fetch(PDO::FETCH_ASSOC);
 }
-function getStops($timingPointsOnly = false, $firstLetter = "")
+function getStops($timingPointsOnly = false, $firstLetter = "", $startsWith = "")
 {
 	global $conn;
 	$conditions = Array();
 	if ($timingPointsOnly) $conditions[] = "substr(stop_code,1,2) != 'Wj'";
 	if ($firstLetter != "") $conditions[] = "substr(stop_name,1,1) = :firstLetter";
+	if ($startsWith != "") $conditions[] = "stop_name like :startsWith";
 	$query = "Select * from stops";
 	if (sizeof($conditions) > 0) {
 		if (sizeof($conditions) > 1) {
@@ -31,6 +32,11 @@ function getStops($timingPointsOnly = false, $firstLetter = "")
 	$query.= " order by stop_name;";
 	$query = $conn->prepare($query);
         if ($firstLetter != "") $query->bindParam(":firstLetter", $firstLetter);
+        
+        if ($startsWith != "") {
+            $startsWith = $startsWith."%";
+            $query->bindParam(":startsWith", $startsWith);
+        }
 	$query->execute();
 	if (!$query) {
 		databaseError($conn->errorInfo());
@@ -72,6 +78,29 @@ function getStopsBySuburb($suburb)
 	}
 	return $query->fetchAll();
 }
+function getStopsByStopCode($stop_code,$startsWith = "")
+{
+	global $conn;
+	$query = "Select * from stops where stop_code = :stop_code OR stop_code LIKE :stop_code2";
+                if ($startsWith != "") $query .= " AND stop_name like :startsWith";
+
+	debug($query, "database");
+	$query = $conn->prepare($query);
+        
+	$query->bindParam(":stop_code", $stop_code);
+        $stop_code2 = $stop_code . "%";
+	$query->bindParam(":stop_code2", $stop_code2);
+ if ($startsWith != "") {
+            $startsWith = $startsWith."%";
+            $query->bindParam(":startsWith", $startsWith);
+        }
+	$query->execute();
+	if (!$query) {
+		databaseError($conn->errorInfo());
+		return Array();
+	}
+	return $query->fetchAll();
+}
 function getStopRoutes($stopID, $service_period)
 {
 	if ($service_period == "") $service_period = service_period();
@@ -90,9 +119,10 @@ stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id
 	}
 	return $query->fetchAll();
 }
-function getStopTrips($stopID, $service_period = "", $afterTime = "")
+function getStopTrips($stopID, $service_period = "", $afterTime = "", $limit = "")
 {
 	if ($service_period == "") $service_period = service_period();
+        	if ($limit != "") $limitSQL = " LIMIT :limit ";
 	global $conn;
 	if ($afterTime != "") {
 		$query = " SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name, end_times.arrival_time as end_time
@@ -105,7 +135,7 @@ WHERE stop_times.stop_id = :stopID
 AND stop_times.trip_id = end_times.trip_id
 AND service_id=:service_period
 AND end_times.arrival_time > :afterTime
-ORDER BY end_time";
+ORDER BY end_time $limitSQL";
 	}
 	else {
 		$query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
@@ -115,12 +145,13 @@ stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 WHERE stop_times.stop_id = :stopID
 AND service_id=:service_period
-ORDER BY arrival_time";
+ORDER BY arrival_time $limitSQL";
 	}
 	debug($query, "database");
 	$query = $conn->prepare($query);
 	$query->bindParam(":service_period", $service_period);
 	$query->bindParam(":stopID", $stopID);
+        if ($limit != "") $query->bindParam(":limit", $limit);
         if ($afterTime != "") $query->bindParam(":afterTime", $afterTime);
 	$query->execute();
 	if (!$query) {

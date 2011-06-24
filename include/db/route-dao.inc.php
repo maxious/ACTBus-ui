@@ -14,6 +14,21 @@ function getRoute($routeID)
 	return $query->fetch(PDO::FETCH_ASSOC);
 }
 
+function getRouteByFullName($routeFullName)
+{
+	global $conn;
+	$query = "Select * from routes where route_short_name||route_long_name = :routeFullName LIMIT 1";
+	debug($query, "database");
+	$query = $conn->prepare($query);
+	$query->bindParam(":routeFullName", $routeFullName);
+	$query->execute();
+	if (!$query) {
+		databaseError($conn->errorInfo());
+		return Array();
+	}
+	return $query->fetch(PDO::FETCH_ASSOC);
+}
+
 function getRoutes()
 {
 	global $conn;
@@ -32,7 +47,8 @@ function getRoutesByNumber($routeNumber = "")
 	global $conn;
 	if ($routeNumber != "") {
 		$query = "Select distinct routes.route_id,routes.route_short_name,routes.route_long_name,service_id from routes  join trips on trips.route_id =
-routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where route_short_name = :routeNumber order by route_short_name;";
+routes.route_id join stop_times on stop_times.trip_id = trips.trip_id
+where route_short_name = :routeNumber OR route_short_name LIKE :routeNumber2 order by route_short_name;";
 	}
 	else {
 		$query = "SELECT DISTINCT route_short_name from routes order by route_short_name";
@@ -41,6 +57,8 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where rout
 	$query = $conn->prepare($query);
 	if ($routeNumber != "") {
 		$query->bindParam(":routeNumber", $routeNumber);
+                $routeNumber2 = "% ".$routeNumber;
+		$query->bindParam(":routeNumber2", $routeNumber2);
 	}
 	$query->execute();
 	if (!$query) {

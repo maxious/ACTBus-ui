@@ -17,6 +17,7 @@ $return = Array();
 }*/
 //set POST variables
 $url = 'https://www.action.act.gov.au/ARTS/use_Funcs.asp';
+$url = 'http://localhost/myway.htm';
 $field_mapping = Array(
 	"card_number" => "SRNO",
 	"DOBmonth" => "month",
@@ -75,7 +76,7 @@ if (!isset($return['error'])) {
 }
 
 if (!isset($return['error'])) {
-	include_once ('lib/simple_html_dom.php');
+	include_once ('../lib/simple_html_dom.php');
 	//print_r($pageHTML);
 	$page = str_get_html($pageHTML);
 	$pageAlerts = $page->find(".smartCardAlert");
@@ -101,8 +102,19 @@ if (!isset($return['error'])) {
 			foreach ($table->find("tr") as $tr) {
 				$tableColumnNum = 0;
 				foreach ($tr->find("td") as $td) {
-					if ($tableNum == 1) $return[$tableName[$tableNum]][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
-					else $return[$tableName[$tableNum]][$tableRowNum][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+					if ($tableNum == 1) {
+						// first table has card/cardholder details
+						$return[$tableName[$tableNum]][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+					} else {
+						// second table has transactions
+						
+						if ($tableColumns[$tableColumnNum] == "TX Reference No / Type") {
+							$return[$tableName[$tableNum]][$tableRowNum]["TX Reference No"] = substr(cleanString($td->plaintext), 0,6);
+							$return[$tableName[$tableNum]][$tableRowNum]["TX Type"] = substr(cleanString($td->plaintext), 7);
+						} else {
+							$return[$tableName[$tableNum]][$tableRowNum][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+						}
+					}
 					//print_r($return);
 					$tableColumnNum++;
 				}

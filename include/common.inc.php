@@ -26,6 +26,8 @@ if (isDebug("vanilleotp")) {
 		$otpAPIurl = 'http://10.0.1.135:8080/opentripplanner-api-webapp/';
 }
 if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
+$labsPath = "";
+if (strstr($_SERVER['PHP_SELF'],"labs")) $labsPath = "../";
 
 include_once ("common-geo.inc.php");
 include_once ("common-net.inc.php");

@@ -11,6 +11,9 @@ else {
 if (!$conn) {
 	die("A database error occurred.\n");
 }
+if (isDebug()) {
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
 function databaseError($errMsg)
 {
 	die($errMsg);
