@@ -29,6 +29,11 @@ if (isDebug("phperror")) error_reporting(E_ALL ^ E_NOTICE);
 $labsPath = "";
 if (strstr($_SERVER['PHP_SELF'],"labs")) $labsPath = "../";
 
+function isDebugServer()
+{
+	return !isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "10.1.0.4" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" ;
+}
+
 include_once ("common-geo.inc.php");
 include_once ("common-net.inc.php");
 include_once ("common-transit.inc.php");
@@ -38,10 +43,7 @@ include_once ("common-request.inc.php");
 include_once ("common-session.inc.php");
 include_once ("common-template.inc.php");
 
-function isDebugServer()
-{
-	return $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" || !$_SERVER['SERVER_NAME'];
-}
+
 function isAnalyticsOn()
 {
 	return !isDebugServer();
