@@ -81,7 +81,7 @@ function getStopsBySuburb($suburb)
 function getStopsByStopCode($stop_code,$startsWith = "")
 {
 	global $conn;
-	$query = "Select * from stops where stop_code = :stop_code OR stop_code LIKE :stop_code2";
+	$query = "Select * from stops where (stop_code = :stop_code OR stop_code LIKE :stop_code2)";
                 if ($startsWith != "") $query .= " AND stop_name like :startsWith";
 
 	debug($query, "database");
@@ -105,7 +105,7 @@ function getStopRoutes($stopID, $service_period)
 {
 	if ($service_period == "") $service_period = service_period();
 	global $conn;
-	$query = "SELECT service_id,trips.route_id,route_short_name,route_long_name
+	$query = "SELECT distinct service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times join trips on trips.trip_id =
 stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id = :stopID AND service_id=:service_period";
 	debug($query, "database");

@@ -75,8 +75,9 @@ WHERE trips.trip_id = :tripID $range ORDER BY stop_sequence";
 					$distance_between_timepoints+= distance($stopTimes[$k - 1]["stop_lat"], $stopTimes[$k - 1]["stop_lon"], $stopTimes[$k]["stop_lat"], $stopTimes[$k]["stop_lon"]);
 				}
 				$next_timepoint = $stopTimes[$k];
-				$rv[] = $stopTime;
+				
 			}
+			$rv[] = $stopTime;
 		}
 		else {
 			// is untimed point
@@ -94,10 +95,11 @@ WHERE trips.trip_id = :tripID $range ORDER BY stop_sequence";
 				$stopTime["arrival_time"] = $cur_timepoint["arrival_time"];
 			}
 			$rv[] = $stopTime;
-			//var_dump($rv);
+			
 			
 		}
 	}
+	//var_dump($rv);
 	return $rv;
 }
 function getTripPreviousTimePoint($tripID, $stop_sequence)

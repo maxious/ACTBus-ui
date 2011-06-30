@@ -2,21 +2,21 @@
 include ('../include/common.inc.php');
 include_header("Route Statistics", "networkstats")
 ?>
-<script type="text/javascript" src="js/flotr/lib/prototype-1.6.0.2.js"></script>
+<script type="text/javascript" src="../js/flotr/lib/prototype-1.6.0.2.js"></script>
 
 		<!--[if IE]>
 
-			<script type="text/javascript" src="js/flotr/lib/excanvas.js"></script>
+			<script type="text/javascript" src="../js/flotr/lib/excanvas.js"></script>
 
-			<script type="text/javascript" src="js/flotr/lib/base64.js"></script>
+			<script type="text/javascript" src="../js/flotr/lib/base64.js"></script>
 
 		<![endif]-->
 
-		<script type="text/javascript" src="js/flotr/lib/canvas2image.js"></script>
+		<script type="text/javascript" src="../js/flotr/lib/canvas2image.js"></script>
 
-		<script type="text/javascript" src="js/flotr/lib/canvastext.js"></script>
+		<script type="text/javascript" src="../js/flotr/lib/canvastext.js"></script>
 
-		<script type="text/javascript" src="js/flotr/flotr.debug-0.2.0-alpha_radar1.js"></script>
+		<script type="text/javascript" src="../js/flotr/flotr.debug-0.2.0-alpha_radar1.js"></script>
 		<form method="get" action="networkstats.php">
 			<select id="routeid" name="routeid">
 				<?php

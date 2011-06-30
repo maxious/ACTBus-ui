@@ -28,5 +28,6 @@ End with a backslash and a period on a line by itself.
 >> noservice    20110426        1
 >> sunday	20110424 	2
 >> noservice    20110424 	1
+>> weekday	20110613 	2
+>> sunday       20110613 	1
 >> \.
-

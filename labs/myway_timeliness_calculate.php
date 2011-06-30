@@ -42,6 +42,7 @@ foreach ($uncalcdObservations as $obsv) {
 	}
 	//		:convert timestamp into time of day and date
 	$time = date("H:i:s", strtotime($obsv['time']));
+        $search_time = date("H:i:s", strtotime($obsv['time'])-(30*60)); // 30 minutes margin
 	$date = date("c", strtotime($obsv['time']));
 	$timing_period = service_period(strtotime($date));
 	$potentialStops = getStopsByStopCode($obsv["stop_code"], $obsv["stop_street"]);
@@ -64,7 +65,7 @@ foreach ($uncalcdObservations as $obsv) {
 		echo "error, route '{$obsv["route_full_name"]}' unknown";
 		continue;
 	}
-	echo "Matched route: {$potentialRoute['route_short_name']}{$potentialRoute['route_long_name']}<br>";
+	echo "Matched route: {$potentialRoute['route_short_name']}{$potentialRoute['route_long_name']} {$timing_period}<br>";
 	$timeDeltas = Array();
 	foreach ($potentialStops as $potentialStop) {
 		$stopRoutes = getStopRoutes($potentialStop['stop_id'], $timing_period);
@@ -72,10 +73,10 @@ foreach ($uncalcdObservations as $obsv) {
 		foreach ($stopRoutes as $stopRoute) {
 			//Check if this route stops at each stop
 			if ($stopRoute['route_short_name'] . $stopRoute['route_long_name'] == $obsv["route_full_name"]) {
-				echo "Matching route found at {$potentialStop['stop_code']}<br>";
+				echo "Matching route {$stopRoute['route_id']} found at {$potentialStop['stop_code']}<br>";
 				$foundRoute = $stopRoute;
 				//if does get tripstoptimes for this route
-				$trips = getStopTrips($potentialStop['stop_id'], $timing_period, $time);
+				$trips = getStopTrips($potentialStop['stop_id'], $timing_period, $search_time);
 				foreach ($trips as $trip) {
 					//echo $trip['route_id']." ".$stopRoute['route_id'].";";
 					if ($trip['route_id'] == $stopRoute['route_id']) {
@@ -88,7 +89,8 @@ foreach ($uncalcdObservations as $obsv) {
 							"timeDiff" => $timeDiff,
 							"stop_code" => $potentialStop['stop_code']
 						);
-						echo "Found trip at {$timedTrip['arrival_time']}, difference of " . round($timeDiff / 60, 2) . " minutes<br>";
+						echo "Found trip {$trip['trip_id']} at stop {$potentialStop['stop_code']} (#{$potentialStop['stop_id']}, sequence #{$trip['stop_sequence']})<br>";
+                                                echo "Arriving at {$timedTrip['arrival_time']}, difference of " . round($timeDiff / 60, 2) . " minutes<br>";
 					}
 				}
 				break; // because have found route
@@ -98,6 +100,7 @@ foreach ($uncalcdObservations as $obsv) {
 		if (sizeof($foundRoute) < 1) {
 			//print out that stops/does not stop
 			echo "No matching routes found at {$potentialStop['stop_code']}<br>";
+                        var_dump($stopRoutes);
 		}
 	}
 	//   lowest delta is recorded delta
