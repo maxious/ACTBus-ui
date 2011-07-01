@@ -1,16 +1,6 @@
 <?php
 include ('../include/common.inc.php');
 include_header("MyWay Deltas", "mywayDelta");
-//collect all observation not in delta
-$query = "select * from myway_timingdeltas";
-debug($query, "database");
-$query = $conn->prepare($query);
-$query->execute();
-if (!$query) {
-	databaseError($conn->errorInfo());
-	return Array();
-}
-
 ?>
 
     <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../js/flot/excanvas.min.js"></script><![endif]--> 
@@ -19,26 +9,76 @@ if (!$query) {
   <div id="placeholder" style="width:800px;height:600px"></div> 
 <script type="text/javascript"> 
 $(function () {
+    var d = new Date();
+						d.setUTCMinutes(0);
+						d.setUTCHours(0);
+    var midnight = d.getTime();
     var d1 = [];
 <?php
-$i=0;
-foreach($query->fetchAll() as $delta) {
-    echo "d1.push([$i, {$delta['timing_delta']}]); \n";
-    $i++;
+//$query = "select * from myway_timingdeltas order by time";
+$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by time;";
+$query = $conn->prepare($query);
+$query->execute();
+if (!$query) {
+	databaseError($conn->errorInfo());
+	return Array();
+}
+$i = 0;
+foreach ($query->fetchAll() as $delta) {
+	echo "d1.push([ midnight+ (1000*" . midnight_seconds(strtotime($delta['time'])) . "), {$delta['timing_delta']}]); \n";
+	$i++;
 };
-     ?>
-     
-    $.plot($("#placeholder"), [
+?>
+
+    var d2 = [];
+<?php
+//$query = "select * from myway_timingdeltas order by route_full_name";
+$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas) order by route_full_name";
+$query = $conn->prepare($query);
+$query->execute();
+if (!$query) {
+	databaseError($conn->errorInfo());
+	return Array();
+}
+$i = 0;
+foreach ($query->fetchAll() as $delta) {
+	//  echo "d2.push([$i, {$delta['timing_delta']}]); \n";
+	$i++;
+};
+?>
+       var placeholder = $("#placeholder");
+
+    var plot = $.plot(placeholder, [
         {
             data: d1,
             points: { show: true }
         },
-        
+        {
+            data: d2,
+            points: { show: true }
+        },
     ],
         {
+            xaxis: {
+                mode: "time",
+                min: midnight + (1000*60*60*8),
+                max: midnight + (1000*60*60*23.5)
+            },
+            yaxis: {
+                tickFormatter: yformatter
+            },
             grid: { hoverable: true, clickable: true },
-        });
-});
+    });
+        var o;
+    o = plot.pointOffset({ x: midnight+ (9*60*60*1000), y: -1.2});
+    placeholder.append('<div style="position:absolute;left:' + (o.left + 4) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">9am</div>');
+  o = plot.pointOffset({ x: midnight+ (16*60*60*1000), y: -1.2});
+    placeholder.append('<div style="position:absolute;left:' + (o.left + 4) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">4pm</div>');
+
+ });
+function yformatter(v) {
+    return Math.floor(v/60) + " minutes " + (v == 0 ? "" : (v >0 ? "early":"late"))
+}
   function showTooltip(x, y, contents) {
         $('<div id="tooltip">' + contents + '</div>').css( {
             position: 'absolute',
@@ -65,8 +105,13 @@ foreach($query->fetchAll() as $delta) {
                     var x = item.datapoint[0].toFixed(2),
                         y = item.datapoint[1].toFixed(2);
                     
+                    var d = new Date();
+d.setTime(x);
+var time = d.getUTCHours() +':'+ (d.getUTCMinutes().toString().length == 1 ? '0'+ d.getMinutes():  d.getUTCMinutes())
+
+                    
                     showTooltip(item.pageX, item.pageY,
-                                item.series.label + " of " + x + " = " + y +" ( "+ y/60+" minutes )");
+                                item.series.label + " of " + x + " "+ time +" = " + y +" ( "+ y/60+" minutes )");
                 }
             }
             else {
@@ -74,4 +119,5 @@ foreach($query->fetchAll() as $delta) {
                 previousPoint = null;            
             }
     });
+
 </script> 

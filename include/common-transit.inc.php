@@ -23,9 +23,12 @@ function service_period($date = "")
 		return 'weekday';
 	}
 }
-function midnight_seconds()
+function midnight_seconds($time = "")
 {
 	// from http://www.perturb.org/display/Perlfunc__Seconds_Since_Midnight.html
+	if ($time != "") {
+		return (date("G", $time) * 3600) + (date("i", $time) * 60) + date("s", $time);
+	}
 	if (isset($_SESSION['time'])) {
 		$time = strtotime($_SESSION['time']);
 		return (date("G", $time) * 3600) + (date("i", $time) * 60) + date("s", $time);
