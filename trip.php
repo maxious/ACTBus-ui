@@ -17,6 +17,7 @@ include_header("Stops on " . $trip['route_short_name'] . ' ' . $trip['route_long
 trackEvent("Route/Trip View","View Route",  $trip['route_short_name'] . ' ' . $trip['route_long_name'], $routeid);
 
 echo '<span id="leftcolumn">';
+echo '<a href="'.$trip['route_url'].'">View Original Timetable/Map</a>';
 echo '<h2>Via:</h2> <small>' . viaPointNames($tripid) . '</small>';
 echo '<h2>Other Trips:</h2> ';
 foreach (getRouteTrips($routeid) as $othertrip) {

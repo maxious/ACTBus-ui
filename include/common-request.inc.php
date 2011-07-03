@@ -15,7 +15,7 @@ if (isset($_REQUEST['nearby'])) {
 	$nearby = true;
 }
 if (isset($_REQUEST['suburb'])) {
-	$suburb = filter_var($_REQUEST['suburb'], FILTER_SANITIZE_STRING);
+	$suburb = $_REQUEST['suburb'];
 }
 $pageKey = filter_var($_REQUEST['pageKey'], FILTER_SANITIZE_NUMBER_INT);
 $lat = filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
