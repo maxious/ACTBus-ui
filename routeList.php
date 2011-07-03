@@ -38,7 +38,7 @@ else if (isset($nearby) || isset($suburb)) {
 		navbar();
 		timePlaceSettings();
 		trackEvent("Route Lists", "Routes By Suburb", $suburb);
-		$routes = getRoutesbysuburbs($suburb);
+		$routes = getRoutesBySuburb($suburb);
 	}
 	if (isset($nearby)) {
 		include_header("Routes Nearby", "routeList", true, true);
