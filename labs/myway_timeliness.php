@@ -6,17 +6,17 @@ include_header("MyWay Deltas", "mywayDelta");
     <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../js/flot/excanvas.min.js"></script><![endif]--> 
  
     <script language="javascript" type="text/javascript" src="../js/flot/jquery.flot.js"></script> 
-  <div id="placeholder" style="width:800px;height:600px"></div> 
+  <div id="placeholder" style="width:1000px;height:600px"></div> 
 <script type="text/javascript"> 
 $(function () {
     var d = new Date();
 						d.setUTCMinutes(0);
 						d.setUTCHours(0);
     var midnight = d.getTime();
-    var d1 = [];
+
 <?php
 //$query = "select * from myway_timingdeltas order by time";
-$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by time;";
+$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by route_full_name;";
 $query = $conn->prepare($query);
 $query->execute();
 if (!$query) {
@@ -24,39 +24,34 @@ if (!$query) {
 	return Array();
 }
 $i = 0;
+$labels = Array();
+$lastRoute = "";
 foreach ($query->fetchAll() as $delta) {
-	echo "d1.push([ midnight+ (1000*" . midnight_seconds(strtotime($delta['time'])) . "), {$delta['timing_delta']}]); \n";
-	$i++;
+    $routeName = $delta['route_full_name'];
+    if (strstr($routeName," 3")) $routeName = "312-319";
+    else $routeName = preg_replace('/\D/', '', $routeName);
+    if ($routeName != $lastRoute) {
+        	$i++;
+                echo "    var d$i = [];";
+                $lastRoute = $routeName;
+                $labels[$i] = $routeName;
+    }
+	echo "d$i.push([ midnight+ (1000*" . midnight_seconds(strtotime($delta['time'])) . "), {$delta['timing_delta']}]); \n";
 };
 ?>
 
-    var d2 = [];
-<?php
-//$query = "select * from myway_timingdeltas order by route_full_name";
-$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas) order by route_full_name";
-$query = $conn->prepare($query);
-$query->execute();
-if (!$query) {
-	databaseError($conn->errorInfo());
-	return Array();
-}
-$i = 0;
-foreach ($query->fetchAll() as $delta) {
-	//  echo "d2.push([$i, {$delta['timing_delta']}]); \n";
-	$i++;
-};
-?>
        var placeholder = $("#placeholder");
 
     var plot = $.plot(placeholder, [
-        {
-            data: d1,
-            points: { show: true }
-        },
-        {
-            data: d2,
-            points: { show: true }
-        },
+<?php
+foreach ($labels as $key => $label) {
+    echo "        {
+            data: d$key,
+            points: { show: true },
+            label: '$label'
+        },";
+}
+        ?>
     ],
         {
             xaxis: {
@@ -111,7 +106,7 @@ var time = d.getUTCHours() +':'+ (d.getUTCMinutes().toString().length == 1 ? '0'
 
                     
                     showTooltip(item.pageX, item.pageY,
-                                item.series.label + " of " + x + " "+ time +" = " + y +" ( "+ y/60+" minutes )");
+                                item.series.label + " at "+ time +" = " + y +" ( "+ y/60+" minutes )");
                 }
             }
             else {
