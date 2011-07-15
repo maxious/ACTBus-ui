@@ -1,7 +1,7 @@
 <?php
 // SELECT array_to_string(array(SELECT REPLACE(name_2006, ',', '\,') as name FROM suburbs order by name), ',')
 $suburbs = explode(",", "Acton,Ainslie,Amaroo,Aranda,Banks,Barton,Belconnen,Bonner,Bonython,Braddon,Bruce,Calwell,Campbell,Chapman,Charnwood,Chifley,Chisholm,City,Conder,Cook,Curtin,Deakin,Dickson,Downer,Duffy,Dunlop,Evatt,Fadden,Farrer,Fisher,Florey,Flynn,Forrest,Franklin,Fraser,Fyshwick,Garran,Gilmore,Giralang,Gordon,Gowrie,Greenway,Griffith,Gungahlin,Hackett,Hall,Harrison,Hawker,Higgins,Holder,Holt,Hughes,Hume,Isaacs,Isabella Plains,Kaleen,Kambah,Kingston,Latham,Lawson,Lyneham,Lyons,Macarthur,Macgregor,Macquarie,Mawson,McKellar,Melba,Mitchell,Monash,Narrabundah,Ngunnawal,Nicholls,Oaks Estate,O'Connor,O'Malley,Oxley,Page,Palmerston,Parkes,Pearce,Phillip,Pialligo,Red Hill,Reid,Richardson,Rivett,Russell,Scullin,Spence,Stirling,Symonston,Tharwa,Theodore,Torrens,Turner,Wanniassa,Waramanga,Watson,Weetangera,Weston,Yarralumla");
-function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible = true)
+function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible = true, $twotone = false)
 {
 	global $labsPath;
 	$width = 300;
@@ -17,7 +17,7 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 	// $metersperpixel[17]=1.193*$width;
 	$center = "";
 	$markers = "";
-	$mapwidthinmeters = 50; 
+	$mapwidthinmeters = 50;
 	if (sizeof($mapPoints) < 1) return "map error";
 	if (sizeof($mapPoints) === 1) {
 		if ($zoom == 0) $zoom = 14;
@@ -26,25 +26,30 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 	}
 	else {
 		foreach ($mapPoints as $index => $mapPoint) {
-			$markers.= $mapPoint[0] . "," . $mapPoint[1] . "," . $markerImage . ($index + 1);
+			if ($twotone && $index == 0) {
+				$markers.= $mapPoint[0] . "," . $mapPoint[1] . "," . "iconr" . ($index + 1);
+				$center = "{$mapPoints[0][0]},{$mapPoints[0][1]}";
+			}
+			else {
+				$markers.= $mapPoint[0] . "," . $mapPoint[1] . "," . $markerImage . ($index + 1);
+			}
 			if ($index + 1 != sizeof($mapPoints)) $markers.= "|";
-			$dist = distance($mapPoints[0][0], $mapPoint[0][1],$mapPoint[0], $mapPoint[1]);
-			$mapwidthinmeters = ($dist>$mapwidthinmeters ? $dist : $mapwidthinmeters);
+			$dist = distance($mapPoints[0][0], $mapPoint[0][1], $mapPoint[0], $mapPoint[1]);
+			$mapwidthinmeters = ($dist > $mapwidthinmeters ? $dist : $mapwidthinmeters);
 			$totalLat+= $mapPoint[0];
 			$totalLon+= $mapPoint[1];
 		}
 		if ($zoom == 0) {
 			$mapwidthinmeters = distance($minlat, $minlon, $minlat, $maxlon);
 			foreach (array_reverse($metersperpixel, true) as $zoomLevel => $maxdistance) {
-				if ($zoom == 0 && $mapwidthinmeters*1.5 < ($maxdistance)) $zoom = $zoomLevel;
+				if ($zoom == 0 && $mapwidthinmeters * 1.5 < ($maxdistance)) $zoom = $zoomLevel;
 			}
 		}
 		$center = $totalLat / sizeof($mapPoints) . "," . $totalLon / sizeof($mapPoints);
 	}
 	$output = "";
 	if ($collapsible) $output.= '<div class="map" data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
-	$output.= '<img class="map" src="' . curPageURL() . '/'. $labsPath. '/lib/staticmaplite/staticmap.php?center=' . $center . '&amp;zoom=' . $zoom . '&amp;size=' . $width . 'x' . $height . '&amp;markers=' . 
-$markers . '" width=' . $width . ' height=' . $height . '>';
+	$output.= '<img class="map" src="' . curPageURL() . '/' . $labsPath . '/lib/staticmaplite/staticmap.php?center=' . $center . '&amp;zoom=' . $zoom . '&amp;size=' . $width . 'x' . $height . '&amp;markers=' . $markers . '" width=' . $width . ' height=' . $height . '>';
 	if ($collapsible) $output.= '</div>';
 	return $output;
 }
@@ -62,11 +67,11 @@ function distance($lat1, $lng1, $lat2, $lng2, $roundLargeValues = false)
 	$c = 2 * atan2(sqrt($a) , sqrt(1 - $a));
 	$km = $r * $c;
 	if ($roundLargeValues) {
-	  if ($km < 1) return floor($km * 1000);
-	  else return round($km,2)."k";
-	} else return floor($km * 1000);
+		if ($km < 1) return floor($km * 1000);
+		else return round($km, 2) . "k";
+	}
+	else return floor($km * 1000);
 }
-
 function decodePolylineToArray($encoded)
 {
 	// source: http://latlongeeks.com/forum/viewtopic.php?f=4&t=5

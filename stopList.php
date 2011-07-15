@@ -47,12 +47,26 @@ else {
 		include_header("Nearby Stops", "stopList", true, true);
 		trackEvent("Stop Lists", "Stops Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
 		navbar();
-		timePlaceSettings(true);
 		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
+			timePlaceSettings(true);
 			include_footer();
 			die();
 		}
 		$stops = getNearbyStops($_SESSION['lat'], $_SESSION['lon'], 15);
+		echo '<span class="content-secondary">';
+		$stopPositions[] = Array(
+			$_SESSION['lat'],
+			$_SESSION['lon']
+		);
+		foreach ($stops as $sub_stop) {
+			$stopPositions[] = Array(
+				$sub_stop["stop_lat"],
+				$sub_stop["stop_lon"]
+			);
+		}
+		echo staticmap($stopPositions, 0, "iconb", true, true);
+		timePlaceSettings(true);
+		echo '</span><span class="content-primary">';
 	}
 	else if (isset($suburb)) {
 		$stops = getStopsBySuburb($suburb);
@@ -129,6 +143,7 @@ else {
 		}
 	}
 	echo '</ul>';
+	if (isset($nearby)) echo '</span>';
 }
 include_footer();
 ?>
