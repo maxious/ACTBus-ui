@@ -9,15 +9,23 @@ else {
 	$trip = getTrip($tripid);
 	$routeid = $trip["route_id"];
 }
-$routetrips = getRouteTrips($routeid);
+
 include_header("Stops on " . $trip['route_short_name'] . ' ' . $trip['route_long_name'], "trip");
 trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $trip['route_long_name'], $routeid);
 echo '<span class="content-secondary">';
 echo '<a href="' . $trip['route_url'] . '">View Original Timetable/Map</a>';
 echo '<h2>Via:</h2> <small>' . viaPointNames($tripid) . '</small>';
 echo '<h2>Other Trips:</h2> ';
-foreach (getRouteTrips($routeid) as $othertrip) {
+$routeTrips = getRouteTrips($routeid);
+foreach ($routeTrips as $key => $othertrip) {
+    if ($othertrip['trip_id']!= $tripid) {
 	echo '<a href="trip.php?tripid=' . $othertrip['trip_id'] . "&amp;routeid=" . $routeid . '">' . str_replace("  ", ":00", str_replace(":00", " ", $othertrip['arrival_time'])) . '</a> ';
+    } else {
+        // skip this trip but look forward/back
+        if ($key-1 > 0) $prevTrip = $routeTrips[$key-1]['trip_id'];
+        if ($key+1 < sizeof($routeTrips)) $nextTrip = $routeTrips[$key+1]['trip_id'];
+        
+    }
 }
 flush();
 @ob_flush();
@@ -33,6 +41,10 @@ if ($otherDir == 0) echo "None";
 echo '</span><span class="content-primary">';
 flush();
 @ob_flush();
+echo "<div class='ui-header' style='overflow: visible; height: 1.5em'>";
+if($nextTrip) echo '<a href="trip.php?tripid=' . $nextTrip . "&amp;routeid=" . $routeid . '" data-icon="arrow-r" class="ui-btn-right">Next Trip</a>';
+if($prevTrip) echo '<a href="trip.php?tripid=' . $prevTrip . "&amp;routeid=" . $routeid . '" data-icon="arrow-l" class="ui-btn-left">Previous Trip</a>';
+echo "</div>";
 echo '  <ul data-role="listview"  data-inset="true">';
 $stopsGrouped = Array();
 $tripStopTimes = getTimeInterpolatedTrip($tripid);
