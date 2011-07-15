@@ -1,6 +1,6 @@
 <?php
 include ('include/common.inc.php');
-include_header("Trip Planner", "tripPlanner", true, true, true);
+include_header("Trip Planner", "tripPlanner", true, false, true);
 $from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZE_STRING) : "");
 $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "");
 $date = (isset($_REQUEST['date']) ? filter_var($_REQUEST['date'], FILTER_SANITIZE_STRING) : date("m/d/Y"));
@@ -13,17 +13,17 @@ function formatTime($timeString)
 function tripPlanForm($errorMessage = "")
 {
 	global $date, $time, $from, $to;
-	echo "<font color=red>$errorMessage</font>";
+	echo "<div class='error'>$errorMessage</font>";
 	echo '<form action="tripPlanner.php" method="post">
     <div data-role="fieldcontain">
         <label for="from">I would like to go from</label>
         <input type="text" name="from" id="from" value="' . $from . '"  />
-        <a href="#" style="display:none" name="fromHere" id="fromHere"/>Here?</a>
+        <a href="#" style="display:none" name="fromHere" id="fromHere">Here?</a>
     </div>
         <div data-role="fieldcontain">
         <label for="to"> to </label>
         <input type="text" name="to" id="to" value="' . $to . '"  />
-        <a href="#" style="display:none" name="toHere" id="toHere"/>Here?</a>
+        <a href="#" style="display:none" name="toHere" id="toHere">Here?</a>
     </div>
     <div data-role="fieldcontain">
         <label for="date"> on </label>
@@ -34,13 +34,7 @@ function tripPlanForm($errorMessage = "")
         <input type="time" name="time" id="time" value="' . $time . '"  />
     </div>
         <input type="submit" value="Go!"></form>';
-	echo "<script>
-$('#toHere').click(function(event) { $('#to').val(getCookie('geolocate')); return false;});
-$('#toHere').show();
-$('#fromHere').click(function(event) { $('#from').val(getCookie('geolocate')); return false;});
-$('#fromHere').show();
 
-        </script>";
 }
 function processItinerary($itineraryNumber, $itinerary)
 {
@@ -117,7 +111,6 @@ if ($_REQUEST['time']) {
 	}
 	else if (strpos($to, "(") !== false) {
 		$toParts = explode("(", $to);
-                print_r($toParts);
 		$toPlace = str_replace( ")", "", $toParts[1]);
 	}
 	else {

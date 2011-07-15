@@ -322,10 +322,6 @@ var options = {
 $(document).ready(function() {
         $('#here').click(function(event) { $('#geolocate').val(geolocate()); return false;});
         $('#here').show();
-	/*if ($.mobile.media('screen and (min-width: 768px)')) {
-	  $('map a:first').click();
-	  $('#settings a:first').click();
-	}*/
 });
 ";
 		if (!isset($_SESSION['lat']) || $_SESSION['lat'] == "") echo "geolocate();";
