@@ -6,7 +6,7 @@ $debugOkay = Array(
 	"phperror",
 	"awsotp",
 	//"squallotp",
-	"vanilleotp",
+	//"vanilleotp",
 	"database",
 	"other"
 );

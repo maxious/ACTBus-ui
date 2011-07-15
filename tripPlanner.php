@@ -77,7 +77,7 @@ function processLeg($legNumber, $leg)
 	$legArray = object2array($leg);
 	echo '<h3>Leg #' . ($legNumber + 1) . " ( {$legArray['@mode']} from: {$leg->from->name} to {$leg->to->name}, " . floor($leg->duration / 60000) . " minutes) </h3>\n";
 	if ($legArray["@mode"] === "BUS") {
-		echo "Take bus {$legArray['@route']} " . str_replace("To", "towards", $legArray['@headsign']) . "<br>";
+		echo "Take bus {$legArray['@route']} " . str_replace("To", "towards", $legArray['@headsign']) . " departing at ". formatTime($leg->startTime)."<br>";
 	}
 	else {
 		$walkStepMarkers = array();

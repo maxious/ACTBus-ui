@@ -13,14 +13,11 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 	$metersperpixel[13] = 19.093 * $width;
 	$metersperpixel[14] = 9.547 * $width;
 	$metersperpixel[15] = 4.773 * $width;
-	$metersperpixel[16] = 2.387 * $width;
+	//$metersperpixel[16] = 2.387 * $width;
 	// $metersperpixel[17]=1.193*$width;
 	$center = "";
 	$markers = "";
-	$minlat = 999;
-	$minlon = 999;
-	$maxlat = 0;
-	$maxlon = 0;
+	$mapwidthinmeters = 50; 
 	if (sizeof($mapPoints) < 1) return "map error";
 	if (sizeof($mapPoints) === 1) {
 		if ($zoom == 0) $zoom = 14;
@@ -31,17 +28,15 @@ function staticmap($mapPoints, $zoom = 0, $markerImage = "iconb", $collapsible =
 		foreach ($mapPoints as $index => $mapPoint) {
 			$markers.= $mapPoint[0] . "," . $mapPoint[1] . "," . $markerImage . ($index + 1);
 			if ($index + 1 != sizeof($mapPoints)) $markers.= "|";
-			if ($mapPoint[0] < $minlat) $minlat = $mapPoint[0];
-			if ($mapPoint[0] > $maxlat) $maxlat = $mapPoint[0];
-			if ($mapPoint[1] < $minlon) $minlon = $mapPoint[1];
-			if ($mapPoint[1] > $maxlon) $maxlon = $mapPoint[1];
+			$dist = distance($mapPoints[0][0], $mapPoint[0][1],$mapPoint[0], $mapPoint[1]);
+			$mapwidthinmeters = ($dist>$mapwidthinmeters ? $dist : $mapwidthinmeters);
 			$totalLat+= $mapPoint[0];
 			$totalLon+= $mapPoint[1];
 		}
 		if ($zoom == 0) {
 			$mapwidthinmeters = distance($minlat, $minlon, $minlat, $maxlon);
 			foreach (array_reverse($metersperpixel, true) as $zoomLevel => $maxdistance) {
-				if ($zoom == 0 && $mapwidthinmeters < ($maxdistance + 50)) $zoom = $zoomLevel;
+				if ($zoom == 0 && $mapwidthinmeters*1.5 < ($maxdistance)) $zoom = $zoomLevel;
 			}
 		}
 		$center = $totalLat / sizeof($mapPoints) . "," . $totalLon / sizeof($mapPoints);
