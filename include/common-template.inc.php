@@ -138,21 +138,7 @@ echo '
     -moz-border-radius: 15px;
 border-radius: 15px;
     }
- 
-/*#leftcolumn { 
-	float: none;
-}			
-.min-width-768px #leftcolumn {
-	float: left;
-	width: 30%;
-}
-#rightcolumn { 
-	float: none;
-}			
-.min-width-768px #rightcolumn {
-	float: right;
-	width: 68%;
-}*/	
+
 
 #footer {
 clear:both;
@@ -175,6 +161,134 @@ position:static;
 width:auto; 
 height:auto; 
 }
+
+
+// adaptive layout from jQuery Mobile docs site
+.type-interior .content-secondary {
+	border-right: 0;
+	border-left: 0;
+	margin: 10px -15px 0;
+	background: #fff;
+	border-top: 1px solid #ccc;
+}
+.type-home .ui-content {
+	margin-top: 5px;
+}
+.type-interior .ui-content {
+	padding-bottom: 0;
+}
+.content-secondary .ui-collapsible-contain {
+	padding: 10px 15px;
+
+}
+.content-secondary .ui-collapsible-heading {
+	margin: 0 0 30px;
+}
+.content-secondary .ui-collapsible-heading-collapsed,
+.content-secondary .ui-collapsible-content {
+	padding:0;
+	margin: 0;
+}
+@media all and (min-width: 650px){
+.content-secondary {
+		text-align: left;
+		float: left;
+		width: 45%;
+		background: none;
+		border-top: 0;
+	}
+	.content-secondary,
+	.type-interior .content-secondary {
+		margin: 30px 0 20px 2%;
+		padding: 20px 4% 0 0;
+			background: none;
+	}
+	.type-index .content-secondary {
+		padding: 0;
+	}
+	.type-index .content-secondary .ui-listview {
+		margin: 0;
+	}
+	.content-primary {
+		width: 45%;
+		float: right;
+		margin-top: 30px;
+		margin-right: 1%;
+		padding-right: 1%;
+	}
+	.content-primary ul:first-child {
+		margin-top: 0;
+	}
+
+	.type-interior .content-primary {
+		padding: 1.5em 6% 3em 0;
+		margin: 0;
+	}
+	/* fix up the collapsibles - expanded on desktop */
+	.content-secondary .ui-collapsible-heading {
+		display: none;
+	}
+	.content-secondary .ui-collapsible-contain {
+		margin:0;
+	}
+	.content-secondary .ui-collapsible-content {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+		.type-interior  .content-secondary .ui-li-divider {
+		padding-top: 1em;
+		padding-bottom: 1em;
+	}
+	.type-interior .content-secondary {
+		margin: 0;
+		padding: 0;
+	}
+	
+}
+@media all and (min-width: 750px){
+	.type-home .ui-content,
+	.type-interior .ui-content {
+		background-position: 39%;
+	}
+	.content-secondary {
+		width: 34%;
+	}
+	.content-primary {
+		width: 56%;
+		padding-right: 1%;
+	}	
+	.type-interior .ui-content {
+		background-position: 34%;
+	}
+}
+
+@media all and (min-width: 1200px){
+	.type-home .ui-content{
+		background-position: 38.5%;
+	}
+	.type-interior .ui-content {
+		background-position: 30%;
+	}
+	.content-secondary {
+		width: 30%;
+		padding-right:6%;
+		margin: 30px 0 20px 5%;
+	}
+	.type-interior .content-secondary {
+		margin: 0;
+		padding: 0;
+	}
+	.content-primary {
+		width: 50%;
+		margin-right: 5%;
+		padding-right: 3%;
+	}
+	.type-interior .content-primary {
+		width: 60%;
+	}
+}
+
 </style>';
 	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
 		echo '<meta name="apple-mobile-web-app-capable" content="yes" />

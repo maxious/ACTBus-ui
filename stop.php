@@ -60,7 +60,7 @@ if (isset($stopids)) {
 	}
 }
 include_header($stop['stop_name'], "stop");
-echo '<span id="leftcolumn">';
+echo '<span class="content-secondary">';
 timePlaceSettings();
 echo $stopLinks;
 if (sizeof($stops) > 0) {
@@ -76,7 +76,7 @@ else {
 		)
 	)) ;
 }
-echo '</span><span id="rightcolumn">';
+echo '</span><span class="content-primary">';
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
     sktimesort($allStopsTrips,"arrival_time", true);
