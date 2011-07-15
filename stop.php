@@ -12,6 +12,7 @@ if (!startsWith($stop[5], "Wj") && strpos($stop[1], "Platform") === false) {
 	// expand out to all platforms
 	
 }*/
+
 $stops = Array();
 $stopPositions = Array();
 $stopNames = Array();
@@ -60,6 +61,12 @@ if (isset($stopids)) {
 	}
 }
 include_header($stop['stop_name'], "stop");
+/*$serviceAlerts = json_decode(getPage(curPageURL() . "/servicealerts_api.php?filter_class=stop&filter_id=".$stopid) , true);
+
+foreach($serviceAlerts['entities'] as $serviceAlert) {
+    echo '<div id="servicewarning">'.$serviceAlert['alert']['description']['translation'].'</div>';
+}*/
+
 echo '<span class="content-secondary">';
 timePlaceSettings();
 echo $stopLinks;

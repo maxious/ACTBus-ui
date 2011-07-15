@@ -17,7 +17,7 @@ $return['header']['gtrtfs_version'] = "1";
 $return['header']['timestamp'] = time();
 $return['entities'] = Array();
 foreach(getCurrentAlerts() as $alert) {
-	$informedEntities = getInformedAlerts($alert['id'],$filter_class,$filter_id);
+	$informedEntities = getInformedAlerts($alert['id'],$_REQUEST['filter_class'],$_REQUEST['filter_id']);
 	if (sizeof($informedEntities) >0) {
 		$entity = Array();
 		$entity['id'] = $alert['id'];

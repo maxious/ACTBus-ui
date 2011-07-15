@@ -2,7 +2,7 @@
 function getServiceOverride($date="") {
 	global $conn;
 	$query = "Select * from calendar_dates where date = :date and exception_type = '1' LIMIT 1";
-	 debug($query,"database");
+	// debug($query,"database");
 	$query = $conn->prepare($query); // Create a prepared statement
 	$query->bindParam(":date", date("Ymd",($date != "" ? $date : time())));
 	$query->execute();
@@ -16,7 +16,7 @@ function getServiceOverride($date="") {
 function getCurrentAlerts() {
 		global $conn;
 	$query = "SELECT * from servicealerts_alerts";
-	debug($query, "database");
+	//debug($query, "database");
 	$query = $conn->prepare($query);
 	//if ($stop_sequence != "") $query->bindParam(":stop_sequence", $stop_sequence);
 	$query->execute();
@@ -29,10 +29,19 @@ function getCurrentAlerts() {
 function getInformedAlerts($id,$filter_class,$filter_id) {
 	
 		global $conn;
-	$query = "SELECT * from servicealerts_informed where servicealert_id = :id";
-	debug($query, "database");
+	$query = "SELECT * from servicealerts_informed where servicealert_id = :servicealert_id";
+	
+	if ($filter_class != "" && $filter_id != "") {
+		$query .= " AND (informed_class = :informed_class OR informed_class = 'network') AND informed_id = :informed_id";
+	
+	}
+	//debug($query, "database");
 	$query = $conn->prepare($query);
-	$query->bindParam(":id", $id);
+	if ($filter_class != "" && $filter_id != "") {
+		$query->bindParam(":informed_class", $filter_class);
+		$query->bindParam(":informed_id", $filter_id);
+	}
+	$query->bindParam(":servicealert_id", $id);
 	$query->execute();
 	if (!$query) {
 		databaseError($conn->errorInfo());
