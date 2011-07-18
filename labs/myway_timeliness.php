@@ -15,7 +15,6 @@ $(function () {
     var midnight = d.getTime();
 
 <?php
-//$query = "select * from myway_timingdeltas order by time";
 $query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by route_full_name;";
 $query = $conn->prepare($query);
 $query->execute();

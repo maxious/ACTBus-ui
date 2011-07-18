@@ -68,7 +68,6 @@ foreach($serviceAlerts['entities'] as $serviceAlert) {
 }*/
 
 echo '<span class="content-secondary">';
-timePlaceSettings();
 echo $stopLinks;
 if (sizeof($stops) > 0) {
 	trackEvent("View Stops", "View Combined Stops", $stop["stop_name"], $stop["stop_id"]);
@@ -83,6 +82,7 @@ else {
 		)
 	)) ;
 }
+timePlaceSettings();
 echo '</span><span class="content-primary">';
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
