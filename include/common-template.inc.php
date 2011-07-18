@@ -32,7 +32,8 @@ global $labsPath;
 <html lang="en">
 	<head>
         <meta charset="UTF-8">
-	<title>' . $pageTitle . '</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"> 	
+<title>' . $pageTitle . '</title>
         <meta name="google-site-verification" 
 content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 	<link rel="stylesheet"  href="'.$labsPath.'css/jquery-ui-1.8.12.custom.css" />';

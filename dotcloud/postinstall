@@ -3,8 +3,8 @@
 
 curl http://s3-ap-southeast-1.amazonaws.com/busresources/cbrfeed.zip \
 -o /home/dotcloud/current/cbrfeed.zip
-wget http://s3-ap-southeast-1.amazonaws.com/busresources/Graph.obj \
--O /tmp/Graph.obj
+curl http://s3-ap-southeast-1.amazonaws.com/busresources/Graph.obj \
+-o /tmp/Graph.obj
 
 #db setup
 #curl https://github.com/maxious/ACTBus-ui/raw/master/transitdata.cbrfeed.sql.gz -o transitdata.cbrfeed.sql.gz

@@ -83,9 +83,10 @@ overflow:hidden;
 position:static; 
 width:auto; 
 height:auto; 
-}
+}';
 
-
+//if (false)
+ echo '
 // adaptive layout from jQuery Mobile docs site
 .type-interior .content-secondary {
 	border-right: 0;
@@ -112,7 +113,7 @@ height:auto;
 	padding:0;
 	margin: 0;
 }
-@media all and (min-width: 969px){
+@media all and (min-width: 650px){
 .content-secondary {
 		text-align: left;
 		float: left;
@@ -167,7 +168,8 @@ height:auto;
 		margin: 0;
 		padding: 0;
 	}
-
+}
+@media all and (min-width: 750px){
 	.type-home .ui-content,
 	.type-interior .ui-content {
 		background-position: 39%;
