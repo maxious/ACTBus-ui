@@ -6,14 +6,23 @@ include_header("Busness R&amp;D", "index")
 		<li data-role="list-divider" > Experimental Features </li>
 		<li><a href="mywaybalance.php"><h3>MyWay Balance for mobile</h3>
 		<p>Mobile viewer for MyWay balance. Warning! No HTTPS security.</p></a></li>
-		<li><a href="networkstats.php"><h3>Route Statistics</h3>
-		<p>Analysis of route timing points</p></a></li>
 		<li><a href="busstopdensity.php"><h3>Bus Stop Density Map</h3>
 		<p>Analysis of bus stop coverage</p></a></li>
 		<li><a href="stopBrowser.php"><h3>Bus Stop Browser Map</h3>
 		<p>Bus stop location/route browser</p></a></li>
-		<li>More coming soon!</li>
             </ul>
+   <ul data-role="listview" data-theme="e" data-groupingtheme="e">
+
+		<li data-role="list-divider" > MyWay Timeliness Graphs </li>
+		<li><a href="myway_timeliness.php"><h3>Timeliness over Day</h3>
+		<p>Displays the deviation from the timetable over the day</p></a></li>
+		<li><a href="myway_timeliness_freqdist.php"><h3>Frequency Distribution of Time Deviation</h3>
+		<p>Displays spread of time deviations</p></a></li>
+		<!--<li><a href="myway_timeliness_route.php"><h3>Timeliness over Route</h3>
+		<p>Displays the deviation from timetable as a specific route progresses</p></a></li>
+		<li><a href="myway_timeliness_stop.php"><h3>Timeliness at Stop</h3>
+		<p>Displays the deviation from the timetable at a specific stop</p></a></li>
+            --></ul>
 	    </div>
 <?php
 include_footer()

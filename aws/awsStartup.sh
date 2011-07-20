@@ -26,6 +26,9 @@ psql -d transitdata -f /var/www/transitdata.cbrfeed.sql
 #createuser transitdata -SDRP
 #password transitdata
 #psql -d transitdata -c \"GRANT SELECT ON TABLE agency,calendar,calendar_dates,routes,stop_times,stops,trips TO transitdata;\"
+#psql -d transitdata -c "GRANT SELECT,INSERT ON	TABLE myway_observations,myway_routes,myway_stops,myway_timingdeltas TO transitdata;"
+#psql -d transitdata -c	"GRANT SELECT,INSERT,UPDATE ON TABLE myway_routes,myway_stops TO transitdata;"
+##psql -d transitdata -c "GRANT SELECT ON ALL TABLES IN SCHEMA public TO transitdata;"
 php /var/www/updatedb.php
 
 wget http://s3-ap-southeast-1.amazonaws.com/busresources/Graph.obj \

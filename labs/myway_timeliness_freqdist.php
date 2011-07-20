@@ -9,84 +9,44 @@ include_header("MyWay Deltas", "mywayDelta");
   <center><div id="placeholder" style="width:900px;height:550px"></div></center>
 <script type="text/javascript"> 
 $(function () {
-    var d = new Date();
-						d.setUTCMinutes(0);
-						d.setUTCHours(0);
-    var midnight = d.getTime();
 
+ var d1 = [];
 <?php
-$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by route_full_name;";
+$query = "select td, count(*) from (select (timing_delta - MOD(timing_delta,10)) as td from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)) as a  group by td order by td";
 $query = $conn->prepare($query);
 $query->execute();
 if (!$query) {
 	databaseError($conn->errorInfo());
 	return Array();
 }
-$i = 0;
-$labels = Array();
-$lastRoute = "";
+
 foreach ($query->fetchAll() as $delta) {
-	$routeName = $delta['route_full_name'];
-	if (strstr($routeName, " 3")) $routeName = "312-319";
-	else $routeName = preg_replace('/\D/', '', $routeName);
-	if ($routeName != $lastRoute) {
-		$i++;
-		echo "    var d$i = [];";
-		$lastRoute = $routeName;
-		$labels[$i] = $routeName;
-	}
-	echo "d$i.push([ midnight+ (1000*" . midnight_seconds(strtotime($delta['time'])) . "), ".intval($delta['timing_delta'])."]); \n";
+
+	echo "d1.push([ ".intval($delta['td']).", ".intval($delta['count'])."]); \n";
 };
 ?>
 
        var placeholder = $("#placeholder");
 
     var plot = $.plot(placeholder, [
-<?php
-foreach ($labels as $key => $label) {
-	echo "        {
-            data: d$key,
-            points: { show: true },
-            label: '$label'
-        },";
-}
-?>
+       {
+            data: d1,
+            bars: { show: true }
+        },
     ],
         {
-            xaxis: {
-                mode: "time",
-                min: midnight + (1000*60*60*8),
-                max: midnight + (1000*60*60*23.5)
-            },
-            yaxis: {
-                tickFormatter: yformatter
-            },
-            grid: { hoverable: true, clickable: true, labelMargin: 32   },
+
+            grid: { hoverable: true, clickable: true, labelMargin: 17  },
     });
-        var o;
+ /*       var o;
     o = plot.pointOffset({ x: midnight+ (9*60*60*1000), y: -1.2});
     placeholder.append('<div style="position:absolute;left:' + (o.left + 4) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">9am</div>');
     o = plot.pointOffset({ x: midnight+ (16*60*60*1000), y: -1.2});
     placeholder.append('<div style="position:absolute;left:' + (o.left + 4) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">4pm</div>');
-
+ */
  });
-function yformatter(v) {
-    if (Math.floor(v/60) < -9) return "";
-    return Math.abs(Math.floor(v/60)) + " min " + (v == 0 ? "" : (v >0 ? "early":"late"))
-}
-  function showTooltip(x, y, contents) {
-        $('<div id="tooltip">' + contents + '</div>').css( {
-            position: 'absolute',
-            display: 'none',
-            top: y + 5,
-            left: x + 5,
-            border: '1px solid #fdd',
-            padding: '2px',
-            'background-color': '#fee',
-            opacity: 0.80
-        }).appendTo("body").fadeIn(200);
-    }
- 
+
+  /*
     var previousPoint = null;
     $("#placeholder").bind("plothover", function (event, pos, item) {
         $("#x").text(pos.x.toFixed(2));
@@ -114,5 +74,5 @@ var time = d.getUTCHours() +':'+ (d.getUTCMinutes().toString().length == 1 ? '0'
                 previousPoint = null;            
             }
     });
-
+  */
 </script> 

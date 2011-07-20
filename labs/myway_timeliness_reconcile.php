@@ -7,8 +7,8 @@ foreach ($_REQUEST as $key => $value) {
 		$query = "update myway_routes set route_full_name = :route_full_name where myway_route = :myway_route";
 		debug($query, "database");
 		$query = $conn->prepare($query);
-		$query->bindParam(":myway_route", $myway_route);
-		$query->bindParam(":route_full_name", $route_full_name);
+		$query->bindParam(":myway_route", $myway_route,PDO::PARAM_STR, 5);
+		$query->bindParam(":route_full_name", $route_full_name,PDO::PARAM_STR, 42);
 		$query->execute();
 		die(print_r($conn->errorInfo() , true));
 	}
@@ -19,8 +19,8 @@ foreach ($_REQUEST as $key => $value) {
 		$query = "update myway_stops set stop_code = :stop_code, stop_street = :stop_street where myway_stop = :myway_stop";
 		debug($query, "database");
 		$query = $conn->prepare($query);
-		$query->bindParam(":myway_stop", $myway_stop);
-		$query->bindParam(":stop_code", $stop_code);
+		$query->bindParam(":myway_stop", $myway_stop, PDO::PARAM_STR, 25);
+		$query->bindParam(":stop_code", $stop_code, PDO::PARAM_STR, 32);
                 		$query->bindParam(":stop_street", $stop_street);
 		$query->execute();
 		die(print_r($conn->errorInfo() , true));
