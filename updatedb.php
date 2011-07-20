@@ -1,4 +1,5 @@
 <?php
+if ( php_sapi_name() == "cli") {
 include ('include/common.inc.php');
 $conn = pg_connect("dbname=transitdata user=postgres password=snmc host=localhost") or die('connection failed');
 // Unzip cbrfeed.zip, import all csv files to database
@@ -56,5 +57,6 @@ foreach (scandir($tmpdir) as $file) {
 		echo "Found a total of $line records in $file.\n";
 
 	}
+}
 }
 ?>
