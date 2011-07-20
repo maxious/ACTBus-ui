@@ -18,11 +18,11 @@ include_header("Busness R&amp;D", "index")
 		<p>Displays the deviation from the timetable over the day</p></a></li>
 		<li><a href="myway_timeliness_freqdist.php"><h3>Frequency Distribution of Time Deviation</h3>
 		<p>Displays spread of time deviations</p></a></li>
-		<!--<li><a href="myway_timeliness_route.php"><h3>Timeliness over Route</h3>
+		<li><a href="myway_timeliness_route.php"><h3>Timeliness over Route</h3>
 		<p>Displays the deviation from timetable as a specific route progresses</p></a></li>
 		<li><a href="myway_timeliness_stop.php"><h3>Timeliness at Stop</h3>
 		<p>Displays the deviation from the timetable at a specific stop</p></a></li>
-            --></ul>
+            </ul>
 	    </div>
 <?php
 include_footer()

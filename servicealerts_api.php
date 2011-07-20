@@ -36,7 +36,7 @@ foreach(getCurrentAlerts() as $alert) {
 		$return['entities'][] = $entity;
 	}
 }
-//header('Content-Type: text/javascript; charset=utf8');
+header('Content-Type: text/javascript; charset=utf8');
 // header('Access-Control-Allow-Origin: http://bus.lambdacomplex.org/');
 header('Access-Control-Max-Age: 3628800');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');

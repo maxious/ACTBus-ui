@@ -87,7 +87,8 @@ foreach ($uncalcdObservations as $obsv) {
 						//work out time delta, put into array with index of delta
 						$timeDeltas[] = Array(
 							"timeDiff" => $timeDiff,
-							"stop_code" => $potentialStop['stop_code']
+							"stop_code" => $potentialStop['stop_code'],
+                                                        "stop_sequence" => $timedTrip['stop_sequence']
 						);
 						echo "Found trip {$trip['trip_id']} at stop {$potentialStop['stop_code']} (#{$potentialStop['stop_id']}, sequence #{$trip['stop_sequence']})<br>";
                                                 echo "Arriving at {$timedTrip['arrival_time']}, difference of " . round($timeDiff / 60, 2) . " minutes<br>";
@@ -110,18 +111,18 @@ foreach ($uncalcdObservations as $obsv) {
 		echo "Lowest difference of " . round($lowestDelta / 60, 2) . " minutes will be recorded for this observation<br>";
 		$observation_id = $obsv['observation_id'];
 		$route_full_name = $obsv['route_full_name'];
-		$myway_route = $obsv['myway_stop'];
 		$stop_code = $timeDeltas[0]["stop_code"];
-		$stmt = $conn->prepare("insert into myway_timingdeltas (observation_id, route_full_name, myway_route, stop_code, timing_delta, time, date, timing_period)
-				      values (:observation_id, :route_full_name, :myway_route, :stop_code, :timing_delta, :time, :date, :timing_period)");
+		$stop_sequence = $timeDeltas[0]["stop_sequence"];
+		$stmt = $conn->prepare("insert into myway_timingdeltas (observation_id, route_full_name, stop_code, timing_delta, time, date, timing_period, stop_sequence)
+				      values (:observation_id, :route_full_name, :stop_code, :timing_delta, :time, :date, :timing_period, :stop_sequence)");
 		$stmt->bindParam(':observation_id', $observation_id);
 		$stmt->bindParam(':route_full_name', $route_full_name);
-		$stmt->bindParam(':myway_route', $myway_route);
 		$stmt->bindParam(':stop_code', $stop_code);
 		$stmt->bindParam(':timing_delta', $lowestDelta);
 		$stmt->bindParam(':time', $time);
 		$stmt->bindParam(':date', $date);
 		$stmt->bindParam(':timing_period', $timing_period);
+                $stmt->bindParam(':stop_sequence', $stop_sequence);
 		// insert a record
 		$stmt->execute();
 		if ($stmt->rowCount() > 0) {
