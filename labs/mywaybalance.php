@@ -111,7 +111,7 @@ else {
     </div>
     <div data-role="fieldcontain">
         <label for="contribute_myway">Contribute MyWay records to timeliness study? </label>
-        <input type="checkbox" name="contribute_myway" id="contribute_myway" checked="no"  />
+        <input type="checkbox" name="contribute_myway" id="contribute_myway" defaultChecked="no"  />
     </div>
         <input type="submit" value="Go!"></form>';
 }
