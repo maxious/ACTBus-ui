@@ -17,6 +17,10 @@ Uses jQuery Mobile, PHP, PostgreSQL, OpenTripPlanner, OpenLayers, OpenStreetMap,
 Feedback encouraged; contact maxious@lambdacomplex.org<br />
     <br />
 Some icons by Joseph Wain / glyphish.com<br />
+Native clients also available for iPhone(<a href="http://itunes.apple.com/au/app/cbrtimetable/id444287349?mt=8">cbrTimetable by Sandor Kolotenko</a>
+, <a href="http://itunes.apple.com/au/app/act-buses/id376634797?mt=8">ACT Buses by David Sullivan</a>) 
+and Android (<a href="https://market.android.com/details?id=com.action">MyBus 2.0 by Imagine Team</a>)
+<br />
 <br />
 <small>Disclaimer: The content of this website is of a general and informative nature. Please check with printed timetables or those available on http://action.act.gov.au before your trip.
 Whilst every effort has been made to ensure the high quality and accuracy of the Site, the Author makes no warranty, 
