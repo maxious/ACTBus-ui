@@ -181,13 +181,12 @@ s.parentNode.insertBefore(ga, s);
 	}
 	echo "\n</div></div></body></html>";
 }
-function timePlaceSettings($geolocate = false)
+function placeSettings()
 {
 	global $service_periods;
 	$geoerror = false;
-	if ($geolocate == true) {
 		$geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
-	}
+
 	echo '<div id="error">';
 	if ($geoerror) {
 		echo 'Sorry, but your location could not currently be detected.
@@ -196,27 +195,13 @@ function timePlaceSettings($geolocate = false)
 	}
 	echo '</div>';
 	echo '<div id="settings" data-role="collapsible" data-collapsed="' . !$geoerror . '">
-        <h3>Change Time/Place (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
+        <h3>Change Location...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'] . '" method="post">
         <div class="ui-body"> 
 		<div data-role="fieldcontain">
 	            <label for="geolocate"> Current Location: </label>
 			<input type="text" id="geolocate" name="geolocate" value="' . (isset($_SESSION['lat']) && isset($_SESSION['lon']) ? $_SESSION['lat'] . "," . $_SESSION['lon'] : "Enter co-ordinates or address here") . '"/> <a href="#" style="display:none" name="here" id="here">Here?</a>
 	        </div>
-    		<div data-role="fieldcontain">
-		        <label for="time"> Time: </label>
-		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/>
-			<a href="#" name="currentTime" id="currentTime" onClick="var d = new Date();' . "$('#time').val(d.getHours() +':'+ (d.getMinutes().toString().length == 1 ? '0'+ d.getMinutes():  d.getMinutes()));" . '">Current Time?</a>
-	        </div>
-		<div data-role="fieldcontain">
-		    <label for="service_period"> Service Period:  </label>
-			<select name="service_period" id="service_period">';
-	foreach ($service_periods as $service_period) {
-		echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
-	}
-	echo '</select>
-			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod">Current Period?</a>
-		</div>
 		
 		<input type="submit" value="Update"/>
                 </div></form>

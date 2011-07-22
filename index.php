@@ -24,7 +24,6 @@ include_header("bus.lambdacomplex.org", "index", false)
 		<li><a class="nearby" href="routeList.php?nearby=yes">Nearby Routes</a></li>
             </ul>
 <?php
-echo timePlaceSettings();
 echo ' <a href="labs/index.php" data-role="button" data-icon="beaker">Busness R&amp;D</a>';
 include_footer(true)
 ?>

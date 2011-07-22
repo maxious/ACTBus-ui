@@ -61,6 +61,7 @@ if (isset($stopids)) {
 	}
 }
 include_header($stop['stop_name'], "stop");
+
 /*$serviceAlerts = json_decode(getPage(curPageURL() . "/servicealerts_api.php?filter_class=stop&filter_id=".$stopid) , true);
 
 foreach($serviceAlerts['entities'] as $serviceAlert) {
@@ -82,7 +83,31 @@ else {
 		)
 	)) ;
 }
-timePlaceSettings();
+
+// time settings
+echo '<div id="settings" data-role="collapsible" data-collapsed="true">
+<h3>Change Time (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
+        <form action="' . basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'] . '" method="post">
+        <div class="ui-body"> 
+    		<div data-role="fieldcontain">
+		        <label for="time"> Time: </label>
+		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/>
+			<a href="#" name="currentTime" id="currentTime" onClick="var d = new Date();' . "$('#time').val(d.getHours() +':'+ (d.getMinutes().toString().length == 1 ? '0'+ d.getMinutes():  d.getMinutes()));" . '">Current Time?</a>
+	        </div>
+		<div data-role="fieldcontain">
+		    <label for="service_period"> Service Period:  </label>
+			<select name="service_period" id="service_period">';
+	foreach ($service_periods as $service_period) {
+		echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
+	}
+	echo '</select>
+			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod">Current Period?</a>
+		</div>
+		
+		<input type="submit" value="Update"/>
+                </div></form>
+            </div>';
+
 echo '</span><span class="content-primary">';
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {

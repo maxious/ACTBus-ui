@@ -44,7 +44,7 @@ else if (isset($nearby) || isset($suburb)) {
 		include_header("Routes Nearby", "routeList", true, true);
 		trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
 		navbar();
-		timePlaceSettings(true);
+		placeSettings();
 		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
 			include_footer();
 			die();

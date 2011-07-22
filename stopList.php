@@ -40,7 +40,6 @@ else {
 		$stops = getStops();
 		include_header("All Stops", "stopList");
 		navbar();
-		timePlaceSettings();
 	}
 	else if (isset($nearby)) {
 		$listType = 'nearby=yes';
@@ -48,7 +47,7 @@ else {
 		trackEvent("Stop Lists", "Stops Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
 		navbar();
 		if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
-			timePlaceSettings(true);
+			placeSettings();
 			include_footer();
 			die();
 		}
@@ -65,7 +64,7 @@ else {
 			);
 		}
 		echo staticmap($stopPositions, 0, "iconb", true, true);
-		timePlaceSettings(true);
+		placeSettings();
 		echo '</span><span class="content-primary">';
 	}
 	else if (isset($suburb)) {
@@ -78,7 +77,6 @@ else {
 		$stops = getStops(true, $firstLetter);
 		include_header("Timing Points / Major Stops", "stopList");
 		navbar();
-		timePlaceSettings();
 	}
 	echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
 	if (!isset($firstLetter) && !isset($suburb) && !isset($nearby)) {
