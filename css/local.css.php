@@ -25,11 +25,11 @@ echo '
         margin: 0 !important;
      }
     .ui-icon-navigation {
-        background-image: url('.$_REQUEST['labsPath'].'css/images/113-navigation.png);
+        background-image: url(images/113-navigation.png);
         background-position: 1px 0;
      }
     .ui-icon-beaker {
-        background-image: url('.$_REQUEST['labsPath'].'css/images/91-beaker-2.png);
+        background-image: url(images/91-beaker-2.png);
         background-position: 1px 0;
     }
     #footer {

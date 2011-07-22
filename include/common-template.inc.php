@@ -23,10 +23,9 @@ function googleAnalyticsGetImageUrl()
 	$url.= "&guid=ON";
 	return str_replace("&", "&amp;", $url);
 }
-
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false)
 {
-global $labsPath;
+	global $labsPath;
 	echo '
 <!DOCTYPE html> 
 <html lang="en">
@@ -34,34 +33,36 @@ global $labsPath;
         <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
 <title>' . $pageTitle . '</title>
-        <meta name="google-site-verification" 
-content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
-	<link rel="stylesheet"  href="'.$labsPath.'css/jquery-ui-1.8.12.custom.css" />';
+        <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
+	<link rel="stylesheet"  href="' . $labsPath . 'css/jquery-ui-1.8.12.custom.css" />
+	<script src="' . $labsPath . 'js/LAB.min.js"></script> ';
 	if (isDebugServer()) {
-		echo '<link rel="stylesheet"  href="'.$labsPath.'css/jquery.mobile-1.0b1.css" />
-	
-         <script type="text/javascript" src="'.$labsPath.'js/jquery-1.6.1.min.js"></script>
-	 <script>$(document).bind("mobileinit", function(){
-  $.mobile.ajaxEnabled = false;
-});
-</script>
-        <script type="text/javascript" src="'.$labsPath.'js/jquery.mobile-1.0b1.js"></script>';
+		$jqmcss = $labsPath . 'css/jquery.mobile-1.0b1.css';
+		$jqjs = $labsPath . 'js/jquery-1.6.1.min.js';
+		$jqmjs = $labsPath . 'js/jquery.mobile-1.0b1.js';
 	}
 	else {
-		echo '<link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-	 <script>$(document).bind("mobileinit", function(){
+		$jqmcss = "http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css";
+		$jqjs = "http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js";
+		$jqmjs = "http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js";
+	}
+	echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
+	<script src="'.$jqjs.'"></script>
+		 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
-</script>
-        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>';
-	}
-	echo '
-	<script src="'.$labsPath.'js/jquery.ui.autocomplete.min.js"></script>
-<script src="'.$labsPath.'js/jquery.ui.core.min.js"></script>
-<script src="'.$labsPath.'js/jquery.ui.position.min.js"></script>
-<script src="'.$labsPath.'js/jquery.ui.widget.min.js"></script>
-  <script>
+</script> 
+	<script src="'.$jqmjs.'"></script>
+	
+	 <script>
+	  $LAB.setOptions({AlwaysPreserveOrder:true})
+  .script("' . $jqjs . '").wait()
+
+.script("' . $labsPath . 'js/jquery.ui.core.min.js")
+.script("' . $labsPath . 'js/jquery.ui.position.min.js")
+.script("' . $labsPath . 'js/jquery.ui.widget.min.js").wait()
+  .script("' . $labsPath . 'js/jquery.ui.autocomplete.min.js")
+ .wait(function() {
 	$(function() {
 		$( "#geolocate" ).autocomplete({
 			source: "lib/autocomplete.php",
@@ -76,11 +77,10 @@ content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 			minLength: 2
 		});
 	});
-	</script>
-	';
+});
+	</script>';
 	echo '<style type="text/css">';
-
-if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android')) echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
+	if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android')) echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
 .ui-btn-down-b,.ui-bar-c,.ui-body-c,.ui-btn-up-c,.ui-btn-hover-c,.ui-btn-down-c,.ui-bar-c,.ui-body-d,
 .ui-btn-up-d,.ui-btn-hover-d,.ui-btn-down-d,.ui-bar-d,.ui-body-e,.ui-btn-up-e,.ui-btn-hover-e,
 .ui-btn-down-e,.ui-bar-e,.ui-overlay-shadow,.ui-shadow,.ui-btn-active,.ui-body-a,.ui-bar-a {
@@ -88,11 +88,8 @@ if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android')) echo '.ui-shadow,.ui-btn-up-
  box-shadow: none;
  -webkit-box-shadow: none;
 }';
-echo '</style>';
-
-echo '<link rel="stylesheet"  href="'.$labsPath.'css/local.css.php?labsPath='.$labsPath.'" />';
-	
-
+	echo '</style>';
+	echo '<link rel="stylesheet"  href="' . $labsPath . 'css/local.css.php" />';
 	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
 		echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -149,28 +146,26 @@ $(document).ready(function() {
 	<div data-role="header" data-position="inline">
 	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1>' . $pageTitle . '</h1>
-		<a href="'.$labsPath.'/index.php" data-icon="home" class="ui-btn-right">Home</a>
+		<a href="' . $labsPath . '/index.php" data-icon="home" class="ui-btn-right">Home</a>
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
 		$overrides = getServiceOverride();
 		if ($overrides['service_id']) {
-				if ($overrides['service_id'] == "noservice") {
-					echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
+			if ($overrides['service_id'] == "noservice") {
+				echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
 href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-				}
-				else {
-					echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-				}
+			}
+			else {
+				echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
 			}
 		}
-
+	}
 }
 function include_footer()
 {
-
-global $labsPath;
-	echo '<div id="footer"><a href="'.$labsPath.'about.php">About/Contact Us</a>&nbsp;<a href="'.$labsPath.'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="'.$labsPath.'privacy.php">Privacy Policy</a>';
+	global $labsPath;
+	echo '<div id="footer"><a href="' . $labsPath . 'about.php">About/Contact Us</a>&nbsp;<a href="' . $labsPath . 'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="' . $labsPath . 'privacy.php">Privacy Policy</a>';
 	echo '</div>';
 	if (isAnalyticsOn()) {
 		echo "<script>  (function() {
@@ -183,9 +178,8 @@ s.parentNode.insertBefore(ga, s);
   })();</script>";
 		$googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
 		echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
-
 	}
-			echo "\n</div></div></body></html>";
+	echo "\n</div></div></body></html>";
 }
 function timePlaceSettings($geolocate = false)
 {
