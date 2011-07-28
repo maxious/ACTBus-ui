@@ -113,6 +113,10 @@ else {
         <label for="contribute_myway">Contribute MyWay records to timeliness study? </label>
         <input type="checkbox" name="contribute_myway" id="contribute_myway" defaultChecked="no"  />
     </div>
+    <div data-role="fieldcontain">
+        <label for="accept_warning">I accept that Transport for Canberra <a href="http://transport.act.gov.au/myway/protect.html">advise against the use of third party MyWay applications</a> </label>
+        <input type="checkbox" name="accept_warning" id="accept_warning" defaultChecked="no"  />
+    </div>
         <input type="submit" value="Go!"></form>';
 }
 include_footer();
