@@ -34,8 +34,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
 <title>' . $pageTitle . '</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
-	<link rel="stylesheet"  href="' . $labsPath . 'css/jquery-ui-1.8.12.custom.css" />
-	<script src="' . $labsPath . 'js/LAB.min.js"></script> ';
+	<link rel="stylesheet"  href="' . $labsPath . 'css/jquery-ui-1.8.12.custom.css" />';
 	if (isDebugServer()) {
 		$jqmcss = $labsPath . 'css/jquery.mobile-1.0b1.css';
 		$jqjs = $labsPath . 'js/jquery-1.6.1.min.js';
@@ -53,16 +52,12 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 });
 </script> 
 	<script src="'.$jqmjs.'"></script>
-	
-	 <script>
-	  $LAB.setOptions({AlwaysPreserveOrder:true})
-  .script("' . $jqjs . '").wait()
 
-.script("' . $labsPath . 'js/jquery.ui.core.min.js")
-.script("' . $labsPath . 'js/jquery.ui.position.min.js")
-.script("' . $labsPath . 'js/jquery.ui.widget.min.js").wait()
-  .script("' . $labsPath . 'js/jquery.ui.autocomplete.min.js")
- .wait(function() {
+<script src="' . $labsPath . 'js/jquery.ui.core.min.js"></script>
+<script src="' . $labsPath . 'js/jquery.ui.position.min.js"></script>
+<script src="' . $labsPath . 'js/jquery.ui.widget.min.js"></script>
+  <script src="' . $labsPath . 'js/jquery.ui.autocomplete.min.js"></script>
+  <script>
 	$(function() {
 		$( "#geolocate" ).autocomplete({
 			source: "lib/autocomplete.php",
@@ -77,7 +72,6 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 			minLength: 2
 		});
 	});
-});
 	</script>';
 	echo '<style type="text/css">';
 	if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android')) echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
