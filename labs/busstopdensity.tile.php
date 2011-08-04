@@ -15,8 +15,8 @@ $debugOkay = Array();
 	set_time_limit(120);//2mn
 	ini_set('memory_limit', '256M');
 error_reporting(E_ALL ^ E_DEPRECATED);
-	require_once ('lib/GoogleMapUtility.php');
-	require_once ('lib/HeatMap.php');
+	require_once ($labsPath . 'lib/GoogleMapUtility.php');
+	require_once ($labsPath . 'lib/HeatMap.php');
 
 	//Root folder to store generated tiles
 	define('TILE_DIR', 'tiles/');
@@ -103,13 +103,14 @@ if ($zoom < 12) { //enforce minimum zoom
             global $conn;
 		$nbPOIInsideTile = 0;
 
-	$result = pg_query($conn, $query);
         $spots = Array();
-	if (!$result) {
-		databaseError(pg_result_error($result));
+	$query = $conn->prepare($query);
+	$query->execute();
+	if (!$query) {
+		databaseError($conn->errorInfo());
 		return Array();
 	}
-	foreach( pg_fetch_all($result) as $row){
+	foreach( $query->fetchAll() as $row){
 				$point = GoogleMapUtility::getOffsetPixelCoords($row['stop_lat'], $row['stop_lon'], $zoom, $X, $Y);
 				//Count result only in the tile
 				if( ($point->x > -$offset) && ($point->x < (GoogleMapUtility::TILE_SIZE+$offset)) && ($point->y > -$offset) && ($point->y < (GoogleMapUtility::TILE_SIZE+$offset))){
