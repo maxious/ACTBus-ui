@@ -31,7 +31,8 @@ if (strstr($_SERVER['PHP_SELF'],"labs")) $labsPath = "../";
 
 function isDebugServer()
 {
-	return !isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "10.1.0.4" || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" ;
+	return isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "10.1.0.4" || $_SERVER['SERVER_NAME'] == 
+"localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1") ;
 }
 
 include_once ("common-geo.inc.php");
