@@ -40,8 +40,9 @@ foreach ($uncalcdObservations as $obsv) {
 		echo "error, route '{$obsv['myway_route']}' unknown";
 		continue;
 	}
-	//		:convert timestamp into time of day and date
-	$time = date("H:i:s", strtotime($obsv['time']));
+	// convert timestamp into time of day and date
+// timezones from http://www.postgresql.org/docs/8.0/static/datetime-keywords.html
+	$time = date("H:i:s AESST", strtotime($obsv['time']));
         $search_time = date("H:i:s", strtotime($obsv['time'])-(30*60)); // 30 minutes margin
 	$date = date("c", strtotime($obsv['time']));
 	$timing_period = service_period(strtotime($date));
