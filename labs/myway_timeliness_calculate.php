@@ -1,6 +1,8 @@
 <?php
 include ('../include/common.inc.php');
 include_header("MyWay Delta Calculate", "mywayDeltaCalc");
+flush();
+ob_flush();
 function abssort($a, $b)
 {
 	if ($a['timeDiff'] == $b['timeDiff']) {
@@ -42,7 +44,8 @@ foreach ($uncalcdObservations as $obsv) {
 	}
 	// convert timestamp into time of day and date
 // timezones from http://www.postgresql.org/docs/8.0/static/datetime-keywords.html
-	$time = date("H:i:s AESST", strtotime($obsv['time']));
+	$time = date("H:i:s", strtotime($obsv['time']));
+    $time_tz = date("H:i:s", strtotime($obsv['time']))." AESST";
         $search_time = date("H:i:s", strtotime($obsv['time'])-(30*60)); // 30 minutes margin
 	$date = date("c", strtotime($obsv['time']));
 	$timing_period = service_period(strtotime($date));
@@ -103,6 +106,8 @@ foreach ($uncalcdObservations as $obsv) {
 			//print out that stops/does not stop
 			echo "No matching routes found at {$potentialStop['stop_code']}<br>";
                         var_dump($stopRoutes);
+                        			flush();
+
 		}
 	}
 	//   lowest delta is recorded delta
@@ -120,7 +125,7 @@ foreach ($uncalcdObservations as $obsv) {
 		$stmt->bindParam(':route_full_name', $route_full_name);
 		$stmt->bindParam(':stop_code', $stop_code);
 		$stmt->bindParam(':timing_delta', $lowestDelta);
-		$stmt->bindParam(':time', $time);
+		$stmt->bindParam(':time', $time_tz);
 		$stmt->bindParam(':date', $date);
 		$stmt->bindParam(':timing_period', $timing_period);
                 $stmt->bindParam(':stop_sequence', $stop_sequence);
@@ -130,6 +135,7 @@ foreach ($uncalcdObservations as $obsv) {
 			echo "Recorded.<br>";
 		}
 		var_dump($conn->errorInfo());
+			flush();
 	}
 	flush();
 }
