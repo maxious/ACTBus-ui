@@ -173,6 +173,22 @@ function getTripStartTime($tripID)
 	$r = $query->fetch(PDO::FETCH_ASSOC);
 	return $r['arrival_time'];
 }
+function getTripEndTime($tripID)
+{
+	global $conn;
+	$query = "SELECT trip_id,max(arrival_time) as arrival_time from stop_times
+	WHERE stop_times.arrival_time IS NOT NULL and trip_id = :tripID group by trip_id";
+	debug($query, "database");
+	$query = $conn->prepare($query);
+	$query->bindParam(":tripID", $tripID);
+	$query->execute();
+	if (!$query) {
+		databaseError($conn->errorInfo());
+		return Array();
+	}
+	$r = $query->fetch(PDO::FETCH_ASSOC);
+	return $r['arrival_time'];
+}
 function getActiveTrips($time)
 {
 	global $conn;

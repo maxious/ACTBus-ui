@@ -40,6 +40,10 @@ $(function () {
                 tickFormatter: yformatter
             },
             grid: { hoverable: true, clickable: true, labelMargin: 32   },
+ series: {
+      lines: { show: false },
+      points: { show: true }
+    }
     };
 
     var plot = $.plot(placeholder, data, options);

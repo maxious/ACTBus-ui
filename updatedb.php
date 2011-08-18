@@ -2,6 +2,9 @@
 if ( php_sapi_name() == "cli") {
 include ('include/common.inc.php');
 $conn = pg_connect("dbname=transitdata user=postgres password=snmc host=localhost") or die('connection failed');
+$pdconn = new PDO("pgsql:dbname=transitdata;user=postgres;password=snmc;host=localhost");
+
+
 // Unzip cbrfeed.zip, import all csv files to database
 $unzip = true;
 $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
@@ -31,8 +34,18 @@ foreach (scandir($tmpdir) as $file) {
 		echo "Opening $file \n";
 		$line = 0;
 		$handle = fopen($tmpdir . $file, "r");
+		 if ($tablename =="stop_times") {
+			 $stmt = $pdconn->prepare("insert into stop_times (trip_id,stop_id,stop_sequence) values(:trip_id, :stop_id, :stop_sequence);");
+		$stmt->bindParam(':trip_id',$trip_id);
+				$stmt->bindParam(':stop_id',$stop_id);
+						$stmt->bindParam(':stop_sequence',$stop_sequence);
+	}
+
+
 		while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-			if ($line > 0) {
+			if ($line == 0) {
+			
+			} else { 
 				$query = "insert into $tablename values(";
                                 $valueCount = 0;
                                 foreach ($data as $value) {
@@ -44,14 +57,22 @@ foreach (scandir($tmpdir) as $file) {
 				} else {
                                   $query.= "');";
                                 }
-                                if ($tablename =="stop_times" && $data[1] == "") {
-                                  $query = "insert into $tablename (trip_id,stop_id,stop_sequence) values('{$data[0]}','{$data[3]}','{$data[4]}');";
-                                }
+               if ($tablename =="stop_times" && $data[1] == "") {
+                //                  $query = "insert into $tablename (trip_id,stop_id,stop_sequence) values('{$data[0]}','{$data[3]}','{$data[4]}');";
+                $trip_id=$data[0];
+                $stop_id=$data[3];
+                $stop_sequence=$data[4];
+               }
                                  
 			}
-                        $result = pg_query($conn, $query);
+              if ($tablename =="stop_times") {
+	              $stmt->execute();
+	          }
+              else {
+	              $result = pg_query($conn, $query);
+	          }
 			$line++;
-                        if ($line % 10000 == 0) echo "$line records... \n";
+                        if ($line % 10000 == 0) echo "$line records... ".date('c')."\n";
 		}
 		fclose($handle);
 		echo "Found a total of $line records in $file.\n";

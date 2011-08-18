@@ -1,0 +1,4 @@
+shared_writable_dirs:
+    - /labs/tiles
+    - /lib/staticmaplite/cache
+php_extensions: [pgsql, pdo, pdo_pgsql, curl]
