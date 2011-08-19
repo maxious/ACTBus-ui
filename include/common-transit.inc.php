@@ -45,4 +45,61 @@ function midnight_seconds_to_time($seconds)
 		return "";
 	}
 }
+function getServiceAlerts($filter_class, $filter_id) {
+/*
+
+  also need last modified epoch of client gtfs
+  
+         - add,remove,patch,inform (null)
+            - stop
+            - trip
+            - network
+          - patterns (WHERE=)
+            - route (short_name or route_id)
+            - street
+            - stop
+            - trip */
+$return = Array();
+$return['header']['gtrtfs_version'] = "1";
+$return['header']['timestamp'] = time();
+$return['entities'] = Array();
+foreach(getCurrentAlerts() as $alert) {
+	$informedEntities = getInformedAlerts($alert['id'],$_REQUEST['filter_class'],$_REQUEST['filter_id']);
+	if (sizeof($informedEntities) >0) {
+		$entity = Array();
+		$entity['id'] = $alert['id'];
+		$entity['alert']['active_period']['start'] = $alert['start'];
+		$entity['alert']['active_period']['end'] = $alert['end'];
+		$entity['alert']['url']['translation'] = $alert['url'];
+		$entity['alert']['description']['translation'] = $alert['description'];
+		
+		foreach ($informedEntities as $informedEntity) {
+			$informed = Array();
+			$informed[$informedEntity['informed_class']."_id"] = $informedEntity['informed_id'];
+			if ($informedEntity['informed_action'] != "") $informed["x-action"] = $informedEntity['informed_action'];
+			$informed[$informedEntity['class']."_type"] = $informedEntity['type'];
+			$entity['informed'][] = $informed; 
+		}
+		$return['entities'][] = $entity;
+	}
+}
+return $return;
+}
+function getServiceAlertsByClass() {
+	$return = Array();
+	$alerts = getServiceAlerts("","");
+	foreach ($alerts['entities'] as $entity) {
+		foreach ($entity['informed'] as $informed) {
+			foreach($informed as $key => $value){
+				if (strpos("_id",$key) > 0) {
+					$parts = explode($key);
+					$class = $parts[0];
+					$id = $value;
+				}
+			}
+		$return[$class][$id]['entity'] = $entity;
+		$return[$class][$id]['action'] = $informed["x-action"];
+	}
+	}
+}
 ?>

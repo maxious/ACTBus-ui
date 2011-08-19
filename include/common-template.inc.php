@@ -156,6 +156,11 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 				echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
 			}
 		}
+		$serviceAlerts = getServiceAlerts("network","network");
+		foreach ($serviceAlerts['entities'] as $entity) {
+			echo "<div id='servicewarning'> From ".date("F j, g:i a",strtotime($entity['alert']['active_period']['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period']['end']))."<br>Warning: {$entity['alert']['description']['translation']} 
+			<br><a href='{$entity['alert']['url']['translation']}'>Source</a>  </div>";
+		}
 	}
 }
 function include_footer()

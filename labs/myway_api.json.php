@@ -126,7 +126,7 @@ if (!isset($return['error'])) {
 if (sizeof($return) == 0) {
 $return['error'][] = "No data extracted from MyWay website - API may be out of date";
 }
-
+if (basename(__FILE__) == "myway_api.json.php") {
 header('Content-Type: text/javascript; charset=utf8');
 // header('Access-Control-Allow-Origin: http://bus.lambdacomplex.org/');
 header('Access-Control-Max-Age: 3628800');
@@ -137,4 +137,5 @@ if (isset($_GET['callback'])) {
 	
 }
 else echo json_encode($return);
+}
 ?>
