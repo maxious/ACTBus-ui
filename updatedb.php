@@ -4,7 +4,16 @@ include ('include/common.inc.php');
 $conn = pg_connect("dbname=transitdata user=postgres password=snmc host=localhost") or die('connection failed');
 $pdconn = new PDO("pgsql:dbname=transitdata;user=postgres;password=snmc;host=localhost");
 
-
+/*
+	delete from agency;
+	delete from calendar;
+	delete from calendar_dates;
+	delete from routes;
+	delete from shapes;
+	delete from stop_times;
+	delete from stops;
+	delete from trips;
+*/
 // Unzip cbrfeed.zip, import all csv files to database
 $unzip = true;
 $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
@@ -35,10 +44,12 @@ foreach (scandir($tmpdir) as $file) {
 		$line = 0;
 		$handle = fopen($tmpdir . $file, "r");
 		 if ($tablename =="stop_times") {
-			 $stmt = $pdconn->prepare("insert into stop_times (trip_id,stop_id,stop_sequence) values(:trip_id, :stop_id, :stop_sequence);");
+			 $stmt = $pdconn->prepare("insert into stop_times (trip_id,stop_id,stop_sequence,arrival_time,departure_time) values(:trip_id, :stop_id, :stop_sequence,:arrival_time,:departure_time);");
 		$stmt->bindParam(':trip_id',$trip_id);
 				$stmt->bindParam(':stop_id',$stop_id);
 						$stmt->bindParam(':stop_sequence',$stop_sequence);
+						$stmt->bindParam(':arrival_time',$time);
+							$stmt->bindParam(':departure_time',$time);
 	}
 
 
@@ -57,11 +68,12 @@ foreach (scandir($tmpdir) as $file) {
 				} else {
                                   $query.= "');";
                                 }
-               if ($tablename =="stop_times" && $data[1] == "") {
+               if ($tablename =="stop_times") {
                 //                  $query = "insert into $tablename (trip_id,stop_id,stop_sequence) values('{$data[0]}','{$data[3]}','{$data[4]}');";
                 $trip_id=$data[0];
                 $stop_id=$data[3];
                 $stop_sequence=$data[4];
+                $time=($data[1] == "" ? null : $data[1]);
                }
                                  
 			}
