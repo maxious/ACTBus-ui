@@ -54,11 +54,17 @@ function getServiceAlerts($filter_class, $filter_id) {
             - stop
             - trip
             - network
-          - patterns (WHERE=)
+          - classes (WHERE=)
             - route (short_name or route_id)
             - street
             - stop
-            - trip */
+            - trip 
+            Currently support:
+            network inform
+            trip patch: stop remove
+            street inform: route inform, trip inform, stop inform
+            route patch: trip remove
+            */
 $return = Array();
 $return['header']['gtrtfs_version'] = "1";
 $return['header']['timestamp'] = time();
@@ -97,8 +103,8 @@ function getServiceAlertsByClass() {
 					$id = $value;
 				}
 			}
-		$return[$class][$id]['entity'] = $entity;
-		$return[$class][$id]['action'] = $informed["x-action"];
+		$return[$class][$id][]['entity'] = $entity;
+		$return[$class][$id][]['action'] = $informed["x-action"];
 	}
 	}
 }

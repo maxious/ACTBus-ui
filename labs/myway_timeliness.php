@@ -10,33 +10,33 @@ include_header("MyWay Deltas", "mywayDelta");
 <script type="text/javascript"> 
 $(function () {
     var d = new Date();
-						d.setUTCMinutes(0);
-						d.setUTCHours(0);
+    d.setUTCMinutes(0);
+    d.setUTCHours(0);
     var midnight = d.getTime();
 
 <?php
 $query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by route_full_name;";
-$query = $conn->prepare($query);
-$query->execute();
+$query = $conn -> prepare($query);
+$query -> execute();
 if (!$query) {
-	databaseError($conn->errorInfo());
-	return Array();
-}
+    databaseError($conn -> errorInfo());
+     return Array();
+    } 
 $i = 0;
 $labels = Array();
 $lastRoute = "";
-foreach ($query->fetchAll() as $delta) {
-	$routeName = $delta['route_full_name'];
-	if (strstr($routeName, " 3")) $routeName = "312-319";
-	else $routeName = preg_replace('/\D/', '', $routeName);
-	if ($routeName != $lastRoute) {
-		$i++;
-		echo "    var d$i = [];";
-		$lastRoute = $routeName;
-		$labels[$i] = $routeName;
-	}
-	echo "d$i.push([ midnight+ (1000*" . midnight_seconds(strtotime($delta['time'])) . "), ".intval($delta['timing_delta'])."]); \n";
-};
+foreach ($query -> fetchAll() as $delta) {
+    $routeName = $delta['route_full_name'];
+     if (strstr($routeName, " 3")) $routeName = "312-319";
+     else $routeName = preg_replace('/\D/', '', $routeName);
+     if ($routeName != $lastRoute) {
+        $i++;
+         echo "    var d$i = [];";
+         $lastRoute = $routeName;
+         $labels[$i] = $routeName;
+         } 
+    echo "d$i.push([ midnight+ (1000*" . midnight_seconds(strtotime($delta['time'])) . "), " . intval($delta['timing_delta']) . "]); \n";
+    } ;
 ?>
 
        var placeholder = $("#placeholder");
@@ -44,12 +44,12 @@ foreach ($query->fetchAll() as $delta) {
     var plot = $.plot(placeholder, [
 <?php
 foreach ($labels as $key => $label) {
-	echo "        {
+    echo "        {
             data: d$key,
             points: { show: true },
             label: '$label'
         },";
-}
+    } 
 ?>
     ],
         {
