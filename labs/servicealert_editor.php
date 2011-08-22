@@ -1,5 +1,6 @@
 <?php
 include ('../include/common.inc.php');
+auth();
 include_header("Service Alert Editor", "serviceAlertEditor");
 /**
  * Currently support:
@@ -12,9 +13,9 @@ include_header("Service Alert Editor", "serviceAlertEditor");
  * - trip search by route
  */
 if (isset($_REQUEST['saveedit'])) {
-
-if ($_REQUEST['saveedit'] != "") updateServiceAlert($_REQUEST['saveedit'], $_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['description'], $_REQUEST['url']);
-else addServiceAlert($_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['description'], $_REQUEST['url']);
+    
+    if ($_REQUEST['saveedit'] != "") updateServiceAlert($_REQUEST['saveedit'], $_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['description'], $_REQUEST['url']);
+    else addServiceAlert($_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['description'], $_REQUEST['url']);
      echo "Saved " . $_REQUEST['saveedit'];
      die();
      } 
@@ -44,18 +45,26 @@ if ($_REQUEST['stopsearch']) {
          foreach (getStopRoutes($_REQUEST['stopid'], $sp) as $route) {
             addInformedAlert($_REQUEST['stopsearch'], "route", $route['route_id'], "inform");
              echo "Added route inform for" . $_REQUEST['stopsearch'] . ", route" . $route['route_id'] . "<br>\n";
-            
-            
              } 
         } 
     die();
      } 
 if ($_REQUEST['routesearch']) {
     echo "Informing route<br>\n";
-     getRouteTrips();
+     $stops = Array();
      echo "Informing trips<br>\n";
-     echo "Informing stops<br>\n";
-     die();
+     foreach(getRouteTrips() as $trip) {
+        addInformedAlert($_REQUEST['stopsearch'], "trip", $trip['trip_id'], "patch");
+         echo "Added trip patch for" . $_REQUEST['stopsearch'] . ", trip" . $trip['trip_id'] . "<br>\n";
+         viaPoints($tripID, "", false);
+         } 
+    
+    echo "Informing stops<br>\n";
+     foreach($stops as $stop) {
+        addInformedAlert($_REQUEST['stopsearch'], "stop", $_REQUEST['stopid'], "remove");
+         echo "Added stop remove for" . $_REQUEST['stopsearch'] . ", stop" . $_REQUEST['stopid'] . "<br>\n";
+         } 
+    die();
      } 
 if ($_REQUEST['streetsearch']) {
     
@@ -141,7 +150,7 @@ if ($_REQUEST['edit']) {
 <form action="<?php echo basename(__FILE__) ;
      ?>" method="get">
         <input type="hidden" name="networkinform" value="<?php echo $_REQUEST['edit'];
-    ?>"/>
+     ?>"/>
         <input type="submit" value="Add Network Inform"/>
                 </form>
                 <form action="<?php echo basename(__FILE__) ;
@@ -151,7 +160,7 @@ if ($_REQUEST['edit']) {
         <input type="text" name="stopid" />
     </div>
         <input type="hidden" name="stopsearch" value="<?php echo $_REQUEST['edit'];
-    ?>"/>
+     ?>"/>
         <input type="submit" value="Stop Search"/>
                 </form>
 <form action="<?php echo basename(__FILE__) ;
@@ -161,7 +170,7 @@ if ($_REQUEST['edit']) {
         <input type="text" name="street" />
     </div>
         <input type="hidden" name="streetsearch" value="<?php echo $_REQUEST['edit'];
-    ?>"/>
+     ?>"/>
         <input type="submit" value="Street Search"/>
                 </form>
                 <form action="<?php echo basename(__FILE__) ;
@@ -171,7 +180,7 @@ if ($_REQUEST['edit']) {
         <input type="text" name="routeid" />
     </div>
         <input type="hidden" name="routesearch" value="<?php echo $_REQUEST['edit'];
-    ?>"/>
+     ?>"/>
         <input type="submit" value="Route Search"/>
                 </form>
 <?php

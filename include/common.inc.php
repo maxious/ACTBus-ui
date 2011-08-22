@@ -43,6 +43,7 @@ include_once ("common-db.inc.php");
 
 include_once ("common-request.inc.php");
 include_once ("common-session.inc.php");
+include_once ("common-auth.inc.php");
 include_once ("common-template.inc.php");
 
 
@@ -55,6 +56,7 @@ function isDebug($debugReason = "other")
 	global $debugOkay;
 	return in_array($debugReason, $debugOkay, false) && isDebugServer();
 }
+
 function debug($msg, $debugReason = "other")
 {
 	if (isDebug($debugReason)) echo "\n<!-- " . date(DATE_RFC822) . "\n $msg -->\n";
@@ -187,4 +189,5 @@ function r_implode( $glue, $pieces )
   } 
   return implode( $glue, $retVal ); 
 } 
+
 ?>

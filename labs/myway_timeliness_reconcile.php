@@ -1,5 +1,6 @@
 <?php
 include ('../include/common.inc.php');
+auth();
 foreach ($_REQUEST as $key => $value) {
 	if (strstr($key, "route") && !strstr($value, "Select")) {
 		$myway_route = str_replace("route", "", $key);
