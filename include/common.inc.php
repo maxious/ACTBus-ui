@@ -32,7 +32,7 @@ if (strstr($_SERVER['PHP_SELF'],"labs")) $labsPath = "../";
 
 function isDebugServer()
 {
-	return php_sapi_name() == "cli" || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "10.0.1.154" || $_SERVER['SERVER_NAME'] == "10.1.0.4" || $_SERVER['SERVER_NAME'] == 
+	return php_sapi_name() == "cli" || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "vanille" || $_SERVER['SERVER_NAME'] == "10.1.0.4" || $_SERVER['SERVER_NAME'] == 
 "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1") ;
 }
 

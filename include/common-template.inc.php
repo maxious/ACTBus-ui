@@ -98,8 +98,11 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 function success(position) {
 $('#error').val('Location now detected. Please wait for data to load.');
 $('#geolocate').val(position.coords.latitude+','+position.coords.longitude);
-$.ajax({ url: \"include/common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
-location.reload(true);
+$.ajax({ async: false, 
+success: function(){
+	location.reload(true);
+  },
+url: \"include/common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
 }
 function error(msg) {
 $('#error').val('Error: '+msg);
