@@ -159,8 +159,8 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 		if ($serviceAlertsEnabled) {
 		$serviceAlerts = getServiceAlerts("network","network");
 		foreach ($serviceAlerts['entities'] as $entity) {
-			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period']['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period']['end']))."<br>Warning: {$entity['alert']['description']['translation']} 
-			<br><a href='{$entity['alert']['url']['translation']}'>Source</a>  </div>";
+			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period']['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period']['end']))."{$entity['alert']['header_text']['translation']['text']}<br>Warning: {$entity['alert']['description_text']['translation']['text']} 
+			<br><a href='{$entity['alert']['url']['translation']['text']}'>Source</a>  </div>";
 		}
 	}
 	}

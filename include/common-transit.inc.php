@@ -45,6 +45,55 @@ function midnight_seconds_to_time($seconds)
 		return "";
 	}
 }
+
+$serviceAlertCause = Array(
+UNKNOWN_CAUSE
+OTHER_CAUSE
+TECHNICAL_PROBLEM
+STRIKE
+DEMONSTRATION
+ACCIDENT
+HOLIDAY
+WEATHER
+MAINTENANCE
+CONSTRUCTION
+POLICE_ACTIVITY
+MEDICAL_EMERGENCY
+
+Unknown cause
+Other cause (not represented by any of these options)
+Technical problem
+Strike
+Demonstration
+Accident
+Holiday
+Weather
+Maintenance
+Construction
+Police activity
+Medical emergency
+);
+$serviceAlertEffect = Array(
+NO_SERVICE
+REDUCED_SERVICE
+SIGNIFICANT_DELAYS
+DETOUR
+ADDITIONAL_SERVICE
+MODIFIED_SERVICE
+OTHER_EFFECT
+UNKNOWN_EFFECT
+STOP_MOVED
+
+No service
+Reduced service
+Significant delays (insignificant delays should only be provided through Trip updates).
+Detour
+Additional service
+Modified service
+Stop moved
+Other effect (not represented by any of these options)
+Unknown effect);
+
 function getServiceAlerts($filter_class, $filter_id) {
 /*
 
@@ -66,8 +115,9 @@ function getServiceAlerts($filter_class, $filter_id) {
             route patch: trip remove
             */
 $return = Array();
-$return['header']['gtrtfs_version'] = "1";
+$return['header']['gtfs_realtime_version'] = "1";
 $return['header']['timestamp'] = time();
+$return['header']['incrementality'] =  "FULL_DATASET";
 $return['entities'] = Array();
 foreach(getCurrentAlerts() as $alert) {
 	$informedEntities = getInformedAlerts($alert['id'],$_REQUEST['filter_class'],$_REQUEST['filter_id']);
@@ -76,8 +126,12 @@ foreach(getCurrentAlerts() as $alert) {
 		$entity['id'] = $alert['id'];
 		$entity['alert']['active_period']['start'] = $alert['start'];
 		$entity['alert']['active_period']['end'] = $alert['end'];
-		$entity['alert']['url']['translation'] = $alert['url'];
-		$entity['alert']['description']['translation'] = $alert['description'];
+		$entity['alert']['url']['translation']['text'] = $alert['url'];
+		$entity['alert']['url']['translation']['language'] = 'en';
+		$entity['alert']['header_text']['translation']['text'] = $alert['header'];
+		$entity['alert']['header_text']['translation']['language'] = 'en';
+		$entity['alert']['description_text']['translation']['text'] = $alert['description'];
+		$entity['alert']['description_text']['translation']['language'] = 'en';
 		
 		foreach ($informedEntities as $informedEntity) {
 			$informed = Array();
