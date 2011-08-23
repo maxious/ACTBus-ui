@@ -47,52 +47,29 @@ function midnight_seconds_to_time($seconds)
 }
 
 $serviceAlertCause = Array(
-UNKNOWN_CAUSE
-OTHER_CAUSE
-TECHNICAL_PROBLEM
-STRIKE
-DEMONSTRATION
-ACCIDENT
-HOLIDAY
-WEATHER
-MAINTENANCE
-CONSTRUCTION
-POLICE_ACTIVITY
-MEDICAL_EMERGENCY
-
-Unknown cause
-Other cause (not represented by any of these options)
-Technical problem
-Strike
-Demonstration
-Accident
-Holiday
-Weather
-Maintenance
-Construction
-Police activity
-Medical emergency
+"UNKNOWN_CAUSE" => "Unknown cause",
+"OTHER_CAUSE" => "Other cause",
+"TECHNICAL_PROBLEM" => "Technical problem",
+"STRIKE" => "Strike",
+"DEMONSTRATION" => "Demonstration",
+"ACCIDENT" => "Accident",
+"HOLIDAY" => "Holiday",
+"WEATHER" => "Weather",
+"MAINTENANCE" => "Maintenance",
+"CONSTRUCTION" => "Construction",
+"POLICE_ACTIVITY" => "Police activity",
+"MEDICAL_EMERGENCY" => "Medical emergency"
 );
 $serviceAlertEffect = Array(
-NO_SERVICE
-REDUCED_SERVICE
-SIGNIFICANT_DELAYS
-DETOUR
-ADDITIONAL_SERVICE
-MODIFIED_SERVICE
-OTHER_EFFECT
-UNKNOWN_EFFECT
-STOP_MOVED
-
-No service
-Reduced service
-Significant delays (insignificant delays should only be provided through Trip updates).
-Detour
-Additional service
-Modified service
-Stop moved
-Other effect (not represented by any of these options)
-Unknown effect);
+"NO_SERVICE" => "No service",
+"REDUCED_SERVICE" => "Reduced service",
+"SIGNIFICANT_DELAYS" => "Significant delays",
+"DETOUR" => "Detour",
+"ADDITIONAL_SERVICE" => "Additional service",
+"MODIFIED_SERVICE" => "Modified service",
+"OTHER_EFFECT" => "Other effect",
+"UNKNOWN_EFFECT" => "Unknown effect",
+"STOP_MOVED" => "Stop moved");
 
 function getServiceAlerts($filter_class, $filter_id) {
 /*
