@@ -156,11 +156,11 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 				echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
 			}
 		}
-		if ($serviceAlertsEnabled) {
-		$serviceAlerts = getServiceAlerts("network","network");
-		foreach ($serviceAlerts['entities'] as $entity) {
-			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period']['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period']['end']))."{$entity['alert']['header_text']['translation']['text']}<br>Warning: {$entity['alert']['description_text']['translation']['text']} 
-			<br><a href='{$entity['alert']['url']['translation']['text']}'>Source</a>  </div>";
+		if ($GTFSREnabled) {
+		$serviceAlerts = getServiceAlertsAsArray("agency","0");
+		foreach ($serviceAlerts['entity'] as $entity) {
+			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period'][0]['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end']))."{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
+			<br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
 		}
 	}
 	}

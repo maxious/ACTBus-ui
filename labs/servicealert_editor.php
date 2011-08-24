@@ -5,16 +5,14 @@ include_header("Service Alert Editor", "serviceAlertEditor");
 /**
  * Currently support:
  * network inform
- * stop remove: trip patch, route inform
+ * stop remove: route patch, stop remove
  * - stop search
- * street inform: route inform, trip inform, stop inform
+ * street inform: route inform, stop inform
  * - street search
- * trip remove: route patch, stop inform 
- * - trip search by route
  */
 if (isset($_REQUEST['saveedit'])) {
     
-    if ($_REQUEST['saveedit'] != "") updateServiceAlert($_REQUEST['saveedit'], $_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['description'], $_REQUEST['url']);
+    if ($_REQUEST['saveedit'] != "") updateServiceAlert($_REQUEST['saveedit'], $_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['header'], $_REQUEST['description'], $_REQUEST['url']);
     else addServiceAlert($_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['description'], $_REQUEST['url']);
      echo "Saved " . $_REQUEST['saveedit'];
      die();
@@ -26,7 +24,7 @@ if ($_REQUEST['delete']) {
      die();
      } 
 if ($_REQUEST['networkinform']) {
-    addInformedAlert($_REQUEST['networkinform'], "network", "network", "inform");
+    addInformedAlert($_REQUEST['networkinform'], "agency", "0", "inform");
      echo "Added network inform for" . $_REQUEST['networkinform'];
      die();
      } 
@@ -34,58 +32,27 @@ if ($_REQUEST['stopsearch']) {
     addInformedAlert($_REQUEST['stopsearch'], "stop", $_REQUEST['stopid'], "remove");
      echo "Added stop remove for" . $_REQUEST['stopsearch'] . ", stop" . $_REQUEST['stopid'] . "<br>\n";
     
-     foreach ($service_periods as $sp) {
-        echo "Patching $sp trips<br>\n";
-         foreach (getStopTrips($_REQUEST['stopid'], $sp) as $trip) {
-            addInformedAlert($_REQUEST['stopsearch'], "trip", $trip['trip_id'], "patch");
-             echo "Added trip patch for" . $_REQUEST['stopsearch'] . ", trip" . $trip['trip_id'] . "<br>\n";
-            
-             } 
-        echo "Informing $sp routes<br>\n";
+     foreach ($service_periods as $sp) { 
+        echo "Remove from $sp routes<br>\n";
          foreach (getStopRoutes($_REQUEST['stopid'], $sp) as $route) {
-            addInformedAlert($_REQUEST['stopsearch'], "route", $route['route_id'], "inform");
-             echo "Added route inform for" . $_REQUEST['stopsearch'] . ", route" . $route['route_id'] . "<br>\n";
+            addInformedAlert($_REQUEST['stopsearch'], "route", $route['route_id'], "patch");
+             echo "Added route patch for" . $_REQUEST['stopsearch'] . ", route" . $route['route_id'] . "<br>\n";
              } 
         } 
     die();
      } 
-if ($_REQUEST['routesearch']) {
-    echo "Informing route<br>\n";
-     $stops = Array();
-     echo "Informing trips<br>\n";
-     foreach(getRouteTrips() as $trip) {
-        addInformedAlert($_REQUEST['stopsearch'], "trip", $trip['trip_id'], "patch");
-         echo "Added trip patch for" . $_REQUEST['stopsearch'] . ", trip" . $trip['trip_id'] . "<br>\n";
-         viaPoints($tripID, "", false);
-         } 
-    
-    echo "Informing stops<br>\n";
-     foreach($stops as $stop) {
-        addInformedAlert($_REQUEST['stopsearch'], "stop", $_REQUEST['stopid'], "remove");
-         echo "Added stop remove for" . $_REQUEST['stopsearch'] . ", stop" . $_REQUEST['stopid'] . "<br>\n";
-         } 
-    die();
-     } 
 if ($_REQUEST['streetsearch']) {
     
-    echo "Informing stops<br>\n";
+    echo "Informing stops of street<br>\n";
      foreach(getStopByName() as $stop) {
-        addInformedAlert($_REQUEST['stopsearch'], "stop", $_REQUEST['stopid'], "remove");
+        addInformedAlert($_REQUEST['stopsearch'], "stop", $_REQUEST['stopid'], "inform");
          echo "Added stop inform for" . $_REQUEST['stopsearch'] . ", stop" . $_REQUEST['stopid'] . "<br>\n";
         
          foreach ($service_periods as $sp) {
-            echo "Patching $sp trips<br>\n";
-             foreach (getStopTrips($_REQUEST['stopid'], $sp) as $trip) {
-                addInformedAlert($_REQUEST['stopsearch'], "trip", $trip['trip_id'], "patch");
-                 echo "Added trip inform for" . $_REQUEST['stopsearch'] . ", trip" . $trip['trip_id'] . "<br>\n";
-                
-                 } 
             echo "Informing $sp routes<br>\n";
              foreach (getStopRoutes($_REQUEST['stopid'], $sp) as $route) {
                 addInformedAlert($_REQUEST['stopsearch'], "route", $route['route_id'], "inform");
-                 echo "Added route inform for" . $_REQUEST['stopsearch'] . ", route" . $route['route_id'] . "<br>\n";
-                
-                
+                 echo "Added route inform for stop" . $_REQUEST['stopsearch'] . ", route" . $route['route_id'] . "<br>\n";
                  } 
             } 
         die();
@@ -122,6 +89,11 @@ $alert = getServiceAlert($_REQUEST['edit']);
  else echo date("c", strtotime("23:59"));
 ?>"  />
     </div>
+     <div data-role="fieldcontain">
+        <label for="header">Header</label>
+        <input type="text" name="header" id="header" value="<?php echo $alert['header'];
+?>"  />
+    </div>
         <div data-role="fieldcontain">
         <label for="description">Description</label>
         <textarea name="description">
@@ -156,7 +128,7 @@ if ($_REQUEST['edit']) {
                 <form action="<?php echo basename(__FILE__) ;
      ?>" method="get">
                 <div data-role="fieldcontain">
-        <label for="stopid">StopID</label>
+        <label for="stopid">StopID to remove</label>
         <input type="text" name="stopid" />
     </div>
         <input type="hidden" name="stopsearch" value="<?php echo $_REQUEST['edit'];
@@ -166,24 +138,14 @@ if ($_REQUEST['edit']) {
 <form action="<?php echo basename(__FILE__) ;
      ?>" method="get">
 <div data-role="fieldcontain">
-        <label for="street">Street</label>
+        <label for="street">Street to inform</label>
         <input type="text" name="street" />
     </div>
         <input type="hidden" name="streetsearch" value="<?php echo $_REQUEST['edit'];
      ?>"/>
         <input type="submit" value="Street Search"/>
                 </form>
-                <form action="<?php echo basename(__FILE__) ;
-     ?>" method="get">
-                <div data-role="fieldcontain">
-        <label for="routeid">routeID</label>
-        <input type="text" name="routeid" />
-    </div>
-        <input type="hidden" name="routesearch" value="<?php echo $_REQUEST['edit'];
-     ?>"/>
-        <input type="submit" value="Route Search"/>
-                </form>
-<?php
+  <?php
     
      } 
 include_footer();

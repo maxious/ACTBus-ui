@@ -45,7 +45,7 @@ function midnight_seconds_to_time($seconds)
 		return "";
 	}
 }
-
+if ($GTFSREnabled) {
 $serviceAlertCause = Array(
 "UNKNOWN_CAUSE" => "Unknown cause",
 "OTHER_CAUSE" => "Other cause",
@@ -71,7 +71,22 @@ $serviceAlertEffect = Array(
 "UNKNOWN_EFFECT" => "Unknown effect",
 "STOP_MOVED" => "Stop moved");
 
-function getServiceAlerts($filter_class, $filter_id) {
+set_include_path(get_include_path() . PATH_SEPARATOR . $labsPath."lib/Protobuf-PHP/library/DrSlump/");
+
+include_once("Protobuf.php");
+include_once("Protobuf/Message.php");
+include_once("Protobuf/Registry.php");
+include_once("Protobuf/Descriptor.php");
+include_once("Protobuf/Field.php");
+
+include_once($labsPath."lib/Protobuf-PHP/gtfs-realtime.php");
+include_once("Protobuf/CodecInterface.php");
+include_once("Protobuf/Codec/PhpArray.php");
+include_once("Protobuf/Codec/Binary.php");
+include_once("Protobuf/Codec/Binary/Writer.php");
+include_once("Protobuf/Codec/Json.php");
+
+function getServiceAlerts($filter_class = "", $filter_id = "") {
 /*
 
   also need last modified epoch of client gtfs
@@ -91,40 +106,82 @@ function getServiceAlerts($filter_class, $filter_id) {
             street inform: route inform, trip inform, stop inform
             route patch: trip remove
             */
-$return = Array();
-$return['header']['gtfs_realtime_version'] = "1";
-$return['header']['timestamp'] = time();
-$return['header']['incrementality'] =  "FULL_DATASET";
-$return['entities'] = Array();
+            $fm = new transit_realtime\FeedMessage();
+$fh = new transit_realtime\FeedHeader();
+$fh->setGtfsRealtimeVersion(1);
+$fh->setTimestamp(time());
+$fm->setHeader($fh);
 foreach(getCurrentAlerts() as $alert) {
-	$informedEntities = getInformedAlerts($alert['id'],$_REQUEST['filter_class'],$_REQUEST['filter_id']);
+$fe = new transit_realtime\FeedEntity();
+	$fe->setId($alert['id']);
+	$fe->setIsDeleted(false);
+	$alert = new transit_realtime\Alert();	
+		$tr = new transit_realtime\TimeRange();
+			$tr->setStart($alert['start']);
+			$tr->setEnd($alert['end']);
+		$alert-> addActivePeriod($tr);
+			$informedEntities = getInformedAlerts($alert['id'],$_REQUEST['filter_class'],$_REQUEST['filter_id']);
 	if (sizeof($informedEntities) >0) {
-		$entity = Array();
-		$entity['id'] = $alert['id'];
-		$entity['alert']['active_period']['start'] = $alert['start'];
-		$entity['alert']['active_period']['end'] = $alert['end'];
-		$entity['alert']['url']['translation']['text'] = $alert['url'];
-		$entity['alert']['url']['translation']['language'] = 'en';
-		$entity['alert']['header_text']['translation']['text'] = $alert['header'];
-		$entity['alert']['header_text']['translation']['language'] = 'en';
-		$entity['alert']['description_text']['translation']['text'] = $alert['description'];
-		$entity['alert']['description_text']['translation']['language'] = 'en';
-		
-		foreach ($informedEntities as $informedEntity) {
-			$informed = Array();
-			$informed[$informedEntity['informed_class']."_id"] = $informedEntity['informed_id'];
-			if ($informedEntity['informed_action'] != "") $informed["x-action"] = $informedEntity['informed_action'];
-			$informed[$informedEntity['class']."_type"] = $informedEntity['type'];
-			$entity['informed'][] = $informed; 
+		$informed = Array();
+		$es = new transit_realtime\EntitySelector();
+		if ($informedEntity['informed_class'] == "agency") {
+			$es->setAgencyId($informedEntity['informed_id']);
 		}
-		$return['entities'][] = $entity;
+		if ($informedEntity['informed_class'] == "stop") {
+			$es->setStopId($informedEntity['informed_id']);
+		}
+		if ($informedEntity['informed_class'] == "route") {
+			$es->setRouteId($informedEntity['informed_id']);
+		}
+		if ($informedEntity['informed_class'] == "trip") {
+			$td = new transit_realtime\TripDescriptor();
+				$td->setTripId($informedEntity['informed_id']);
+			$es->setTrip($td);
+		}
+		$alert-> addInformedEntity($es);
 	}
+		$alert->setCause(constant("transit_realtime\Alert\Cause::".$alert['cause']));
+		$alert->setEffect(constant("transit_realtime\Alert\Effect::".$alert['effect']));
+		$tsUrl = new transit_realtime\TranslatedString();
+			$tUrl = new transit_realtime\TranslatedString\Translation();
+				$tUrl->setText($alert['url']);
+				$tUrl->setLanguage("en");
+			$tsUrl->addTranslation($tUrl);
+		$alert->setUrl($tsUrl);
+		$tsHeaderText= new transit_realtime\TranslatedString();
+			$tHeaderText = new transit_realtime\TranslatedString\Translation();
+				$tHeaderText->setText($alert['header']);
+				$tHeaderText->setLanguage("en");
+			$tsHeaderText->addTranslation($tHeaderText);
+		$alert->setHeaderText($tsHeaderText);
+		$tsDescriptionText= new transit_realtime\TranslatedString();
+			$tDescriptionText = new transit_realtime\TranslatedString\Translation();
+				$tDescriptionText->setText($alert['description']);
+				$tDescriptionText->setLanguage("en");
+			$tsDescriptionText->addTranslation($tDescriptionText);
+		$alert->setDescriptionText($tsDescriptionText);
+	$fe->setAlert($alert);
+$fm->addEntity($fe);
 }
-return $return;
+return $fm;
+}
+function getServiceAlertsAsArray($filter_class = "", $filter_id = "") {
+	$codec = new DrSlump\Protobuf\Codec\PhpArray();
+	return $codec->encode(getServiceAlerts($filter_class, $filter_id));
+}
+
+function getServiceAlertsAsBinary($filter_class = "", $filter_id = "") {
+	$codec = new DrSlump\Protobuf\Codec\Binary();
+	return $codec->encode(getServiceAlerts($filter_class, $filter_id));
+}
+
+function getServiceAlertsAsJSON($filter_class = "", $filter_id = "") {
+	$codec = new DrSlump\Protobuf\Codec\Json();
+	return $codec->encode(getServiceAlerts($filter_class, $filter_id));
 }
 function getServiceAlertsByClass() {
 	$return = Array();
-	$alerts = getServiceAlerts("","");
+	$alerts = getServiceAlertsAsArray("","");
 	foreach ($alerts['entities'] as $entity) {
 		foreach ($entity['informed'] as $informed) {
 			foreach($informed as $key => $value){
@@ -134,9 +191,69 @@ function getServiceAlertsByClass() {
 					$id = $value;
 				}
 			}
-		$return[$class][$id][]['entity'] = $entity;
-		$return[$class][$id][]['action'] = $informed["x-action"];
+		$return[$class][$id][] = $entity;
 	}
 	}
+}
+
+function getTripUpdates($filter_class = "", $filter_id = "") {
+     $fm = new transit_realtime\FeedMessage();
+$fh = new transit_realtime\FeedHeader();
+$fh->setGtfsRealtimeVersion(1);
+$fh->setTimestamp(time());
+$fm->setHeader($fh);
+foreach(getCurrentAlerts() as $alert) {
+			$informedEntities = getInformedAlerts($alert['id'],$_REQUEST['filter_class'],$_REQUEST['filter_id']);
+	$stops = Array();
+		$routestrips = Array();
+		if (sizeof($informedEntities) >0) {
+		if ($informedEntity['informed_class'] == "stop" && $informed["x-action"] == "remove") {
+			$stops[] = $informedEntity['informed_id'];
+		}
+		if (($informedEntity['informed_class'] == "route" || $informedEntity['informed_class'] == "trip") && $informed["x-action"] == "patch" ) {
+			$routestrips[] = Array( "id" => $informedEntity['informed_id'],
+			"type"=>$informedEntity['informed_class']);
+		}
+		}
+foreach ($routestrips as $routetrip) {
+$fe = new transit_realtime\FeedEntity();
+	$fe->setId($alert['id'].$routetrip['id']);
+	$fe->setIsDeleted(false);
+	$tu = new transit_realtime\TripUpdate();	
+		$td = new transit_realtime\TripDescriptor();
+		if ($routetrip['type'] == "route") {
+			$td->setRouteId($routetrip['id']);
+			} else if ($routetrip['type'] == "trip") {
+				$td->setTripId($routetrip['id']);
+			}
+		$tu->setTrip($td);
+		foreach ($stops as $stop) {
+		$stu = new transit_realtime\TripUpdate\StopTimeUpdate();
+				$stu->setStopId($stop);
+				$stu->setScheduleRelationship(transit_realtime\TripUpdate\StopTimeUpdate\ScheduleRelationship::SKIPPED);
+		$tu->addStopTimeUpdate($stu);
+	}
+	$fe->setTripUpdate($tu);
+$fm->addEntity($fe);
+}		
+
+}
+return $fm;
+	
+}
+function getTripUpdatesAsArray($filter_class = "", $filter_id = "") {
+	$codec = new DrSlump\Protobuf\Codec\PhpArray();
+	return $codec->encode(getTripUpdates($filter_class, $filter_id));
+}
+
+function getTripUpdatesAsBinary($filter_class = "", $filter_id = "") {
+	$codec = new DrSlump\Protobuf\Codec\Binary();
+	return $codec->encode(getTripUpdates($filter_class, $filter_id));
+}
+
+function getTripUpdatesAsJSON($filter_class = "", $filter_id = "") {
+	$codec = new DrSlump\Protobuf\Codec\Json();
+	return $codec->encode(getTripUpdates($filter_class, $filter_id));
+}
 }
 ?>

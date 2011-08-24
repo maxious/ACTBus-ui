@@ -17,7 +17,7 @@ function getServiceOverride($date = "")
 function getServiceAlert($alertID)
 {
      global $conn;
-     $query = 'SELECT * from servicealerts_alerts where id = :servicealert_id';
+     $query = "SELECT id,extract('epoch', start) as start, extract('epoch', end) as end,cause,effect,header,description,url from servicealerts_alerts where id = :servicealert_id";
      debug($query, "database");
      $query = $conn -> prepare($query);
      $query -> bindParam(":servicealert_id", $alertID);
@@ -30,15 +30,16 @@ function getServiceAlert($alertID)
     } 
 
 
-function updateServiceAlert($alertID, $start, $end, $description, $url)
+function updateServiceAlert($alertID, $start, $end, $header, $description, $url)
 {
      global $conn;
-     $query = 'update servicealerts_alerts set start=:start, "end"=:end, description=:description, url=:url where id = :servicealert_id';
+     $query = 'update servicealerts_alerts set start=:start, "end"=:end, header=:header, description=:description, url=:url where id = :servicealert_id';
      debug($query, "database");
      $query = $conn -> prepare($query);
      $query -> bindParam(":servicealert_id", $alertID);
      $query -> bindParam(":start", $start);
      $query -> bindParam(":end", $end);
+     $query -> bindParam(":header", $header);
      $query -> bindParam(":description", $description);
      $query -> bindParam(":url", $url);
      $query -> execute();
@@ -51,14 +52,15 @@ function updateServiceAlert($alertID, $start, $end, $description, $url)
     return $query -> fetch(PDO :: FETCH_ASSOC);
     } 
 
-    function addServiceAlert($start, $end, $description, $url)
+    function addServiceAlert($start, $end, $header, $description, $url)
 {
      global $conn;
-     $query = 'INSERT INTO servicealerts_alerts (start, "end", description, url) VALUES (:start, :end, :description, :url) ';
+     $query = 'INSERT INTO servicealerts_alerts (start, "end", header, description, url) VALUES (:start, :end, :header, :description, :url) ';
      debug($query, "database");
      $query = $conn -> prepare($query);
      $query -> bindParam(":start", $start);
      $query -> bindParam(":end", $end);
+     $query -> bindParam(":header", $header);
      $query -> bindParam(":description", $description);
      $query -> bindParam(":url", $url);
      $query -> execute();
@@ -74,7 +76,7 @@ function updateServiceAlert($alertID, $start, $end, $description, $url)
 function getCurrentAlerts()
 {
      global $conn;
-     $query = 'SELECT * from servicealerts_alerts where NOW() > start and NOW() < "end"';
+     $query = "SELECT id,extract('epoch', start) as start, extract('epoch', end) as end,cause,effect,header,description,url from servicealerts_alerts where NOW() > start and NOW() < \"end\"";
      // debug($query, "database");
     $query = $conn -> prepare($query);
      $query -> execute();
@@ -88,7 +90,7 @@ function getCurrentAlerts()
 function getFutureAlerts()
 {
      global $conn;
-     $query = 'SELECT * from servicealerts_alerts where NOW() > start or NOW() < "end"';
+     $query = "SELECT id,extract('epoch', start) as start, extract('epoch', end) as end,cause,effect,header,description,url from servicealerts_alerts where NOW() > start or NOW() < \"end\"";
      // debug($query, "database");
     $query = $conn -> prepare($query);
      $query -> execute();
