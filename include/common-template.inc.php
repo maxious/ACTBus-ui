@@ -32,7 +32,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 	<head>
         <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
-<title>' . $pageTitle . '</title>
+<title>' . $pageTitle . ' - Canberra Bus Timetable</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 <link rel="dns-prefetch" href="//code.jquery.com">
 <link rel="dns-prefetch" href="//ajax.googleapis.com">

@@ -47,7 +47,9 @@ include_once ("common-template.inc.php");
 
 function isAnalyticsOn()
 {
-	return !isDebugServer();
+ $user_agent = $_SERVER['HTTP_USER_AGENT'];
+	return !isDebugServer() && !preg_match('/cloudkick/i', $user_agent) && !preg_match('/googlebot/i', $user_agent) && 
+!preg_match('/baidu/i', $user_agent);
 }
 function isDebug($debugReason = "other")
 {
