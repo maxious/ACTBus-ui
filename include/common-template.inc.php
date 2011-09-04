@@ -25,7 +25,7 @@ function googleAnalyticsGetImageUrl()
 }
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false)
 {
-	global $labsPath;
+	global $labsPath,$serviceAlertsEnabled;
 	echo '
 <!DOCTYPE html> 
 <html lang="en">
@@ -38,14 +38,14 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <link rel="dns-prefetch" href="//ajax.googleapis.com">
 	<link rel="stylesheet"  href="' . $labsPath . 'css/jquery-ui-1.8.12.custom.css" />';
 	if (isDebugServer()) {
-		$jqmcss = $labsPath . 'css/jquery.mobile-1.0b1.css';
-		$jqjs = $labsPath . 'js/jquery-1.6.1.min.js';
-		$jqmjs = $labsPath . 'js/jquery.mobile-1.0b1.js';
+		$jqmcss = $labsPath . 'css/jquery.mobile-1.0b2.css';
+		$jqjs = $labsPath . 'js/jquery-1.6.2.min.js';
+		$jqmjs = $labsPath . 'js/jquery.mobile-1.0b2.js';
 	}
 	else {
-		$jqmcss = "//code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css";
-		$jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js";
-		$jqmjs = "//code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js";
+		$jqmcss = "//code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css";
+		$jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js";
+		$jqmjs = "//code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js";
 	}
 	echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
 	<script src="'.$jqjs.'"></script>
@@ -156,6 +156,13 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 				echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
 			}
 		}
+		if ($GTFSREnabled) {
+		$serviceAlerts = getServiceAlertsAsArray("agency","0");
+		foreach ($serviceAlerts['entity'] as $entity) {
+			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period'][0]['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end']))."{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
+			<br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
+		}
+	}
 	}
 }
 function include_footer()
