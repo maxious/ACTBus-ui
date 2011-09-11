@@ -25,5 +25,6 @@ include_header("bus.lambdacomplex.org", "index", false)
             </ul>
 <?php
 echo ' <a href="labs/index.php" data-role="button" data-icon="beaker">Busness R&amp;D</a>';
+echo ' <a href="myway/index.php" data-role="button">MyWay Balance and Timeliness Survey Results</a>';
 include_footer(true)
 ?>

@@ -11,6 +11,9 @@ foreach (scandir("./") as $file) {
 foreach (scandir("./labs") as $file) {
       if (strpos($file,".php") !== false) echo " <url><loc>".curPageURL()."/labs/$file</loc><priority>0.3</priority></url>\n";
 }
+foreach (scandir("./myway") as $file) {
+      if (strpos($file,".php") !== false) echo " <url><loc>".curPageURL()."/myway/$file</loc><priority>0.3</priority></url>\n";
+}
 foreach (getStops() as $stop) {
       echo " <url><loc>".curPageURL()."stop.php?stopid=".htmlspecialchars ($stop["stop_id"])."</loc>";
 	echo "<lastmod>" . $last_updated . "</lastmod>";
