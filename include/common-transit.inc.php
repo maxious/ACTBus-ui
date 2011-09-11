@@ -87,7 +87,7 @@ if ($GTFSREnabled) {
         "UNKNOWN_EFFECT" => "Unknown effect",
         "STOP_MOVED" => "Stop moved");
 
-    set_include_path(get_include_path() . PATH_SEPARATOR . $labsPath . "lib/Protobuf-PHP/library/DrSlump/");
+    set_include_path(get_include_path() . PATH_SEPARATOR . ($basePath . "lib/Protobuf-PHP/library/DrSlump/"));
 
     include_once("Protobuf.php");
     include_once("Protobuf/Message.php");
@@ -95,7 +95,7 @@ if ($GTFSREnabled) {
     include_once("Protobuf/Descriptor.php");
     include_once("Protobuf/Field.php");
 
-    include_once($labsPath . "lib/Protobuf-PHP/gtfs-realtime.php");
+    include_once($basePath . "lib/Protobuf-PHP/gtfs-realtime.php");
     include_once("Protobuf/CodecInterface.php");
     include_once("Protobuf/Codec/PhpArray.php");
     include_once("Protobuf/Codec/Binary.php");

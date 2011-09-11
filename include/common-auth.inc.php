@@ -35,10 +35,11 @@ require_once "Auth/OpenID/FileStore.php";
 require_once "Auth/OpenID/AX.php";
 
 function login() {
+    global $basePath;
     // Just tested this with/for Google, needs trying with others ...
     $oid_identifier = 'https://www.google.com/accounts/o8/id';
     // Create file storage area for OpenID data
-    $store = new Auth_OpenID_FileStore('lib/openid-php/oid_store');
+    $store = new Auth_OpenID_FileStore(realpath($basePath) . '/lib/openid-php/oid_store');
     // Create OpenID consumer
     $consumer = new Auth_OpenID_Consumer($store);
     // Create an authentication request to the OpenID provider
@@ -68,11 +69,12 @@ function login() {
 }
 
 function auth() {
+      global $basePath;
     if ($_SESSION['authed'] == true)
         return true;
 
     // Create file storage area for OpenID data
-    $store = new Auth_OpenID_FileStore('lib/openid-php/oid_store');
+    $store = new Auth_OpenID_FileStore(realpath($basePath) . '/lib/openid-php/oid_store');
     // Create OpenID consumer
     $consumer = new Auth_OpenID_Consumer($store);
     // Create an authentication request to the OpenID provider
