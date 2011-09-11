@@ -10,7 +10,7 @@ $debugOkay = Array(
 	"database",
 	"other"
 );
-$serviceAlertsEnabled = true;
+$GTFSREnabled = true;
 $cloudmadeAPIkey = "daa03470bb8740298d4b10e3f03d63e6";
 $googleMapsAPIkey = "ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q";
 $otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
@@ -32,8 +32,8 @@ if (strstr($_SERVER['PHP_SELF'],"labs")) $labsPath = "../";
 
 function isDebugServer()
 {
-	return php_sapi_name() == "cli" || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "vanille" || $_SERVER['SERVER_NAME'] == "10.1.0.4" || $_SERVER['SERVER_NAME'] == 
-"localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1") ;
+	return php_sapi_name() == "cli" || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "azusa" || $_SERVER['SERVER_NAME'] == "vanille" 
+|| $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1") ;
 }
 
 include_once ("common-geo.inc.php");
@@ -49,7 +49,9 @@ include_once ("common-template.inc.php");
 
 function isAnalyticsOn()
 {
-	return !isDebugServer();
+ $user_agent = $_SERVER['HTTP_USER_AGENT'];
+	return !isDebugServer() && !preg_match('/cloudkick/i', $user_agent) && !preg_match('/googlebot/i', $user_agent) && 
+!preg_match('/baidu/i', $user_agent);
 }
 function isDebug($debugReason = "other")
 {

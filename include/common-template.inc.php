@@ -32,7 +32,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 	<head>
         <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
-<title>' . $pageTitle . '</title>
+<title>' . $pageTitle . ' - Canberra Bus Timetable</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 <link rel="dns-prefetch" href="//code.jquery.com">
 <link rel="dns-prefetch" href="//ajax.googleapis.com">
@@ -159,11 +159,11 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 				echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
 			}
 		}
-		if ($serviceAlertsEnabled) {
-		$serviceAlerts = getServiceAlerts("network","network");
-		foreach ($serviceAlerts['entities'] as $entity) {
-			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period']['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period']['end']))."<br>Warning: {$entity['alert']['description']['translation']} 
-			<br><a href='{$entity['alert']['url']['translation']}'>Source</a>  </div>";
+		if ($GTFSREnabled) {
+		$serviceAlerts = getServiceAlertsAsArray("agency","0");
+		foreach ($serviceAlerts['entity'] as $entity) {
+			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period'][0]['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end']))."{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
+			<br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
 		}
 	}
 	}
