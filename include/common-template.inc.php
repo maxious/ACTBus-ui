@@ -1,5 +1,21 @@
 <?php
 
+/*
+ *    Copyright 2010,2011 Alexander Sadleir 
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ */
+
 // Copyright 2009 Google Inc. All Rights Reserved.
 $GA_ACCOUNT = "MO-22173039-1";
 $GA_PIXEL = "/lib/ga.php";
@@ -39,13 +55,13 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <link rel="dns-prefetch" href="//ajax.googleapis.com">
 	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
     if (isDebugServer()) {
-        $jqmcss = $basePath . 'css/jquery.mobile-1.0b2.css';
+        $jqmcss = $basePath . 'css/jquery.mobile-1.0b3.css';
         $jqjs = $basePath . 'js/jquery-1.6.2.min.js';
-        $jqmjs = $basePath . 'js/jquery.mobile-1.0b2.js';
+        $jqmjs = $basePath . 'js/jquery.mobile-1.0b3.js';
     } else {
-        $jqmcss = "//code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css";
+        $jqmcss = "//code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css";
         $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js";
-        $jqmjs = "//code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js";
+        $jqmjs = "//code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js";
     }
     echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
 	<script src="' . $jqjs . '"></script>
