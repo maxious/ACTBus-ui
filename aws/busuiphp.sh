@@ -9,6 +9,7 @@ chmod -R 777 /var/www/lib/staticmaplite/cache
 chcon -R -t httpd_sys_content_rw_t /var/www/labs/tiles
 chmod -R 777 /var/www/labs/tiles
 
+mkdir /var/www/lib/openid-php/oid_store
 chcon -R -t httpd_sys_content_rw_t /var/www/lib/openid-php/oid_store
 chmod -R 777 /var/www/lib/openid-php/oid_store
 
