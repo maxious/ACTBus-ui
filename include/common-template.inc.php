@@ -1,64 +1,80 @@
 <?php
+
+/*
+ *    Copyright 2010,2011 Alexander Sadleir 
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ */
+
 // Copyright 2009 Google Inc. All Rights Reserved.
 $GA_ACCOUNT = "MO-22173039-1";
 $GA_PIXEL = "/lib/ga.php";
-function googleAnalyticsGetImageUrl()
-{
-	global $GA_ACCOUNT, $GA_PIXEL;
-	//if (stristr($_SERVER['HTTP_USER_AGENT'], 'Googlebot') return "";
-	$url = "";
-	$url.= $GA_PIXEL . "?";
-	$url.= "utmac=" . $GA_ACCOUNT;
-	$url.= "&utmn=" . rand(0, 0x7fffffff);
-	$referer = $_SERVER["HTTP_REFERER"];
-	$query = $_SERVER["QUERY_STRING"];
-	$path = $_SERVER["REQUEST_URI"];
-	if (empty($referer)) {
-		$referer = "-";
-	}
-	$url.= "&utmr=" . urlencode($referer);
-	if (!empty($path)) {
-		$url.= "&utmp=" . urlencode($path);
-	}
-	$url.= "&guid=ON";
-	return str_replace("&", "&amp;", $url);
+
+function googleAnalyticsGetImageUrl() {
+    global $GA_ACCOUNT, $GA_PIXEL;
+    //if (stristr($_SERVER['HTTP_USER_AGENT'], 'Googlebot') return "";
+    $url = "";
+    $url.= $GA_PIXEL . "?";
+    $url.= "utmac=" . $GA_ACCOUNT;
+    $url.= "&utmn=" . rand(0, 0x7fffffff);
+    $referer = $_SERVER["HTTP_REFERER"];
+    $query = $_SERVER["QUERY_STRING"];
+    $path = $_SERVER["REQUEST_URI"];
+    if (empty($referer)) {
+        $referer = "-";
+    }
+    $url.= "&utmr=" . urlencode($referer);
+    if (!empty($path)) {
+        $url.= "&utmp=" . urlencode($path);
+    }
+    $url.= "&guid=ON";
+    return str_replace("&", "&amp;", $url);
 }
-function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false)
-{
-	global $labsPath,$serviceAlertsEnabled;
-	echo '
+
+function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false) {
+    global $basePath, $serviceAlertsEnabled;
+    echo '
 <!DOCTYPE html> 
 <html lang="en">
 	<head>
         <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
-<title>' . $pageTitle . '</title>
+<title>' . $pageTitle . ' - Canberra Bus Timetable</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 <link rel="dns-prefetch" href="//code.jquery.com">
 <link rel="dns-prefetch" href="//ajax.googleapis.com">
-	<link rel="stylesheet"  href="' . $labsPath . 'css/jquery-ui-1.8.12.custom.css" />';
-	if (isDebugServer()) {
-		$jqmcss = $labsPath . 'css/jquery.mobile-1.0b2.css';
-		$jqjs = $labsPath . 'js/jquery-1.6.2.min.js';
-		$jqmjs = $labsPath . 'js/jquery.mobile-1.0b2.js';
-	}
-	else {
-		$jqmcss = "//code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css";
-		$jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js";
-		$jqmjs = "//code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js";
-	}
-	echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
-	<script src="'.$jqjs.'"></script>
+	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
+    if (isDebugServer()) {
+        $jqmcss = $basePath . 'css/jquery.mobile-1.0b3.css';
+        $jqjs = $basePath . 'js/jquery-1.6.2.min.js';
+        $jqmjs = $basePath . 'js/jquery.mobile-1.0b3.js';
+    } else {
+        $jqmcss = "//code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css";
+        $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js";
+        $jqmjs = "//code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js";
+    }
+    echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
+	<script src="' . $jqjs . '"></script>
 		 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 </script> 
-	<script src="'.$jqmjs.'"></script>
+	<script src="' . $jqmjs . '"></script>
 
-<script src="' . $labsPath . 'js/jquery.ui.core.min.js"></script>
-<script src="' . $labsPath . 'js/jquery.ui.position.min.js"></script>
-<script src="' . $labsPath . 'js/jquery.ui.widget.min.js"></script>
-  <script src="' . $labsPath . 'js/jquery.ui.autocomplete.min.js"></script>
+<script src="' . $basePath . 'js/jquery.ui.core.min.js"></script>
+<script src="' . $basePath . 'js/jquery.ui.position.min.js"></script>
+<script src="' . $basePath . 'js/jquery.ui.widget.min.js"></script>
+  <script src="' . $basePath . 'js/jquery.ui.autocomplete.min.js"></script>
   <script>
 	$(function() {
 		$( "#geolocate" ).autocomplete({
@@ -75,8 +91,9 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 		});
 	});
 	</script>';
-	echo '<style type="text/css">';
-	if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android')) echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
+    echo '<style type="text/css">';
+    if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android'))
+        echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
 .ui-btn-down-b,.ui-bar-c,.ui-body-c,.ui-btn-up-c,.ui-btn-hover-c,.ui-btn-down-c,.ui-bar-c,.ui-body-d,
 .ui-btn-up-d,.ui-btn-hover-d,.ui-btn-down-d,.ui-bar-d,.ui-body-e,.ui-btn-up-e,.ui-btn-hover-e,
 .ui-btn-down-e,.ui-bar-e,.ui-overlay-shadow,.ui-shadow,.ui-btn-active,.ui-body-a,.ui-bar-a {
@@ -84,22 +101,25 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
  box-shadow: none;
  -webkit-box-shadow: none;
 }';
-	echo '</style>';
-	echo '<link rel="stylesheet"  href="' . $labsPath . 'css/local.css.php" />';
-	if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
-		echo '<meta name="apple-mobile-web-app-capable" content="yes" />
+    echo '</style>';
+    echo '<link rel="stylesheet"  href="' . $basePath . 'css/local.css.php" />';
+    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+        echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
  <link rel="apple-touch-startup-image" href="startup.png" />
  <link rel="apple-touch-icon" href="apple-touch-icon.png" />';
-	}
-	if ($geolocate) {
-		echo "<script>
+    }
+    if ($geolocate) {
+        echo "<script>
 
 function success(position) {
 $('#error').val('Location now detected. Please wait for data to load.');
 $('#geolocate').val(position.coords.latitude+','+position.coords.longitude);
-$.ajax({ url: \"include/common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
-location.reload(true);
+$.ajax({ async: false, 
+success: function(){
+	location.reload(true);
+  },
+url: \"include/common.inc.php?geolocate=yes&lat=\"+position.coords.latitude+\"&lon=\"+position.coords.longitude });
 }
 function error(msg) {
 $('#error').val('Error: '+msg);
@@ -120,10 +140,12 @@ $(document).ready(function() {
         $('#here').show();
 });
 ";
-		if (!isset($_SESSION['lat']) || $_SESSION['lat'] == "") echo "geolocate();";
-		echo "</script> ";
-	}
-	if (isAnalyticsOn()) echo '
+        if (!isset($_SESSION['lat']) || $_SESSION['lat'] == "")
+            echo "geolocate();";
+        echo "</script> ";
+    }
+    if (isAnalyticsOn())
+        echo '
 <script type="text/javascript">' . "
 
   var _gaq = _gaq || [];
@@ -131,47 +153,46 @@ $(document).ready(function() {
   _gaq.push(['_trackPageview']);
    _gaq.push(['_trackPageLoadTime']);
 </script>";
-	echo '</head>
+    echo '</head>
 <body>
     <div id="skip">
     <a href="#maincontent">Skip to content</a>
     </div>
  ';
-	if ($opendiv) {
-		echo '<div data-role="page"> 
+    if ($opendiv) {
+        echo '<div data-role="page"> 
 	<div data-role="header" data-position="inline">
 	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1>' . $pageTitle . '</h1>
-		<a href="' . $labsPath . '/index.php" data-icon="home" class="ui-btn-right">Home</a>
+		<a href="' . $basePath . '/index.php" data-icon="home" class="ui-btn-right">Home</a>
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
-		$overrides = getServiceOverride();
-		if ($overrides['service_id']) {
-			if ($overrides['service_id'] == "noservice") {
-				echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
+        $overrides = getServiceOverride();
+        if ($overrides['service_id']) {
+            if ($overrides['service_id'] == "noservice") {
+                echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
 href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-			}
-			else {
-				echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-			}
-		}
-		if ($serviceAlertsEnabled) {
-		$serviceAlerts = getServiceAlerts("network","network");
-		foreach ($serviceAlerts['entities'] as $entity) {
-			echo "<div id='servicewarning'>".date("F j, g:i a",strtotime($entity['alert']['active_period']['start']))." to ". date("F j, g:i a", strtotime($entity['alert']['active_period']['end']))."{$entity['alert']['header_text']['translation']['text']}<br>Warning: {$entity['alert']['description_text']['translation']['text']} 
-			<br><a href='{$entity['alert']['url']['translation']['text']}'>Source</a>  </div>";
-		}
-	}
-	}
+            } else {
+                echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+            }
+        }
+        if ($GTFSREnabled) {
+            $serviceAlerts = getServiceAlertsAsArray("agency", "0");
+            foreach ($serviceAlerts['entity'] as $entity) {
+                echo "<div id='servicewarning'>" . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['start'])) . " to " . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end'])) . "{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
+			<br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
+            }
+        }
+    }
 }
-function include_footer()
-{
-	global $labsPath;
-	echo '<div id="footer"><a href="' . $labsPath . 'about.php">About/Contact Us</a>&nbsp;<a href="' . $labsPath . 'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="' . $labsPath . 'privacy.php">Privacy Policy</a>';
-	echo '</div>';
-	if (isAnalyticsOn()) {
-		echo "<script>  (function() {
+
+function include_footer() {
+    global $basePath;
+    echo '<div id="footer"><a href="' . $basePath . 'about.php">About/Contact Us</a>&nbsp;<a href="' . $basePath . 'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="' . $basePath . 'privacy.php">Privacy Policy</a>';
+    echo '</div>';
+    if (isAnalyticsOn()) {
+        echo "<script>  (function() {
     var ga = document.createElement('script'); ga.type = 
 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 
@@ -179,25 +200,25 @@ function include_footer()
     var s = document.getElementsByTagName('script')[0]; 
 s.parentNode.insertBefore(ga, s);
   })();</script>";
-		$googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
-		echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
-	}
-	echo "\n</div></div></body></html>";
+        $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
+        echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
+    }
+    echo "\n</div></div></body></html>";
 }
-function placeSettings()
-{
-	global $service_periods;
-	$geoerror = false;
-		$geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
 
-	echo '<div id="error">';
-	if ($geoerror) {
-		echo 'Sorry, but your location could not currently be detected.
+function placeSettings() {
+    global $service_periods;
+    $geoerror = false;
+    $geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
+
+    echo '<div id="error">';
+    if ($geoerror) {
+        echo 'Sorry, but your location could not currently be detected.
         Please allow location permission, wait for your location to be detected,
         or enter an address/co-ordinates in the box below.';
-	}
-	echo '</div>';
-	echo '<div id="settings" data-role="collapsible" data-collapsed="' . !$geoerror . '">
+    }
+    echo '</div>';
+    echo '<div id="settings" data-role="collapsible" data-collapsed="' . !$geoerror . '">
         <h3>Change Location...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'] . '" method="post">
         <div class="ui-body"> 
@@ -210,10 +231,11 @@ function placeSettings()
                 </div></form>
             </div>';
 }
-function trackEvent($category, $action, $label = "", $value = - 1)
-{
-	if (isAnalyticsOn()) {
-		echo "\n<script> _gaq.push(['_trackEvent', '$category', '$action'" . ($label != "" ? ", '$label'" : "") . ($value != - 1 ? ", $value" : "") . "]);</script>";
-	}
+
+function trackEvent($category, $action, $label = "", $value = - 1) {
+    if (isAnalyticsOn()) {
+        echo "\n<script> _gaq.push(['_trackEvent', '$category', '$action'" . ($label != "" ? ", '$label'" : "") . ($value != - 1 ? ", $value" : "") . "]);</script>";
+    }
 }
+
 ?>

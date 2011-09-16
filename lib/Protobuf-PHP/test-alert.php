@@ -19,7 +19,8 @@ $fh->setTimestamp(time());
 $fm->setHeader($fh);
 $fe = new transit_realtime\FeedEntity();
 	$fe->setId("1234");
-	$alert = new transit_realtime\Alert();
+	$fe->setIsDeleted(false);
+	$alert = new transit_realtime\Alert();	
 		$tr = new transit_realtime\TimeRange();
 			$tr->setStart(000);
 			$tr->setEnd(001);
@@ -59,7 +60,10 @@ $fm->addEntity($fe);
 //$codec = new DrSlump\Protobuf\Codec\Binary();
 //echo $codec->encode($fm);
 
-$codec = new DrSlump\Protobuf\Codec\Json();
-echo $codec->encode($fm);
+//$codec = new DrSlump\Protobuf\Codec\Json();
+//echo $codec->encode($fm);
+
+$codec = new DrSlump\Protobuf\Codec\PhpArray();
+print_r($codec->encode($fm));
 
 ?>
