@@ -1,6 +1,6 @@
 <?php
 require $basePath.'lib/openid.php';
- $openid = new LightOpenID($_SERVER['HTTP_HOST']);
+$openid = new LightOpenID($_SERVER['HTTP_HOST']);
  
 function login()
 {
