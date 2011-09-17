@@ -33,8 +33,8 @@ $return = Array();
   }
   } */
 //set POST variables
-$url = 'https://www.action.act.gov.au/ARTS/use_Funcs.asp';
-//$url = 'http://localhost/myway.htm';
+$url = 'https://www.transport.act.gov.au/ARTS/use_Funcs.asp';
+//$url = 'http://localhost/myway.html';
 $field_mapping = Array(
     "card_number" => "SRNO",
     "DOBmonth" => "month",
@@ -81,7 +81,7 @@ if (!isset($return['error'])) {
     curl_setopt($ch, CURLOPT_POST, count($fields));
     curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_REFERER, "https://www.action.act.gov.au/ARTS/getbalance.asp");
+    curl_setopt($ch, CURLOPT_REFERER, "https://www.transport.act.gov.au/ARTS/getbalance.asp");
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     //execute post
@@ -92,22 +92,8 @@ if (!isset($return['error'])) {
     curl_close($ch);
 }
 
-if (!isset($return['error'])) {
-    include_once ('../lib/simple_html_dom.php');
-    //print_r($pageHTML);
-    $page = str_get_html($pageHTML);
-    $pageAlerts = $page->find(".smartCardAlert");
-    if (sizeof($pageAlerts) > 0) {
-        $return['error'][] = $pageAlerts[0]->plaintext;
-    }
-    if (!isset($return['error'])) {
-        $tableNum = 0;
-        $tableName = Array(
-            1 => "myway_carddetails",
-            2 => "myway_transactions"
-        );
-        foreach ($page->find("table") as $table) {
-            $tableNum++;
+function parseTable($table,$tableName) {
+    global $return;
             $tableColumns = Array();
             $tableColumnNum = 0;
             foreach ($table->find("th") as $th) {
@@ -119,17 +105,17 @@ if (!isset($return['error'])) {
             foreach ($table->find("tr") as $tr) {
                 $tableColumnNum = 0;
                 foreach ($tr->find("td") as $td) {
-                    if ($tableNum == 1) {
+                    if ($tableName ==  "myway_carddetails") {
                         // first table has card/cardholder details
-                        $return[$tableName[$tableNum]][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+                        $return[$tableName][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
                     } else {
                         // second table has transactions
 
                         if ($tableColumns[$tableColumnNum] == "TX Reference No / Type") {
-                            $return[$tableName[$tableNum]][$tableRowNum]["TX Reference No"] = substr(cleanString($td->plaintext), 0, 6);
-                            $return[$tableName[$tableNum]][$tableRowNum]["TX Type"] = substr(cleanString($td->plaintext), 7);
+                            $return[$tableName][$tableRowNum]["TX Reference No"] = substr(cleanString($td->plaintext), 0, 6);
+                            $return[$tableName][$tableRowNum]["TX Type"] = substr(cleanString($td->plaintext), 7);
                         } else {
-                            $return[$tableName[$tableNum]][$tableRowNum][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
+                            $return[$tableName][$tableRowNum][$tableColumns[$tableColumnNum]] = cleanString($td->plaintext);
                         }
                     }
                     //print_r($return);
@@ -137,7 +123,23 @@ if (!isset($return['error'])) {
                 }
                 $tableRowNum++;
             }
-        }
+}
+
+if (!isset($return['error'])) {
+    include_once ('../lib/simple_html_dom.php');
+    //print_r($pageHTML);
+    $page = str_get_html($pageHTML);
+    $pageAlerts = $page->find(".smartCardAlert");
+    if (sizeof($pageAlerts) > 0) {
+        $return['error'][] = $pageAlerts[0]->plaintext;
+    }
+    if (!isset($return['error'])) {
+        $tables = $page->find(".type3");
+            parseTable($tables[0], "myway_carddetails");
+      
+        $tables = $page->find(".type2");
+            parseTable($tables[0], "myway_transactions");
+        
     }
 }
 if (sizeof($return) == 0) {
