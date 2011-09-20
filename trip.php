@@ -69,7 +69,7 @@ $stopsGrouped = Array();
 $tripStopTimes = getTimeInterpolatedTrip($tripid);
 echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' ' . $trip['route_long_name'] . ' (' . ucwords($tripStopTimes[0]['service_id']) . ')</li>';
 foreach ($tripStopTimes as $key => $tripStopTime) {
-    if (($tripStopTimes[$key]["stop_name"] != $tripStopTimes[$key + 1]["stop_name"]) || $key + 1 >= sizeof($tripStopTimes)) {
+    if ($key + 1 > sizeof($tripStopTimes) || ($tripStopTimes[$key]["stop_name"] != $tripStopTimes[$key + 1]["stop_name"])) {
         echo '<li>';
         if (!startsWith($tripStopTime['stop_code'], "Wj"))
             echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';

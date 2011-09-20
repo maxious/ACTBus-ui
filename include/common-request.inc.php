@@ -33,10 +33,18 @@ if (isset($_REQUEST['nearby'])) {
 if (isset($_REQUEST['suburb'])) {
     $suburb = $_REQUEST['suburb'];
 }
-$pageKey = filter_var($_REQUEST['pageKey'], FILTER_SANITIZE_NUMBER_INT);
-$lat = filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-$lon = filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-$max_distance = filter_var($_REQUEST['radius'], FILTER_SANITIZE_NUMBER_INT);
+if (isset($_REQUEST['pageKey'])) {
+    $pageKey = filter_var($_REQUEST['pageKey'], FILTER_SANITIZE_NUMBER_INT);
+}
+if (isset($_REQUEST['lat'])) {
+    $lat = filter_var($_REQUEST['lat'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+}
+if (isset($_REQUEST['lon'])) {
+    $lon = filter_var($_REQUEST['lon'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+}
+if (isset($_REQUEST['radius'])) {
+    $max_distance = filter_var($_REQUEST['radius'], FILTER_SANITIZE_NUMBER_INT);
+}
 if (isset($_REQUEST['numberSeries'])) {
     $numberSeries = filter_var($_REQUEST['numberSeries'], FILTER_SANITIZE_NUMBER_INT);
 }

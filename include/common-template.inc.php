@@ -42,7 +42,7 @@ function googleAnalyticsGetImageUrl() {
 }
 
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false) {
-    global $basePath, $serviceAlertsEnabled;
+    global $basePath, $GTFSREnabled;
     echo '
 <!DOCTYPE html> 
 <html lang="en">
@@ -179,9 +179,11 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
         }
         if ($GTFSREnabled) {
             $serviceAlerts = getServiceAlertsAsArray("agency", "0");
-            foreach ($serviceAlerts['entity'] as $entity) {
-                echo "<div id='servicewarning'>" . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['start'])) . " to " . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end'])) . "{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
-			<br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
+            if (isset($serviceAlerts['entity']) && sizeof($serviceAlerts['entity']) > 0) {
+                foreach ($serviceAlerts['entity'] as $entity) {
+                    echo "<div id='servicewarning'>" . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['start'])) . " to " . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end'])) . "{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
+                            <br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
+                }
             }
         }
     }
