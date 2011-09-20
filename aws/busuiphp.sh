@@ -1,4 +1,6 @@
 cp /root/aws.php /tmp/
+chmod  777 /var/cache/lighttpd/compress/
+
 mkdir /var/www/lib/staticmaplite/cache 
 chcon -h system_u:object_r:httpd_sys_content_t /var/www
 chcon -R -h root:object_r:httpd_sys_content_t /var/www/*

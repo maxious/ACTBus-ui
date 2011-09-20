@@ -48,6 +48,8 @@ if (isDebug("phperror"))
 $basePath = "";
 if (strstr($_SERVER['PHP_SELF'], "labs/")
         || strstr($_SERVER['PHP_SELF'], "myway/")
+        || strstr($_SERVER['PHP_SELF'], "lib/")
+        || strstr($_SERVER['PHP_SELF'], "include/")
         || strstr($_SERVER['PHP_SELF'], "servicealerts/"))
     $basePath = "../";
 
