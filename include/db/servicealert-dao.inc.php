@@ -32,7 +32,7 @@ function getServiceOverride($date = "") {
 
 function getServiceAlert($alertID) {
     global $conn;
-    $query = "SELECT id,extract('epoch', start) as start, extract('epoch', end) as end,cause,effect,header,description,url from servicealerts_alerts where id = :servicealert_id";
+    $query = "SELECT id,extract('epoch' from start) as start, extract('epoch' from end) as end,cause,effect,header,description,url from servicealerts_alerts where id = :servicealert_id";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":servicealert_id", $alertID);
@@ -87,7 +87,7 @@ function addServiceAlert($start, $end, $header, $description, $url) {
 
 function getCurrentAlerts() {
     global $conn;
-    $query = "SELECT id,extract('epoch', start) as start, extract('epoch', end) as end,cause,effect,header,description,url from servicealerts_alerts where NOW() > start and NOW() < \"end\"";
+    $query = "SELECT id,extract('epoch' from start) as start, extract('epoch' from end) as end,cause,effect,header,description,url from servicealerts_alerts where NOW() > start and NOW() < \"end\"";
     // debug($query, "database");
     $query = $conn->prepare($query);
     $query->execute();
@@ -100,7 +100,7 @@ function getCurrentAlerts() {
 
 function getFutureAlerts() {
     global $conn;
-    $query = "SELECT id,extract('epoch', start) as start, extract('epoch', end) as end,cause,effect,header,description,url from servicealerts_alerts where NOW() > start or NOW() < \"end\"";
+    $query = "SELECT id,extract('epoch' from start) as start, extract('epoch' from end) as end,cause,effect,header,description,url from servicealerts_alerts where NOW() > start or NOW() < \"end\"";
     // debug($query, "database");
     $query = $conn->prepare($query);
     $query->execute();
