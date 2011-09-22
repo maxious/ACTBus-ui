@@ -34,7 +34,7 @@ $html.= '</td><td>' . staticmap(Array(
                 $stop[2],
                 $stop[3]
             )
-                ), 0, "iconb", false) . "</td></tr>";
+                ), 0, false) . "</td></tr>";
 $url = $APIurl . "/json/stoptrips?stop=" . $stopid . "&time=" . midnight_seconds() . "&service_period=" . service_period();
 $trips = json_decode(getPage($url));
 $html.= "</table><br><br><table>";

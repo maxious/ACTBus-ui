@@ -77,7 +77,7 @@ if (isset($bysuburbs)) {
                 $sub_stop["stop_lon"]
             );
         }
-        echo staticmap($stopPositions, 0, "iconb", true, true);
+        echo staticmap($stopPositions, true, true);
         placeSettings();
         echo '</span><span class="content-primary">';
     } else if (isset($suburb)) {

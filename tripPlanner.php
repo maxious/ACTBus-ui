@@ -65,7 +65,7 @@ function processItinerary($itineraryNumber, $itinerary) {
                 $leg->from->lon
             );
         }
-        echo '' . staticmap($legMarkers, 0, "iconb", false) . "<br>\n";
+        echo '' . staticmap($legMarkers, false, false, true) . "<br>\n";
         echo '<ul>';
         foreach ($itinerary->legs->leg as $legNumber => $leg) {
             echo '<li>';
@@ -81,7 +81,7 @@ function processItinerary($itineraryNumber, $itinerary) {
                 $itinerary->legs->leg->from->lat,
                 $itinerary->legs->leg->from->lon
             )
-                ), 0, "iconb", false) . "<br>\n";
+                ), false, false, true) . "<br>\n";
         processLeg(0, $itinerary->legs->leg);
     }
     echo "</p></div>";
@@ -100,7 +100,7 @@ function processLeg($legNumber, $leg) {
                 $step->lon
             );
         }
-        echo "" . staticmap($walkStepMarkers, 0, "icong", false) . "<br>\n";
+        echo "" . staticmap($walkStepMarkers, false, false, true) . "<br>\n";
         foreach ($leg->steps->walkSteps as $stepNumber => $step) {
             echo "Walking step " . ($stepNumber + 1) . ": ";
             if ($step->relativeDirection == "CONTINUE") {

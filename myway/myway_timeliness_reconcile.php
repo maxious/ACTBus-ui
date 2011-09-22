@@ -80,7 +80,7 @@ foreach ($query->fetchAll() as $myway_stop) {
     echo "<h3>{$myway_stop[0]}</h3>";
     $stopNameParts = explode(" ", $myway_stop[0]);
     $markers = array();
-    $stopKey = 1;
+    $stopKey = 0;
     $foundStops = getStops(false, "", $stopNameParts[0] . " " . $stopNameParts[1]);
     if (sizeof($foundStops) > 0) {
         echo "<table>";
@@ -92,7 +92,7 @@ foreach ($query->fetchAll() as $myway_stop) {
             echo "<tr><td>" . $stopKey++ . "</td><td>" . $stopResult['stop_name'] . "</td><td>" . $stopResult['stop_code'] . "</td></tr>";
         }
         echo '</table>';
-        echo "" . staticmap($markers, 0, "icong", false) . "<br>\n";
+        echo "" . staticmap($markers,false,false,false,true) . "<br>\n";
     }
     echo '<form id="inputform' . md5($myway_stop[0]) . '">
         <input type="hidden" name="myway_stop" value="' . $myway_stop[0] . '">

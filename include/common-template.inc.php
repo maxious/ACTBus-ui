@@ -103,7 +103,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 }';
     echo '</style>';
     echo '<link rel="stylesheet"  href="' . $basePath . 'css/local.css.php" />';
-    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    if (isIOSDevice()){
         echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
  <link rel="apple-touch-startup-image" href="startup.png" />

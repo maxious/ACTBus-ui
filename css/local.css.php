@@ -1,13 +1,15 @@
 <?php
-  header('Content-type: text/css');
-  ob_start("compress");
-  function compress($buffer) {
+
+header('Content-type: text/css');
+ob_start("compress");
+
+function compress($buffer) {
     /* remove comments */
     $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
     /* remove tabs, spaces, newlines, etc. */
     $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
     return $buffer;
-  }
+}
 
 echo '
 .ui-li-thumb, .ui-li-icon { position: relative; }
@@ -86,7 +88,7 @@ height:auto;
 }';
 
 //if (false)
- echo '
+echo '
 // adaptive layout from jQuery Mobile docs site
 .type-interior .content-secondary {
 	border-right: 0;
@@ -113,7 +115,9 @@ height:auto;
 	padding:0;
 	margin: 0;
 }
+	/* hires ahoy */
 @media all and (min-width: 650px){
+
 .content-secondary {
 		text-align: left;
 		float: left;
@@ -210,6 +214,7 @@ height:auto;
 	.type-interior .content-primary {
 		width: 60%;
 	}
-}';
-  ob_end_flush();
+}
+';
+ob_end_flush();
 ?>

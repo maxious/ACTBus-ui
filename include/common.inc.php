@@ -83,31 +83,15 @@ function debug($msg, $debugReason = "other") {
     if (isDebug($debugReason))
         echo "\n<!-- " . date(DATE_RFC822) . "\n $msg -->\n";
 }
-
+function isIOSDevice() {
+   return strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad');
+}
 function isJQueryMobileDevice() {
     // http://forum.jquery.com/topic/what-is-the-best-way-to-detect-all-useragents-which-can-handle-jquery-mobile#14737000002087897
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
     return preg_match('/iphone/i', $user_agent) || preg_match('/android/i', $user_agent) || preg_match('/webos/i', $user_agent) || preg_match('/ios/i', $user_agent) || preg_match('/bada/i', $user_agent) || preg_match('/maemo/i', $user_agent) || preg_match('/meego/i', $user_agent) || preg_match('/fennec/i', $user_agent) || (preg_match('/symbian/i', $user_agent) && preg_match('/s60/i', $user_agent) && $browser['majorver'] >= 5) || (preg_match('/symbian/i', $user_agent) && preg_match('/platform/i', $user_agent) && $browser['majorver'] >= 3) || (preg_match('/blackberry/i', $user_agent) && $browser['majorver'] >= 5) || (preg_match('/opera mobile/i', $user_agent) && $browser['majorver'] >= 10) || (preg_match('/opera mini/i', $user_agent) && $browser['majorver'] >= 5);
 }
 
-function isFastDevice() {
-    $ua = $_SERVER['HTTP_USER_AGENT'];
-    $fastDevices = Array(
-        "Mozilla/5.0 (X11;",
-        "Mozilla/5.0 (Windows;",
-        "Mozilla/5.0 (iP",
-        "Mozilla/5.0 (Linux; U; Android",
-        "Mozilla/4.0 (compatible; MSIE"
-    );
-    $slowDevices = Array(
-        "J2ME",
-        "MIDP",
-        "Opera/",
-        "Mozilla/2.0 (compatible;",
-        "Mozilla/3.0 (compatible;"
-    );
-    return true;
-}
 
 function array_flatten($a, $f = array()) {
     if (!$a || !is_array($a))
