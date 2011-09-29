@@ -1,4 +1,5 @@
 <?php
+include ('../include/common.inc.php');
 header('Content-type: application/vnd.google-earth.kml+xml');
 //http://wiki.openstreetmap.org/wiki/OpenLayers_Dynamic_KML
 // Creates the KML/XML Document.
