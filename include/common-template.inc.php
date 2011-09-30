@@ -60,9 +60,9 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
         $jqjs = $basePath . "js/jquery-1.6.2.min.js";
         $jqmjs = $basePath . "js/jquery.mobile-$jqmVersion.js";
     } else {
-        $jqmcss = "//code.jquery.com/mobile/1.0b3/jquery.mobile-$jqmVersion.min.css";
+        $jqmcss = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.css";
         $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js";
-        $jqmjs = "//code.jquery.com/mobile/1.0b3/jquery.mobile-$jqmVersion.min.js";
+        $jqmjs = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.js";
     }
     echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
 	<script src="' . $jqjs . '"></script>
