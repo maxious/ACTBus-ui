@@ -54,14 +54,15 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <link rel="dns-prefetch" href="//code.jquery.com">
 <link rel="dns-prefetch" href="//ajax.googleapis.com">
 	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
+    $jqmVersion = "1.0rc1";
     if (isDebugServer()) {
-        $jqmcss = $basePath . 'css/jquery.mobile-1.0b3.css';
-        $jqjs = $basePath . 'js/jquery-1.6.2.min.js';
-        $jqmjs = $basePath . 'js/jquery.mobile-1.0b3.js';
+        $jqmcss = $basePath . "css/jquery.mobile-$jqmVersion.css";
+        $jqjs = $basePath . "js/jquery-1.6.2.min.js";
+        $jqmjs = $basePath . "js/jquery.mobile-$jqmVersion.js";
     } else {
-        $jqmcss = "//code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css";
+        $jqmcss = "//code.jquery.com/mobile/1.0b3/jquery.mobile-$jqmVersion.min.css";
         $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js";
-        $jqmjs = "//code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js";
+        $jqmjs = "//code.jquery.com/mobile/1.0b3/jquery.mobile-$jqmVersion.min.js";
     }
     echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
 	<script src="' . $jqjs . '"></script>
