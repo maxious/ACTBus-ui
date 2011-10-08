@@ -27,6 +27,8 @@ include_header("About", "about")
         feed</a> and <a href="https://github.com/maxious/ACTBus-ui">this 
         site</a> available from github.<br />
     Uses jQuery Mobile, PHP, PostgreSQL, OpenTripPlanner, OpenLayers, OpenStreetMap, Cloudmade Geocoder and Tile Service<br />
+    Suburb Geocoding Based on <A href="http://www.abs.gov.au/AUSSTATS/abs@.nsf/Lookup/1270.0.55.003Main+Features1July%202011?OpenDocument">Australian Bureau of Statistics data.</a><br />
+    Street geocoding based on work by OpenStreetMap contributors<br>
     <br />
     Feedback encouraged; contact maxious@lambdacomplex.org<br />
     <br />
@@ -35,9 +37,9 @@ include_header("About", "about")
     , <a href="http://itunes.apple.com/au/app/act-buses/id376634797?mt=8">ACT Buses by David Sullivan</a>) 
     and Android (<a href="https://market.android.com/details?id=com.action">MyBus 2.0 by Imagine Team</a>)
     <br />
-    GTFS-realtime API;
+    GTFS-realtime API:
     Alerts and Trip Updates (but only Cancelled or Stop Skipped)
-    Default format binary but can get JSON by adding ?ascii=yes
+    Default format binary Protocol Buffer but can get JSON by adding ?ascii=yes
     <br />
     <br />
     <small>Disclaimer: The content of this website is of a general and informative nature. Please check with printed timetables or those available on http://action.act.gov.au before your trip.
