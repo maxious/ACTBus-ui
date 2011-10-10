@@ -222,12 +222,12 @@ WHERE start_times.trip_id = end_times.trip_id AND stop_times.trip_id = end_times
     return $query->fetchAll();
 }
 
-function viaPoints($tripID, $stop_sequence = "", $timing_points_only = true) {
+function viaPoints($tripID, $stop_sequence = "") {
     global $conn;
     $query = "SELECT stops.stop_id, stop_name, arrival_time
 FROM stop_times join stops on stops.stop_id = stop_times.stop_id
 WHERE stop_times.trip_id = :tripID
-" . ($stop_sequence != "" ? " AND stop_sequence > :stop_sequence " : "") . ($timing_points_only ? "AND substr(stop_code,1,2) != 'Wj' " : "") . " ORDER BY stop_sequence";
+" . ($stop_sequence != "" ? " AND stop_sequence > :stop_sequence " : "") ." ORDER BY stop_sequence";
     debug($query, "database");
     $query = $conn->prepare($query);
     if ($stop_sequence != "")

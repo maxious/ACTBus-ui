@@ -17,7 +17,17 @@
  */
 include ('include/common.inc.php');
 $stops = Array();
-
+function stopCompare($stopName) {
+    return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)),0,9);
+}
+function stopGroupTitle($stopName,$stopdesc) {
+    if (preg_match("/Dr |Cct |Cir |Av |St /",$stopName)) {
+        $descParts =  explode("<br>",$stopdesc);
+         return trim(str_replace("Street: ","",$descParts[0]));
+    } else {
+        return trim(preg_replace("/\(Platform.*/", "",$stopName));
+    }
+}
 function navbar() {
     echo '
 		<div data-role="navbar">
@@ -52,7 +62,7 @@ if (isset($bysuburbs)) {
     // Timing Points / All stops
     if (isset($allstops)) {
         $listType = 'allstops=yes';
-        $stops = getStops();
+        $stops = getStops($firstLetter);
         include_header("All Stops", "stopList");
         navbar();
     } else if (isset($nearby)) {
@@ -99,19 +109,19 @@ if (isset($bysuburbs)) {
         //var_dump($stops);
         $stopsGrouped = Array();
         foreach ($stops as $key => $stop) {
-            if ((trim(preg_replace("/\(Platform.*/", "", $stops[$key]["stop_name"])) != trim(preg_replace("/\(Platform.*/", "", $stops[$key + 1]["stop_name"]))) || $key + 1 >= sizeof($stops)) {
+            if (stopCompare($stops[$key]["stop_name"]) 
+                    != stopCompare($stops[$key + 1]["stop_name"])
+                    || $key + 1 >= sizeof($stops)) {
                 if (sizeof($stopsGrouped) > 0) {
                     // print and empty grouped stops
                     // subsequent duplicates
                     $stopsGrouped["stop_ids"][] = $stop['stop_id'];
                     echo '<li>';
-                    if (!startsWith($stopsGrouped['stop_codes'][0], "Wj"))
-                        echo '<img src="css/images/time.png" alt="Timing Point: " class="ui-li-icon">';
                     echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
                     if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                         echo '<span class="ui-li-count">' . distance($stop['stop_lat'], $stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
                     }
-                    echo bracketsMeanNewLine(trim(preg_replace("/\(Platform.*/", "", $stop['stop_name'])) . '(' . sizeof($stopsGrouped["stop_ids"]) . ' stops)');
+                    echo stopGroupTitle($stop['stop_name'],$stop['stop_desc']) . '<br><small>' . sizeof($stopsGrouped["stop_ids"]) . ' stops</small>';
                     echo "</a></li>\n";
                     flush();
                     @ob_flush();
@@ -119,20 +129,18 @@ if (isset($bysuburbs)) {
                 } else {
                     // just a normal stop
                     echo '<li>';
-                    if (!startsWith($stop['stop_code'], "Wj"))
-                        echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
-                    echo '<a href="stop.php?stopid=' . $stop['stop_id'] . (startsWith($stop['stop_code'], "Wj") ? '&amp;stopcode=' . $stop['stop_code'] : "") . '">';
+                    echo '<a href="stop.php?stopid=' . $stop['stop_id'] . '&amp;stopcode=' . $stop['stop_code'] . '">';
                     if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                         echo '<span class="ui-li-count">' . distance($stop['stop_lat'], $stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
                     }
-                    echo bracketsMeanNewLine($stop['stop_name']);
+                    echo $stop['stop_name'];
                     echo "</a></li>\n";
                     flush();
                     @ob_flush();
                 }
             } else {
                 // this is a duplicated line item
-                if ($key - 1 <= 0 || (trim(preg_replace("/\(Platform.*/", "", $stops[$key]['stop_name'])) != trim(preg_replace("/\(Platform.*/", "", $stops[$key - 1]['stop_name'])))) {
+                if ($key - 1 <= 0 || stopCompare($stops[$key]['stop_name']) != stopCompare($stops[$key - 1]['stop_name'])) {
                     // first duplicate
                     $stopsGrouped = Array(
                         "name" => trim(preg_replace("/\(Platform.*/", "", $stop['stop_name'])),
