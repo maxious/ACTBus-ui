@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.0.4
 -- Dumped by pg_dump version 9.0.4
--- Started on 2011-10-10 16:28:13
+-- Started on 2011-10-11 23:16:11
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -14,26 +14,7 @@ SET client_min_messages = warning;
 SET escape_string_warning = off;
 
 --
--- TOC entry 2766 (class 1262 OID 18349)
--- Name: transitdata; Type: DATABASE; Schema: -; Owner: postgres
---
-
-CREATE DATABASE transitdata WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'English_Australia.1252' LC_CTYPE = 'English_Australia.1252';
-
-
-ALTER DATABASE transitdata OWNER TO postgres;
-
-\connect transitdata
-
-SET statement_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-SET escape_string_warning = off;
-
---
--- TOC entry 1167 (class 2612 OID 11574)
+-- TOC entry 1168 (class 2612 OID 11574)
 -- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
 --
 
@@ -80,7 +61,7 @@ ALTER FUNCTION public.box2d_out(box2d) OWNER TO postgres;
 
 --
 -- TOC entry 1087 (class 1247 OID 18350)
--- Dependencies: 19 6 15
+-- Dependencies: 6 15 19
 -- Name: box2d; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -131,7 +112,7 @@ ALTER FUNCTION public.box3d_out(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 1090 (class 1247 OID 18354)
--- Dependencies: 20 6 21
+-- Dependencies: 6 21 20
 -- Name: box3d; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -182,7 +163,7 @@ ALTER FUNCTION public.box3d_extent_out(box3d_extent) OWNER TO postgres;
 
 --
 -- TOC entry 1093 (class 1247 OID 18358)
--- Dependencies: 6 22 23
+-- Dependencies: 6 23 22
 -- Name: box3d_extent; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -323,7 +304,7 @@ ALTER FUNCTION public.geography_typmod_out(integer) OWNER TO postgres;
 
 --
 -- TOC entry 1099 (class 1247 OID 18366)
--- Dependencies: 30 29 26 6 27 28
+-- Dependencies: 26 6 27 28 29 30
 -- Name: geography; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -416,7 +397,7 @@ ALTER FUNCTION public.geometry_send(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 1102 (class 1247 OID 18373)
--- Dependencies: 6 31 35 34 33 32
+-- Dependencies: 33 34 35 31 6 32
 -- Name: geometry; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -437,7 +418,7 @@ ALTER TYPE public.geometry OWNER TO postgres;
 
 --
 -- TOC entry 1105 (class 1247 OID 18382)
--- Dependencies: 6 2407
+-- Dependencies: 6 2408
 -- Name: geometry_dump; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -485,7 +466,7 @@ ALTER FUNCTION public.gidx_out(gidx) OWNER TO postgres;
 
 --
 -- TOC entry 1107 (class 1247 OID 18383)
--- Dependencies: 37 6 36
+-- Dependencies: 37 36 6
 -- Name: gidx; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -536,7 +517,7 @@ ALTER FUNCTION public.pgis_abs_out(pgis_abs) OWNER TO postgres;
 
 --
 -- TOC entry 1110 (class 1247 OID 18387)
--- Dependencies: 39 38 6
+-- Dependencies: 38 6 39
 -- Name: pgis_abs; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -630,7 +611,7 @@ ALTER FUNCTION public._st_asgeojson(integer, geography, integer, integer) OWNER 
 
 --
 -- TOC entry 44 (class 1255 OID 18397)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: _st_asgml(integer, geometry, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -656,7 +637,7 @@ ALTER FUNCTION public._st_asgml(integer, geography, integer, integer) OWNER TO p
 
 --
 -- TOC entry 46 (class 1255 OID 18399)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: _st_askml(integer, geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -682,7 +663,7 @@ ALTER FUNCTION public._st_askml(integer, geography, integer) OWNER TO postgres;
 
 --
 -- TOC entry 49 (class 1255 OID 18402)
--- Dependencies: 6 1099
+-- Dependencies: 1099 6
 -- Name: _st_bestsrid(geography); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -695,7 +676,7 @@ ALTER FUNCTION public._st_bestsrid(geography) OWNER TO postgres;
 
 --
 -- TOC entry 48 (class 1255 OID 18401)
--- Dependencies: 1099 6 1099
+-- Dependencies: 6 1099 1099
 -- Name: _st_bestsrid(geography, geography); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -721,7 +702,7 @@ ALTER FUNCTION public._st_buffer(geometry, double precision, cstring) OWNER TO p
 
 --
 -- TOC entry 51 (class 1255 OID 18404)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: _st_contains(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -734,7 +715,7 @@ ALTER FUNCTION public._st_contains(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 52 (class 1255 OID 18405)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: _st_containsproperly(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -747,7 +728,7 @@ ALTER FUNCTION public._st_containsproperly(geometry, geometry) OWNER TO postgres
 
 --
 -- TOC entry 53 (class 1255 OID 18406)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: _st_coveredby(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -786,7 +767,7 @@ ALTER FUNCTION public._st_covers(geography, geography) OWNER TO postgres;
 
 --
 -- TOC entry 56 (class 1255 OID 18409)
--- Dependencies: 1102 6 1102
+-- Dependencies: 1102 1102 6
 -- Name: _st_crosses(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -812,7 +793,7 @@ ALTER FUNCTION public._st_dfullywithin(geometry, geometry, double precision) OWN
 
 --
 -- TOC entry 58 (class 1255 OID 18411)
--- Dependencies: 1099 1099 6
+-- Dependencies: 1099 6 1099
 -- Name: _st_distance(geography, geography, double precision, boolean); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -825,7 +806,7 @@ ALTER FUNCTION public._st_distance(geography, geography, double precision, boole
 
 --
 -- TOC entry 59 (class 1255 OID 18412)
--- Dependencies: 1102 6 1167 1105
+-- Dependencies: 6 1168 1105 1102
 -- Name: _st_dumppoints(geometry, integer[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -956,7 +937,7 @@ ALTER FUNCTION public._st_equals(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 63 (class 1255 OID 18416)
--- Dependencies: 6 1099 1099
+-- Dependencies: 1099 1099 6
 -- Name: _st_expand(geography, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -969,7 +950,7 @@ ALTER FUNCTION public._st_expand(geography, double precision) OWNER TO postgres;
 
 --
 -- TOC entry 64 (class 1255 OID 18417)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: _st_intersects(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -982,7 +963,7 @@ ALTER FUNCTION public._st_intersects(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 65 (class 1255 OID 18418)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: _st_linecrossingdirection(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1021,7 +1002,7 @@ ALTER FUNCTION public._st_maxdistance(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 68 (class 1255 OID 18421)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: _st_orderingequals(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1047,7 +1028,7 @@ ALTER FUNCTION public._st_overlaps(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 70 (class 1255 OID 18423)
--- Dependencies: 1099 6 1099
+-- Dependencies: 6 1099 1099
 -- Name: _st_pointoutside(geography); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1060,7 +1041,7 @@ ALTER FUNCTION public._st_pointoutside(geography) OWNER TO postgres;
 
 --
 -- TOC entry 71 (class 1255 OID 18424)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: _st_touches(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1086,7 +1067,7 @@ ALTER FUNCTION public._st_within(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 73 (class 1255 OID 18426)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: addauth(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1126,7 +1107,7 @@ ALTER FUNCTION public.addauth(text) OWNER TO postgres;
 
 --
 -- TOC entry 74 (class 1255 OID 18427)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: addbbox(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1139,7 +1120,7 @@ ALTER FUNCTION public.addbbox(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 79 (class 1255 OID 18430)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: addgeometrycolumn(character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1159,7 +1140,7 @@ ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, in
 
 --
 -- TOC entry 78 (class 1255 OID 18429)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: addgeometrycolumn(character varying, character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1179,7 +1160,7 @@ ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, ch
 
 --
 -- TOC entry 77 (class 1255 OID 18428)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: addgeometrycolumn(character varying, character varying, character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1380,7 +1361,7 @@ ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, ch
 
 --
 -- TOC entry 80 (class 1255 OID 18431)
--- Dependencies: 1102 6 1102 1102
+-- Dependencies: 6 1102 1102 1102
 -- Name: addpoint(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1393,7 +1374,7 @@ ALTER FUNCTION public.addpoint(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 81 (class 1255 OID 18432)
--- Dependencies: 1102 1102 1102 6
+-- Dependencies: 6 1102 1102 1102
 -- Name: addpoint(geometry, geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1406,7 +1387,7 @@ ALTER FUNCTION public.addpoint(geometry, geometry, integer) OWNER TO postgres;
 
 --
 -- TOC entry 83 (class 1255 OID 18434)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: affine(geometry, double precision, double precision, double precision, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1419,7 +1400,7 @@ ALTER FUNCTION public.affine(geometry, double precision, double precision, doubl
 
 --
 -- TOC entry 82 (class 1255 OID 18433)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 1102 6
 -- Name: affine(geometry, double precision, double precision, double precision, double precision, double precision, double precision, double precision, double precision, double precision, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1458,7 +1439,7 @@ ALTER FUNCTION public.area2d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 86 (class 1255 OID 18437)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: asbinary(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1471,7 +1452,7 @@ ALTER FUNCTION public.asbinary(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 87 (class 1255 OID 18438)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: asbinary(geometry, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1484,7 +1465,7 @@ ALTER FUNCTION public.asbinary(geometry, text) OWNER TO postgres;
 
 --
 -- TOC entry 88 (class 1255 OID 18439)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: asewkb(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1523,7 +1504,7 @@ ALTER FUNCTION public.asewkt(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 92 (class 1255 OID 18443)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: asgml(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1536,7 +1517,7 @@ ALTER FUNCTION public.asgml(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 91 (class 1255 OID 18442)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: asgml(geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1562,7 +1543,7 @@ ALTER FUNCTION public.ashexewkb(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 94 (class 1255 OID 18445)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: ashexewkb(geometry, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1575,7 +1556,7 @@ ALTER FUNCTION public.ashexewkb(geometry, text) OWNER TO postgres;
 
 --
 -- TOC entry 96 (class 1255 OID 18447)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: askml(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1588,7 +1569,7 @@ ALTER FUNCTION public.askml(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 95 (class 1255 OID 18446)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: askml(geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1640,7 +1621,7 @@ ALTER FUNCTION public.assvg(geometry, integer) OWNER TO postgres;
 
 --
 -- TOC entry 98 (class 1255 OID 18449)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: assvg(geometry, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1666,7 +1647,7 @@ ALTER FUNCTION public.astext(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 102 (class 1255 OID 18453)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: azimuth(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1679,7 +1660,7 @@ ALTER FUNCTION public.azimuth(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 103 (class 1255 OID 18454)
--- Dependencies: 1102 1167 6
+-- Dependencies: 1102 1168 6
 -- Name: bdmpolyfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1710,7 +1691,7 @@ ALTER FUNCTION public.bdmpolyfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 75 (class 1255 OID 18455)
--- Dependencies: 6 1102 1167
+-- Dependencies: 6 1168 1102
 -- Name: bdpolyfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1746,7 +1727,7 @@ ALTER FUNCTION public.bdpolyfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 76 (class 1255 OID 18456)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: boundary(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1759,7 +1740,7 @@ ALTER FUNCTION public.boundary(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 104 (class 1255 OID 18457)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: box(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1772,7 +1753,7 @@ ALTER FUNCTION public.box(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 105 (class 1255 OID 18458)
--- Dependencies: 1090 6
+-- Dependencies: 6 1090
 -- Name: box(box3d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1785,7 +1766,7 @@ ALTER FUNCTION public.box(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 106 (class 1255 OID 18459)
--- Dependencies: 6 1093 1087
+-- Dependencies: 6 1087 1093
 -- Name: box2d(box3d_extent); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1798,7 +1779,7 @@ ALTER FUNCTION public.box2d(box3d_extent) OWNER TO postgres;
 
 --
 -- TOC entry 107 (class 1255 OID 18460)
--- Dependencies: 1087 6 1102
+-- Dependencies: 6 1087 1102
 -- Name: box2d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1824,7 +1805,7 @@ ALTER FUNCTION public.box2d(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 109 (class 1255 OID 18462)
--- Dependencies: 6 1102 1090
+-- Dependencies: 6 1090 1102
 -- Name: box3d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1837,7 +1818,7 @@ ALTER FUNCTION public.box3d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 110 (class 1255 OID 18463)
--- Dependencies: 1087 1090 6
+-- Dependencies: 6 1090 1087
 -- Name: box3d(box2d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1850,7 +1831,7 @@ ALTER FUNCTION public.box3d(box2d) OWNER TO postgres;
 
 --
 -- TOC entry 111 (class 1255 OID 18464)
--- Dependencies: 1093 1090 6
+-- Dependencies: 6 1090 1093
 -- Name: box3d_extent(box3d_extent); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1863,7 +1844,7 @@ ALTER FUNCTION public.box3d_extent(box3d_extent) OWNER TO postgres;
 
 --
 -- TOC entry 112 (class 1255 OID 18465)
--- Dependencies: 1090 6
+-- Dependencies: 6 1090
 -- Name: box3dtobox(box3d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1876,7 +1857,7 @@ ALTER FUNCTION public.box3dtobox(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 113 (class 1255 OID 18466)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: buffer(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1902,7 +1883,7 @@ ALTER FUNCTION public.buffer(geometry, double precision, integer) OWNER TO postg
 
 --
 -- TOC entry 115 (class 1255 OID 18468)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: buildarea(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1915,7 +1896,7 @@ ALTER FUNCTION public.buildarea(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 116 (class 1255 OID 18469)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: bytea(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1954,7 +1935,7 @@ ALTER FUNCTION public.checkauth(text, text) OWNER TO postgres;
 
 --
 -- TOC entry 118 (class 1255 OID 18471)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: checkauth(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2016,7 +1997,7 @@ ALTER FUNCTION public.collect(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 122 (class 1255 OID 18475)
--- Dependencies: 1087 6 1087 1102
+-- Dependencies: 6 1087 1087 1102
 -- Name: combine_bbox(box2d, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2081,7 +2062,7 @@ ALTER FUNCTION public.contains(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 127 (class 1255 OID 18480)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: convexhull(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2107,7 +2088,7 @@ ALTER FUNCTION public.crosses(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 129 (class 1255 OID 18482)
--- Dependencies: 1096 6
+-- Dependencies: 6 1096
 -- Name: datatype(chip); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2120,7 +2101,7 @@ ALTER FUNCTION public.datatype(chip) OWNER TO postgres;
 
 --
 -- TOC entry 130 (class 1255 OID 18483)
--- Dependencies: 1102 1102 1102 6
+-- Dependencies: 6 1102 1102 1102
 -- Name: difference(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2133,7 +2114,7 @@ ALTER FUNCTION public.difference(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 131 (class 1255 OID 18484)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: dimension(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2146,7 +2127,7 @@ ALTER FUNCTION public.dimension(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 132 (class 1255 OID 18485)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: disablelongtransactions(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2205,7 +2186,7 @@ ALTER FUNCTION public.disjoint(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 134 (class 1255 OID 18487)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: distance(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2218,7 +2199,7 @@ ALTER FUNCTION public.distance(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 135 (class 1255 OID 18488)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: distance_sphere(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2231,7 +2212,7 @@ ALTER FUNCTION public.distance_sphere(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 136 (class 1255 OID 18489)
--- Dependencies: 1102 6 1113 1102
+-- Dependencies: 6 1102 1102 1113
 -- Name: distance_spheroid(geometry, geometry, spheroid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2244,7 +2225,7 @@ ALTER FUNCTION public.distance_spheroid(geometry, geometry, spheroid) OWNER TO p
 
 --
 -- TOC entry 137 (class 1255 OID 18490)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: dropbbox(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2257,7 +2238,7 @@ ALTER FUNCTION public.dropbbox(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 140 (class 1255 OID 18493)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: dropgeometrycolumn(character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2277,7 +2258,7 @@ ALTER FUNCTION public.dropgeometrycolumn(character varying, character varying) O
 
 --
 -- TOC entry 139 (class 1255 OID 18492)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: dropgeometrycolumn(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2297,7 +2278,7 @@ ALTER FUNCTION public.dropgeometrycolumn(character varying, character varying, c
 
 --
 -- TOC entry 138 (class 1255 OID 18491)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: dropgeometrycolumn(character varying, character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2391,7 +2372,7 @@ ALTER FUNCTION public.dropgeometrytable(character varying, character varying) OW
 
 --
 -- TOC entry 141 (class 1255 OID 18494)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: dropgeometrytable(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2435,7 +2416,7 @@ ALTER FUNCTION public.dropgeometrytable(character varying, character varying, ch
 
 --
 -- TOC entry 144 (class 1255 OID 18497)
--- Dependencies: 1102 6 1105
+-- Dependencies: 6 1105 1102
 -- Name: dump(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2461,7 +2442,7 @@ ALTER FUNCTION public.dumprings(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 146 (class 1255 OID 18499)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: enablelongtransactions(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2522,7 +2503,7 @@ ALTER FUNCTION public.enablelongtransactions() OWNER TO postgres;
 
 --
 -- TOC entry 147 (class 1255 OID 18500)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: endpoint(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2548,7 +2529,7 @@ ALTER FUNCTION public.envelope(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 149 (class 1255 OID 18502)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: equals(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2574,7 +2555,7 @@ ALTER FUNCTION public.estimated_extent(text, text) OWNER TO postgres;
 
 --
 -- TOC entry 150 (class 1255 OID 18503)
--- Dependencies: 1087 6
+-- Dependencies: 6 1087
 -- Name: estimated_extent(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2600,7 +2581,7 @@ ALTER FUNCTION public.expand(box3d, double precision) OWNER TO postgres;
 
 --
 -- TOC entry 153 (class 1255 OID 18506)
--- Dependencies: 1087 6 1087
+-- Dependencies: 6 1087 1087
 -- Name: expand(box2d, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2613,7 +2594,7 @@ ALTER FUNCTION public.expand(box2d, double precision) OWNER TO postgres;
 
 --
 -- TOC entry 154 (class 1255 OID 18507)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: expand(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2639,7 +2620,7 @@ ALTER FUNCTION public.exteriorring(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 156 (class 1255 OID 18509)
--- Dependencies: 1096 6
+-- Dependencies: 6 1096
 -- Name: factor(chip); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2652,7 +2633,7 @@ ALTER FUNCTION public.factor(chip) OWNER TO postgres;
 
 --
 -- TOC entry 158 (class 1255 OID 18511)
--- Dependencies: 1087 1167 6
+-- Dependencies: 6 1168 1087
 -- Name: find_extent(text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2676,7 +2657,7 @@ ALTER FUNCTION public.find_extent(text, text) OWNER TO postgres;
 
 --
 -- TOC entry 157 (class 1255 OID 18510)
--- Dependencies: 1087 1167 6
+-- Dependencies: 6 1168 1087
 -- Name: find_extent(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2701,7 +2682,7 @@ ALTER FUNCTION public.find_extent(text, text, text) OWNER TO postgres;
 
 --
 -- TOC entry 159 (class 1255 OID 18512)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: find_srid(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2747,7 +2728,7 @@ ALTER FUNCTION public.find_srid(character varying, character varying, character 
 
 --
 -- TOC entry 160 (class 1255 OID 18513)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: fix_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2813,7 +2794,7 @@ ALTER FUNCTION public.fix_geometry_columns() OWNER TO postgres;
 
 --
 -- TOC entry 161 (class 1255 OID 18514)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: force_2d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2826,7 +2807,7 @@ ALTER FUNCTION public.force_2d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 162 (class 1255 OID 18515)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: force_3d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2839,7 +2820,7 @@ ALTER FUNCTION public.force_3d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 163 (class 1255 OID 18516)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: force_3dm(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2865,7 +2846,7 @@ ALTER FUNCTION public.force_3dz(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 165 (class 1255 OID 18518)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: force_4d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2878,7 +2859,7 @@ ALTER FUNCTION public.force_4d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 166 (class 1255 OID 18519)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: force_collection(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2891,7 +2872,7 @@ ALTER FUNCTION public.force_collection(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 167 (class 1255 OID 18520)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: forcerhr(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2904,7 +2885,7 @@ ALTER FUNCTION public.forcerhr(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 169 (class 1255 OID 18522)
--- Dependencies: 6 1102 1099
+-- Dependencies: 6 1099 1102
 -- Name: geography(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2930,7 +2911,7 @@ ALTER FUNCTION public.geography(geography, integer, boolean) OWNER TO postgres;
 
 --
 -- TOC entry 170 (class 1255 OID 18523)
--- Dependencies: 1099 1099 6
+-- Dependencies: 6 1099 1099
 -- Name: geography_cmp(geography, geography); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2943,7 +2924,7 @@ ALTER FUNCTION public.geography_cmp(geography, geography) OWNER TO postgres;
 
 --
 -- TOC entry 171 (class 1255 OID 18524)
--- Dependencies: 1099 6 1099
+-- Dependencies: 6 1099 1099
 -- Name: geography_eq(geography, geography); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -3047,7 +3028,7 @@ ALTER FUNCTION public.geography_gist_picksplit(internal, internal) OWNER TO post
 
 --
 -- TOC entry 179 (class 1255 OID 18532)
--- Dependencies: 1087 6 1087
+-- Dependencies: 6 1087 1087
 -- Name: geography_gist_same(box2d, box2d, internal); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -3457,7 +3438,7 @@ ALTER FUNCTION public.geometry_gist_sel(internal, oid, internal, integer) OWNER 
 
 --
 -- TOC entry 209 (class 1255 OID 18562)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: geometry_gt(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -3756,7 +3737,7 @@ ALTER FUNCTION public.geomunion(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 232 (class 1255 OID 18585)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: get_proj4_from_srid(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -3968,7 +3949,7 @@ ALTER FUNCTION public.length2d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 248 (class 1255 OID 18601)
--- Dependencies: 6 1102 1113
+-- Dependencies: 1102 6 1113
 -- Name: length2d_spheroid(geometry, spheroid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -3981,7 +3962,7 @@ ALTER FUNCTION public.length2d_spheroid(geometry, spheroid) OWNER TO postgres;
 
 --
 -- TOC entry 249 (class 1255 OID 18602)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: length3d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4226,7 +4207,7 @@ ALTER FUNCTION public.locate_along_measure(geometry, double precision) OWNER TO 
 
 --
 -- TOC entry 266 (class 1255 OID 18619)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 1102 6
 -- Name: locate_between_measures(geometry, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4278,7 +4259,7 @@ ALTER FUNCTION public.lockrow(text, text, text, timestamp without time zone) OWN
 
 --
 -- TOC entry 267 (class 1255 OID 18620)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: lockrow(text, text, text, text, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4336,7 +4317,7 @@ ALTER FUNCTION public.lockrow(text, text, text, text, timestamp without time zon
 
 --
 -- TOC entry 271 (class 1255 OID 18624)
--- Dependencies: 1167 6
+-- Dependencies: 1168 6
 -- Name: longtransactionsenabled(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4372,7 +4353,7 @@ ALTER FUNCTION public.lwgeom_gist_compress(internal) OWNER TO postgres;
 
 --
 -- TOC entry 273 (class 1255 OID 18626)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: lwgeom_gist_consistent(internal, geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4424,7 +4405,7 @@ ALTER FUNCTION public.lwgeom_gist_picksplit(internal, internal) OWNER TO postgre
 
 --
 -- TOC entry 277 (class 1255 OID 18630)
--- Dependencies: 1087 6 1087
+-- Dependencies: 6 1087 1087
 -- Name: lwgeom_gist_same(box2d, box2d, internal); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4450,7 +4431,7 @@ ALTER FUNCTION public.lwgeom_gist_union(bytea, internal) OWNER TO postgres;
 
 --
 -- TOC entry 279 (class 1255 OID 18632)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: m(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4463,7 +4444,7 @@ ALTER FUNCTION public.m(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 280 (class 1255 OID 18633)
--- Dependencies: 1087 6 1102 1102
+-- Dependencies: 1102 6 1087 1102
 -- Name: makebox2d(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4476,7 +4457,7 @@ ALTER FUNCTION public.makebox2d(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 281 (class 1255 OID 18634)
--- Dependencies: 1102 6 1102 1090
+-- Dependencies: 1090 6 1102 1102
 -- Name: makebox3d(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4489,7 +4470,7 @@ ALTER FUNCTION public.makebox3d(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 282 (class 1255 OID 18635)
--- Dependencies: 1102 6 1102 1102
+-- Dependencies: 6 1102 1102 1102
 -- Name: makeline(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4567,7 +4548,7 @@ ALTER FUNCTION public.makepointm(double precision, double precision, double prec
 
 --
 -- TOC entry 289 (class 1255 OID 18642)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: makepolygon(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4580,7 +4561,7 @@ ALTER FUNCTION public.makepolygon(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 288 (class 1255 OID 18641)
--- Dependencies: 6 1104 1102 1102
+-- Dependencies: 1104 6 1102 1102
 -- Name: makepolygon(geometry, geometry[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4593,7 +4574,7 @@ ALTER FUNCTION public.makepolygon(geometry, geometry[]) OWNER TO postgres;
 
 --
 -- TOC entry 290 (class 1255 OID 18643)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 1102 6
 -- Name: max_distance(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4606,7 +4587,7 @@ ALTER FUNCTION public.max_distance(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 291 (class 1255 OID 18644)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: mem_size(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4636,7 +4617,7 @@ ALTER FUNCTION public.mlinefromtext(text) OWNER TO postgres;
 
 --
 -- TOC entry 292 (class 1255 OID 18645)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: mlinefromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4654,7 +4635,7 @@ ALTER FUNCTION public.mlinefromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 295 (class 1255 OID 18648)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: mlinefromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4671,7 +4652,7 @@ ALTER FUNCTION public.mlinefromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 294 (class 1255 OID 18647)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: mlinefromwkb(bytea, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4705,7 +4686,7 @@ ALTER FUNCTION public.mpointfromtext(text) OWNER TO postgres;
 
 --
 -- TOC entry 296 (class 1255 OID 18649)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: mpointfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4739,7 +4720,7 @@ ALTER FUNCTION public.mpointfromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 298 (class 1255 OID 18651)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: mpointfromwkb(bytea, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4756,7 +4737,7 @@ ALTER FUNCTION public.mpointfromwkb(bytea, integer) OWNER TO postgres;
 
 --
 -- TOC entry 301 (class 1255 OID 18654)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: mpolyfromtext(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4773,7 +4754,7 @@ ALTER FUNCTION public.mpolyfromtext(text) OWNER TO postgres;
 
 --
 -- TOC entry 300 (class 1255 OID 18653)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: mpolyfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4790,7 +4771,7 @@ ALTER FUNCTION public.mpolyfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 303 (class 1255 OID 18656)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: mpolyfromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4824,7 +4805,7 @@ ALTER FUNCTION public.mpolyfromwkb(bytea, integer) OWNER TO postgres;
 
 --
 -- TOC entry 304 (class 1255 OID 18657)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: multi(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4910,7 +4891,7 @@ ALTER FUNCTION public.multipointfromtext(text) OWNER TO postgres;
 
 --
 -- TOC entry 309 (class 1255 OID 18662)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: multipointfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4923,7 +4904,7 @@ ALTER FUNCTION public.multipointfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 312 (class 1255 OID 18665)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: multipointfromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4957,7 +4938,7 @@ ALTER FUNCTION public.multipointfromwkb(bytea, integer) OWNER TO postgres;
 
 --
 -- TOC entry 314 (class 1255 OID 18667)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: multipolyfromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -4991,7 +4972,7 @@ ALTER FUNCTION public.multipolyfromwkb(bytea, integer) OWNER TO postgres;
 
 --
 -- TOC entry 316 (class 1255 OID 18669)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: multipolygonfromtext(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5121,7 +5102,7 @@ ALTER FUNCTION public.numpoints(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 325 (class 1255 OID 18678)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: overlaps(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5147,7 +5128,7 @@ ALTER FUNCTION public.perimeter(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 327 (class 1255 OID 18680)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: perimeter2d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5160,7 +5141,7 @@ ALTER FUNCTION public.perimeter2d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 328 (class 1255 OID 18681)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: perimeter3d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5199,7 +5180,7 @@ ALTER FUNCTION public.pgis_geometry_accum_transfn(pgis_abs, geometry) OWNER TO p
 
 --
 -- TOC entry 331 (class 1255 OID 18684)
--- Dependencies: 1110 6 1102
+-- Dependencies: 1102 6 1110
 -- Name: pgis_geometry_collect_finalfn(pgis_abs); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5212,7 +5193,7 @@ ALTER FUNCTION public.pgis_geometry_collect_finalfn(pgis_abs) OWNER TO postgres;
 
 --
 -- TOC entry 332 (class 1255 OID 18685)
--- Dependencies: 6 1102 1110
+-- Dependencies: 1102 6 1110
 -- Name: pgis_geometry_makeline_finalfn(pgis_abs); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5238,7 +5219,7 @@ ALTER FUNCTION public.pgis_geometry_polygonize_finalfn(pgis_abs) OWNER TO postgr
 
 --
 -- TOC entry 334 (class 1255 OID 18687)
--- Dependencies: 1102 6 1110
+-- Dependencies: 1110 1102 6
 -- Name: pgis_geometry_union_finalfn(pgis_abs); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5251,7 +5232,7 @@ ALTER FUNCTION public.pgis_geometry_union_finalfn(pgis_abs) OWNER TO postgres;
 
 --
 -- TOC entry 335 (class 1255 OID 18688)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: point_inside_circle(geometry, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5298,7 +5279,7 @@ ALTER FUNCTION public.pointfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 339 (class 1255 OID 18692)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: pointfromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5315,7 +5296,7 @@ ALTER FUNCTION public.pointfromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 338 (class 1255 OID 18691)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: pointfromwkb(bytea, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5409,7 +5390,7 @@ ALTER FUNCTION public.polyfromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 344 (class 1255 OID 18697)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: polyfromwkb(bytea, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5452,7 +5433,7 @@ ALTER FUNCTION public.polygonfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 349 (class 1255 OID 18702)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: polygonfromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5499,7 +5480,7 @@ ALTER FUNCTION public.polygonize_garray(geometry[]) OWNER TO postgres;
 
 --
 -- TOC entry 351 (class 1255 OID 18704)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: populate_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5595,7 +5576,7 @@ ALTER FUNCTION public.populate_geometry_columns() OWNER TO postgres;
 
 --
 -- TOC entry 352 (class 1255 OID 18705)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: populate_geometry_columns(oid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5861,7 +5842,7 @@ ALTER FUNCTION public.postgis_dropbbox(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 356 (class 1255 OID 18710)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: postgis_full_version(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -6128,7 +6109,7 @@ ALTER FUNCTION public.postgis_version() OWNER TO postgres;
 
 --
 -- TOC entry 373 (class 1255 OID 18727)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: probe_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -6535,7 +6516,7 @@ ALTER FUNCTION public.shift_longitude(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 398 (class 1255 OID 18752)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: simplify(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -7471,7 +7452,7 @@ ALTER FUNCTION public.st_azimuth(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 470 (class 1255 OID 18824)
--- Dependencies: 6 1167 1102
+-- Dependencies: 6 1168 1102
 -- Name: st_bdmpolyfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -7502,7 +7483,7 @@ ALTER FUNCTION public.st_bdmpolyfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 471 (class 1255 OID 18825)
--- Dependencies: 6 1167 1102
+-- Dependencies: 6 1168 1102
 -- Name: st_bdpolyfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8417,7 +8398,7 @@ ALTER FUNCTION public.st_estimated_extent(text, text, text) OWNER TO postgres;
 
 --
 -- TOC entry 539 (class 1255 OID 18893)
--- Dependencies: 1090 1090 6
+-- Dependencies: 6 1090 1090
 -- Name: st_expand(box3d, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8469,7 +8450,7 @@ ALTER FUNCTION public.st_exteriorring(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 543 (class 1255 OID 18899)
--- Dependencies: 1096 6
+-- Dependencies: 6 1096
 -- Name: st_factor(chip); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8482,7 +8463,7 @@ ALTER FUNCTION public.st_factor(chip) OWNER TO postgres;
 
 --
 -- TOC entry 545 (class 1255 OID 18901)
--- Dependencies: 1167 1087 6
+-- Dependencies: 1087 1168 6
 -- Name: st_find_extent(text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8506,7 +8487,7 @@ ALTER FUNCTION public.st_find_extent(text, text) OWNER TO postgres;
 
 --
 -- TOC entry 544 (class 1255 OID 18900)
--- Dependencies: 1167 6 1087
+-- Dependencies: 1168 6 1087
 -- Name: st_find_extent(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8531,7 +8512,7 @@ ALTER FUNCTION public.st_find_extent(text, text, text) OWNER TO postgres;
 
 --
 -- TOC entry 546 (class 1255 OID 18902)
--- Dependencies: 1102 6 1102
+-- Dependencies: 1102 1102 6
 -- Name: st_force_2d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8544,7 +8525,7 @@ ALTER FUNCTION public.st_force_2d(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 547 (class 1255 OID 18903)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: st_force_3d(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8609,7 +8590,7 @@ ALTER FUNCTION public.st_force_collection(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 552 (class 1255 OID 18908)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 1102 6
 -- Name: st_forcerhr(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8622,7 +8603,7 @@ ALTER FUNCTION public.st_forcerhr(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 553 (class 1255 OID 18909)
--- Dependencies: 6 1099
+-- Dependencies: 1099 6
 -- Name: st_geogfromtext(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8648,7 +8629,7 @@ ALTER FUNCTION public.st_geogfromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 555 (class 1255 OID 18911)
--- Dependencies: 1099 6
+-- Dependencies: 6 1099
 -- Name: st_geographyfromtext(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8723,7 +8704,7 @@ ALTER FUNCTION public.st_geomcollfromtext(text, integer) OWNER TO postgres;
 
 --
 -- TOC entry 561 (class 1255 OID 18917)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: st_geomcollfromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8741,7 +8722,7 @@ ALTER FUNCTION public.st_geomcollfromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 560 (class 1255 OID 18916)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: st_geomcollfromwkb(bytea, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8759,7 +8740,7 @@ ALTER FUNCTION public.st_geomcollfromwkb(bytea, integer) OWNER TO postgres;
 
 --
 -- TOC entry 562 (class 1255 OID 18918)
--- Dependencies: 1087 1102 6
+-- Dependencies: 1087 6 1102
 -- Name: st_geometry(box2d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8772,7 +8753,7 @@ ALTER FUNCTION public.st_geometry(box2d) OWNER TO postgres;
 
 --
 -- TOC entry 563 (class 1255 OID 18919)
--- Dependencies: 1102 6 1090
+-- Dependencies: 6 1102 1090
 -- Name: st_geometry(box3d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8798,7 +8779,7 @@ ALTER FUNCTION public.st_geometry(text) OWNER TO postgres;
 
 --
 -- TOC entry 565 (class 1255 OID 18921)
--- Dependencies: 6 1096 1102
+-- Dependencies: 1102 1096 6
 -- Name: st_geometry(chip); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8824,7 +8805,7 @@ ALTER FUNCTION public.st_geometry(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 567 (class 1255 OID 18923)
--- Dependencies: 1102 6 1093
+-- Dependencies: 6 1093 1102
 -- Name: st_geometry(box3d_extent); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8837,7 +8818,7 @@ ALTER FUNCTION public.st_geometry(box3d_extent) OWNER TO postgres;
 
 --
 -- TOC entry 568 (class 1255 OID 18924)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 1102 6
 -- Name: st_geometry_above(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8876,7 +8857,7 @@ ALTER FUNCTION public.st_geometry_below(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 571 (class 1255 OID 18927)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: st_geometry_cmp(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8902,7 +8883,7 @@ ALTER FUNCTION public.st_geometry_contain(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 573 (class 1255 OID 18929)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: st_geometry_contained(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8928,7 +8909,7 @@ ALTER FUNCTION public.st_geometry_eq(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 575 (class 1255 OID 18931)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: st_geometry_ge(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8941,7 +8922,7 @@ ALTER FUNCTION public.st_geometry_ge(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 576 (class 1255 OID 18932)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: st_geometry_gt(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8954,7 +8935,7 @@ ALTER FUNCTION public.st_geometry_gt(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 577 (class 1255 OID 18933)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: st_geometry_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -8993,7 +8974,7 @@ ALTER FUNCTION public.st_geometry_left(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 580 (class 1255 OID 18936)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: st_geometry_lt(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9019,7 +9000,7 @@ ALTER FUNCTION public.st_geometry_out(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 582 (class 1255 OID 18938)
--- Dependencies: 1102 6 1102
+-- Dependencies: 1102 1102 6
 -- Name: st_geometry_overabove(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9032,7 +9013,7 @@ ALTER FUNCTION public.st_geometry_overabove(geometry, geometry) OWNER TO postgre
 
 --
 -- TOC entry 583 (class 1255 OID 18939)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: st_geometry_overbelow(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9045,7 +9026,7 @@ ALTER FUNCTION public.st_geometry_overbelow(geometry, geometry) OWNER TO postgre
 
 --
 -- TOC entry 584 (class 1255 OID 18940)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: st_geometry_overlap(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9071,7 +9052,7 @@ ALTER FUNCTION public.st_geometry_overleft(geometry, geometry) OWNER TO postgres
 
 --
 -- TOC entry 586 (class 1255 OID 18942)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: st_geometry_overright(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9084,7 +9065,7 @@ ALTER FUNCTION public.st_geometry_overright(geometry, geometry) OWNER TO postgre
 
 --
 -- TOC entry 587 (class 1255 OID 18943)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_geometry_recv(internal); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9097,7 +9078,7 @@ ALTER FUNCTION public.st_geometry_recv(internal) OWNER TO postgres;
 
 --
 -- TOC entry 588 (class 1255 OID 18944)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: st_geometry_right(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9136,7 +9117,7 @@ ALTER FUNCTION public.st_geometry_send(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 591 (class 1255 OID 18947)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_geometryfromtext(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9149,7 +9130,7 @@ ALTER FUNCTION public.st_geometryfromtext(text) OWNER TO postgres;
 
 --
 -- TOC entry 592 (class 1255 OID 18948)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_geometryfromtext(text, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9201,7 +9182,7 @@ ALTER FUNCTION public.st_geomfromewkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 596 (class 1255 OID 18952)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_geomfromewkt(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9227,7 +9208,7 @@ ALTER FUNCTION public.st_geomfromgml(text) OWNER TO postgres;
 
 --
 -- TOC entry 598 (class 1255 OID 18954)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: st_geomfromkml(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9240,7 +9221,7 @@ ALTER FUNCTION public.st_geomfromkml(text) OWNER TO postgres;
 
 --
 -- TOC entry 599 (class 1255 OID 18955)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: st_geomfromtext(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9292,7 +9273,7 @@ ALTER FUNCTION public.st_geomfromwkb(bytea, integer) OWNER TO postgres;
 
 --
 -- TOC entry 603 (class 1255 OID 18959)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_gmltosql(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9318,7 +9299,7 @@ ALTER FUNCTION public.st_hasarc(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 605 (class 1255 OID 18961)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: st_hausdorffdistance(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9966,7 +9947,7 @@ ALTER FUNCTION public.st_makeline(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 653 (class 1255 OID 19009)
--- Dependencies: 1102 6 1104
+-- Dependencies: 6 1102 1104
 -- Name: st_makeline_garray(geometry[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -9979,7 +9960,7 @@ ALTER FUNCTION public.st_makeline_garray(geometry[]) OWNER TO postgres;
 
 --
 -- TOC entry 654 (class 1255 OID 19010)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_makepoint(double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -10096,7 +10077,7 @@ ALTER FUNCTION public.st_minimumboundingcircle(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 662 (class 1255 OID 19018)
--- Dependencies: 6 1167 1102 1102
+-- Dependencies: 6 1168 1102 1102
 -- Name: st_minimumboundingcircle(geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -10480,7 +10461,7 @@ ALTER FUNCTION public.st_multipointfromtext(text) OWNER TO postgres;
 
 --
 -- TOC entry 683 (class 1255 OID 19039)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_multipointfromwkb(bytea); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -10531,7 +10512,7 @@ ALTER FUNCTION public.st_multipolyfromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 684 (class 1255 OID 19040)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: st_multipolyfromwkb(bytea, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -10935,7 +10916,7 @@ ALTER FUNCTION public.st_polygon(geometry, integer) OWNER TO postgres;
 
 --
 -- TOC entry 715 (class 1255 OID 19070)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_polygonfromtext(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -10978,7 +10959,7 @@ ALTER FUNCTION public.st_polygonfromwkb(bytea) OWNER TO postgres;
 
 --
 -- TOC entry 716 (class 1255 OID 19071)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_polygonfromwkb(bytea, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -10995,7 +10976,7 @@ ALTER FUNCTION public.st_polygonfromwkb(bytea, integer) OWNER TO postgres;
 
 --
 -- TOC entry 718 (class 1255 OID 19073)
--- Dependencies: 6 1102 1104
+-- Dependencies: 1102 6 1104
 -- Name: st_polygonize(geometry[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11008,7 +10989,7 @@ ALTER FUNCTION public.st_polygonize(geometry[]) OWNER TO postgres;
 
 --
 -- TOC entry 719 (class 1255 OID 19074)
--- Dependencies: 6 1104 1102
+-- Dependencies: 1102 6 1104
 -- Name: st_polygonize_garray(geometry[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11047,7 +11028,7 @@ ALTER FUNCTION public.st_postgis_gist_sel(internal, oid, internal, integer) OWNE
 
 --
 -- TOC entry 722 (class 1255 OID 19077)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: st_relate(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11073,7 +11054,7 @@ ALTER FUNCTION public.st_relate(geometry, geometry, text) OWNER TO postgres;
 
 --
 -- TOC entry 724 (class 1255 OID 19079)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: st_removepoint(geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11099,7 +11080,7 @@ ALTER FUNCTION public.st_reverse(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 726 (class 1255 OID 19081)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: st_rotate(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11112,7 +11093,7 @@ ALTER FUNCTION public.st_rotate(geometry, double precision) OWNER TO postgres;
 
 --
 -- TOC entry 727 (class 1255 OID 19082)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: st_rotatex(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11125,7 +11106,7 @@ ALTER FUNCTION public.st_rotatex(geometry, double precision) OWNER TO postgres;
 
 --
 -- TOC entry 728 (class 1255 OID 19083)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: st_rotatey(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11138,7 +11119,7 @@ ALTER FUNCTION public.st_rotatey(geometry, double precision) OWNER TO postgres;
 
 --
 -- TOC entry 729 (class 1255 OID 19084)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: st_rotatez(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11164,7 +11145,7 @@ ALTER FUNCTION public.st_scale(geometry, double precision, double precision) OWN
 
 --
 -- TOC entry 730 (class 1255 OID 19085)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: st_scale(geometry, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11177,7 +11158,7 @@ ALTER FUNCTION public.st_scale(geometry, double precision, double precision, dou
 
 --
 -- TOC entry 732 (class 1255 OID 19087)
--- Dependencies: 1102 6 1102
+-- Dependencies: 1102 1102 6
 -- Name: st_segmentize(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11190,7 +11171,7 @@ ALTER FUNCTION public.st_segmentize(geometry, double precision) OWNER TO postgre
 
 --
 -- TOC entry 733 (class 1255 OID 19088)
--- Dependencies: 1096 1096 6
+-- Dependencies: 6 1096 1096
 -- Name: st_setfactor(chip, real); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11242,7 +11223,7 @@ ALTER FUNCTION public.st_shift_longitude(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 737 (class 1255 OID 19092)
--- Dependencies: 1102 6 1102 1102
+-- Dependencies: 1102 1102 1102 6
 -- Name: st_shortestline(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11281,7 +11262,7 @@ ALTER FUNCTION public.st_simplifypreservetopology(geometry, double precision) OW
 
 --
 -- TOC entry 740 (class 1255 OID 19097)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: st_snaptogrid(geometry, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11294,7 +11275,7 @@ ALTER FUNCTION public.st_snaptogrid(geometry, double precision) OWNER TO postgre
 
 --
 -- TOC entry 704 (class 1255 OID 19096)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: st_snaptogrid(geometry, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11307,7 +11288,7 @@ ALTER FUNCTION public.st_snaptogrid(geometry, double precision, double precision
 
 --
 -- TOC entry 670 (class 1255 OID 19095)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: st_snaptogrid(geometry, double precision, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11320,7 +11301,7 @@ ALTER FUNCTION public.st_snaptogrid(geometry, double precision, double precision
 
 --
 -- TOC entry 741 (class 1255 OID 19098)
--- Dependencies: 6 1102 1102 1102
+-- Dependencies: 1102 1102 1102 6
 -- Name: st_snaptogrid(geometry, geometry, double precision, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11346,7 +11327,7 @@ ALTER FUNCTION public.st_spheroid_in(cstring) OWNER TO postgres;
 
 --
 -- TOC entry 743 (class 1255 OID 19100)
--- Dependencies: 1113 6
+-- Dependencies: 6 1113
 -- Name: st_spheroid_out(spheroid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11398,7 +11379,7 @@ ALTER FUNCTION public.st_startpoint(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 747 (class 1255 OID 19104)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: st_summary(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11411,7 +11392,7 @@ ALTER FUNCTION public.st_summary(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 748 (class 1255 OID 19105)
--- Dependencies: 1102 6 1102 1102
+-- Dependencies: 1102 1102 1102 6
 -- Name: st_symdifference(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11424,7 +11405,7 @@ ALTER FUNCTION public.st_symdifference(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 749 (class 1255 OID 19106)
--- Dependencies: 1102 6 1102 1102
+-- Dependencies: 1102 1102 1102 6
 -- Name: st_symmetricdifference(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11463,7 +11444,7 @@ ALTER FUNCTION public.st_touches(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 752 (class 1255 OID 19109)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: st_transform(geometry, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11476,7 +11457,7 @@ ALTER FUNCTION public.st_transform(geometry, integer) OWNER TO postgres;
 
 --
 -- TOC entry 754 (class 1255 OID 19111)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: st_translate(geometry, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11502,7 +11483,7 @@ ALTER FUNCTION public.st_translate(geometry, double precision, double precision,
 
 --
 -- TOC entry 755 (class 1255 OID 19112)
--- Dependencies: 1102 1102 6
+-- Dependencies: 6 1102 1102
 -- Name: st_transscale(geometry, double precision, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11529,7 +11510,7 @@ ALTER FUNCTION public.st_union(geometry[]) OWNER TO postgres;
 
 --
 -- TOC entry 756 (class 1255 OID 19113)
--- Dependencies: 1102 6 1102 1102
+-- Dependencies: 6 1102 1102 1102
 -- Name: st_union(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11542,7 +11523,7 @@ ALTER FUNCTION public.st_union(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 758 (class 1255 OID 19115)
--- Dependencies: 6 1104 1102
+-- Dependencies: 1104 6 1102
 -- Name: st_unite_garray(geometry[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11555,7 +11536,7 @@ ALTER FUNCTION public.st_unite_garray(geometry[]) OWNER TO postgres;
 
 --
 -- TOC entry 759 (class 1255 OID 19116)
--- Dependencies: 1096 6
+-- Dependencies: 6 1096
 -- Name: st_width(chip); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11568,7 +11549,7 @@ ALTER FUNCTION public.st_width(chip) OWNER TO postgres;
 
 --
 -- TOC entry 760 (class 1255 OID 19117)
--- Dependencies: 1102 6 1102
+-- Dependencies: 1102 1102 6
 -- Name: st_within(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11607,7 +11588,7 @@ ALTER FUNCTION public.st_wkttosql(text) OWNER TO postgres;
 
 --
 -- TOC entry 763 (class 1255 OID 19120)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_x(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11633,7 +11614,7 @@ ALTER FUNCTION public.st_xmax(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 765 (class 1255 OID 19122)
--- Dependencies: 1090 6
+-- Dependencies: 6 1090
 -- Name: st_xmin(box3d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11685,7 +11666,7 @@ ALTER FUNCTION public.st_ymin(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 769 (class 1255 OID 19126)
--- Dependencies: 6 1102
+-- Dependencies: 1102 6
 -- Name: st_z(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11724,7 +11705,7 @@ ALTER FUNCTION public.st_zmflag(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 772 (class 1255 OID 19129)
--- Dependencies: 6 1090
+-- Dependencies: 1090 6
 -- Name: st_zmin(box3d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11737,7 +11718,7 @@ ALTER FUNCTION public.st_zmin(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 773 (class 1255 OID 19130)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: startpoint(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11750,7 +11731,7 @@ ALTER FUNCTION public.startpoint(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 774 (class 1255 OID 19131)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: summary(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11828,7 +11809,7 @@ ALTER FUNCTION public.transform(geometry, integer) OWNER TO postgres;
 
 --
 -- TOC entry 781 (class 1255 OID 19138)
--- Dependencies: 6 1102 1102
+-- Dependencies: 1102 6 1102
 -- Name: translate(geometry, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11841,7 +11822,7 @@ ALTER FUNCTION public.translate(geometry, double precision, double precision) OW
 
 --
 -- TOC entry 780 (class 1255 OID 19137)
--- Dependencies: 1102 1102 6
+-- Dependencies: 1102 6 1102
 -- Name: translate(geometry, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11854,7 +11835,7 @@ ALTER FUNCTION public.translate(geometry, double precision, double precision, do
 
 --
 -- TOC entry 782 (class 1255 OID 19139)
--- Dependencies: 1102 6 1102
+-- Dependencies: 6 1102 1102
 -- Name: transscale(geometry, double precision, double precision, double precision, double precision); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11868,7 +11849,7 @@ ALTER FUNCTION public.transscale(geometry, double precision, double precision, d
 
 --
 -- TOC entry 783 (class 1255 OID 19140)
--- Dependencies: 1102 6 1104
+-- Dependencies: 1104 6 1102
 -- Name: unite_garray(geometry[]); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11881,7 +11862,7 @@ ALTER FUNCTION public.unite_garray(geometry[]) OWNER TO postgres;
 
 --
 -- TOC entry 784 (class 1255 OID 19141)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: unlockrows(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11910,7 +11891,7 @@ ALTER FUNCTION public.unlockrows(text) OWNER TO postgres;
 
 --
 -- TOC entry 787 (class 1255 OID 19144)
--- Dependencies: 1167 6
+-- Dependencies: 6 1168
 -- Name: updategeometrysrid(character varying, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11930,7 +11911,7 @@ ALTER FUNCTION public.updategeometrysrid(character varying, character varying, i
 
 --
 -- TOC entry 786 (class 1255 OID 19143)
--- Dependencies: 6 1167
+-- Dependencies: 6 1168
 -- Name: updategeometrysrid(character varying, character varying, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -11950,7 +11931,7 @@ ALTER FUNCTION public.updategeometrysrid(character varying, character varying, c
 
 --
 -- TOC entry 785 (class 1255 OID 19142)
--- Dependencies: 1167 6
+-- Dependencies: 1168 6
 -- Name: updategeometrysrid(character varying, character varying, character varying, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -12037,7 +12018,7 @@ ALTER FUNCTION public.updategeometrysrid(character varying, character varying, c
 
 --
 -- TOC entry 788 (class 1255 OID 19145)
--- Dependencies: 1096 6
+-- Dependencies: 6 1096
 -- Name: width(chip); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -12050,7 +12031,7 @@ ALTER FUNCTION public.width(chip) OWNER TO postgres;
 
 --
 -- TOC entry 789 (class 1255 OID 19146)
--- Dependencies: 1102 6 1102
+-- Dependencies: 1102 1102 6
 -- Name: within(geometry, geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -12063,7 +12044,7 @@ ALTER FUNCTION public.within(geometry, geometry) OWNER TO postgres;
 
 --
 -- TOC entry 790 (class 1255 OID 19147)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: x(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -12102,7 +12083,7 @@ ALTER FUNCTION public.xmin(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 793 (class 1255 OID 19150)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: y(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -12115,7 +12096,7 @@ ALTER FUNCTION public.y(geometry) OWNER TO postgres;
 
 --
 -- TOC entry 794 (class 1255 OID 19151)
--- Dependencies: 6 1090
+-- Dependencies: 1090 6
 -- Name: ymax(box3d); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -12167,7 +12148,7 @@ ALTER FUNCTION public.zmax(box3d) OWNER TO postgres;
 
 --
 -- TOC entry 798 (class 1255 OID 19155)
--- Dependencies: 1102 6
+-- Dependencies: 6 1102
 -- Name: zmflag(geometry); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -12192,7 +12173,7 @@ CREATE FUNCTION zmin(box3d) RETURNS double precision
 ALTER FUNCTION public.zmin(box3d) OWNER TO postgres;
 
 --
--- TOC entry 1172 (class 1255 OID 19157)
+-- TOC entry 1173 (class 1255 OID 19157)
 -- Dependencies: 1104 1102 330 329 6
 -- Name: accum(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12207,7 +12188,7 @@ CREATE AGGREGATE accum(geometry) (
 ALTER AGGREGATE public.accum(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1173 (class 1255 OID 19158)
+-- TOC entry 1174 (class 1255 OID 19158)
 -- Dependencies: 331 6 1102 1102 330
 -- Name: collect(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12222,7 +12203,7 @@ CREATE AGGREGATE collect(geometry) (
 ALTER AGGREGATE public.collect(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1174 (class 1255 OID 19159)
+-- TOC entry 1175 (class 1255 OID 19159)
 -- Dependencies: 6 1102 500 1093
 -- Name: extent(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12236,7 +12217,7 @@ CREATE AGGREGATE extent(geometry) (
 ALTER AGGREGATE public.extent(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1175 (class 1255 OID 19160)
+-- TOC entry 1176 (class 1255 OID 19160)
 -- Dependencies: 124 1102 1090 6
 -- Name: extent3d(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12250,8 +12231,8 @@ CREATE AGGREGATE extent3d(geometry) (
 ALTER AGGREGATE public.extent3d(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1176 (class 1255 OID 19161)
--- Dependencies: 1102 1102 330 6 332
+-- TOC entry 1177 (class 1255 OID 19161)
+-- Dependencies: 1102 6 1102 330 332
 -- Name: makeline(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
 
@@ -12265,7 +12246,7 @@ CREATE AGGREGATE makeline(geometry) (
 ALTER AGGREGATE public.makeline(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1177 (class 1255 OID 19162)
+-- TOC entry 1178 (class 1255 OID 19162)
 -- Dependencies: 1102 496 1102 6
 -- Name: memcollect(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12279,7 +12260,7 @@ CREATE AGGREGATE memcollect(geometry) (
 ALTER AGGREGATE public.memcollect(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1178 (class 1255 OID 19163)
+-- TOC entry 1179 (class 1255 OID 19163)
 -- Dependencies: 231 1102 1102 6
 -- Name: memgeomunion(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12293,7 +12274,7 @@ CREATE AGGREGATE memgeomunion(geometry) (
 ALTER AGGREGATE public.memgeomunion(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1179 (class 1255 OID 19164)
+-- TOC entry 1180 (class 1255 OID 19164)
 -- Dependencies: 6 333 330 1102 1102
 -- Name: polygonize(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12308,7 +12289,7 @@ CREATE AGGREGATE polygonize(geometry) (
 ALTER AGGREGATE public.polygonize(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1180 (class 1255 OID 19165)
+-- TOC entry 1181 (class 1255 OID 19165)
 -- Dependencies: 329 330 1102 1104 6
 -- Name: st_accum(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12323,7 +12304,7 @@ CREATE AGGREGATE st_accum(geometry) (
 ALTER AGGREGATE public.st_accum(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1181 (class 1255 OID 19166)
+-- TOC entry 1182 (class 1255 OID 19166)
 -- Dependencies: 331 330 1102 1102 6
 -- Name: st_collect(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12338,7 +12319,7 @@ CREATE AGGREGATE st_collect(geometry) (
 ALTER AGGREGATE public.st_collect(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1182 (class 1255 OID 19167)
+-- TOC entry 1183 (class 1255 OID 19167)
 -- Dependencies: 500 1102 1093 6
 -- Name: st_extent(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12352,7 +12333,7 @@ CREATE AGGREGATE st_extent(geometry) (
 ALTER AGGREGATE public.st_extent(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1168 (class 1255 OID 19168)
+-- TOC entry 1169 (class 1255 OID 19168)
 -- Dependencies: 501 1102 1090 6
 -- Name: st_extent3d(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12366,7 +12347,7 @@ CREATE AGGREGATE st_extent3d(geometry) (
 ALTER AGGREGATE public.st_extent3d(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1169 (class 1255 OID 19169)
+-- TOC entry 1170 (class 1255 OID 19169)
 -- Dependencies: 1102 6 330 332 1102
 -- Name: st_makeline(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12381,7 +12362,7 @@ CREATE AGGREGATE st_makeline(geometry) (
 ALTER AGGREGATE public.st_makeline(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1170 (class 1255 OID 19170)
+-- TOC entry 1171 (class 1255 OID 19170)
 -- Dependencies: 6 496 1102 1102
 -- Name: st_memcollect(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
@@ -12395,8 +12376,8 @@ CREATE AGGREGATE st_memcollect(geometry) (
 ALTER AGGREGATE public.st_memcollect(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1171 (class 1255 OID 19171)
--- Dependencies: 756 1102 6 1102
+-- TOC entry 1172 (class 1255 OID 19171)
+-- Dependencies: 756 6 1102 1102
 -- Name: st_memunion(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
 
@@ -12409,8 +12390,8 @@ CREATE AGGREGATE st_memunion(geometry) (
 ALTER AGGREGATE public.st_memunion(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1183 (class 1255 OID 19172)
--- Dependencies: 6 1102 330 1102 333
+-- TOC entry 1184 (class 1255 OID 19172)
+-- Dependencies: 330 333 1102 1102 6
 -- Name: st_polygonize(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
 
@@ -12424,8 +12405,8 @@ CREATE AGGREGATE st_polygonize(geometry) (
 ALTER AGGREGATE public.st_polygonize(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1184 (class 1255 OID 19173)
--- Dependencies: 6 330 334 1102 1102
+-- TOC entry 1185 (class 1255 OID 19173)
+-- Dependencies: 330 334 1102 1102 6
 -- Name: st_union(geometry); Type: AGGREGATE; Schema: public; Owner: postgres
 --
 
@@ -12439,8 +12420,8 @@ CREATE AGGREGATE st_union(geometry) (
 ALTER AGGREGATE public.st_union(geometry) OWNER TO postgres;
 
 --
--- TOC entry 1890 (class 2617 OID 19174)
--- Dependencies: 208 207 6 1102 1102 215
+-- TOC entry 1891 (class 2617 OID 19174)
+-- Dependencies: 215 6 1102 1102 208 207
 -- Name: &&; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12457,8 +12438,8 @@ CREATE OPERATOR && (
 ALTER OPERATOR public.&& (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1891 (class 2617 OID 19175)
--- Dependencies: 180 185 1099 1099 6 176
+-- TOC entry 1892 (class 2617 OID 19175)
+-- Dependencies: 6 176 180 185 1099 1099
 -- Name: &&; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12475,8 +12456,8 @@ CREATE OPERATOR && (
 ALTER OPERATOR public.&& (geography, geography) OWNER TO postgres;
 
 --
--- TOC entry 1892 (class 2617 OID 19177)
--- Dependencies: 216 6 1102 1102
+-- TOC entry 1893 (class 2617 OID 19177)
+-- Dependencies: 1102 6 1102 216
 -- Name: &<; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12493,7 +12474,7 @@ CREATE OPERATOR &< (
 ALTER OPERATOR public.&< (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1893 (class 2617 OID 19179)
+-- TOC entry 1894 (class 2617 OID 19179)
 -- Dependencies: 1102 214 1102 6
 -- Name: &<|; Type: OPERATOR; Schema: public; Owner: postgres
 --
@@ -12511,8 +12492,8 @@ CREATE OPERATOR &<| (
 ALTER OPERATOR public.&<| (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1894 (class 2617 OID 19176)
--- Dependencies: 1102 1102 217 6
+-- TOC entry 1895 (class 2617 OID 19176)
+-- Dependencies: 1102 217 6 1102
 -- Name: &>; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12529,8 +12510,8 @@ CREATE OPERATOR &> (
 ALTER OPERATOR public.&> (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1895 (class 2617 OID 19182)
--- Dependencies: 6 1102 212 1102
+-- TOC entry 1896 (class 2617 OID 19182)
+-- Dependencies: 6 1102 1102 212
 -- Name: <; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12548,8 +12529,8 @@ CREATE OPERATOR < (
 ALTER OPERATOR public.< (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1898 (class 2617 OID 19185)
--- Dependencies: 184 1099 6 1099
+-- TOC entry 1899 (class 2617 OID 19185)
+-- Dependencies: 1099 6 1099 184
 -- Name: <; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12567,8 +12548,8 @@ CREATE OPERATOR < (
 ALTER OPERATOR public.< (geography, geography) OWNER TO postgres;
 
 --
--- TOC entry 1899 (class 2617 OID 19187)
--- Dependencies: 1102 6 211 1102
+-- TOC entry 1900 (class 2617 OID 19187)
+-- Dependencies: 1102 6 1102 211
 -- Name: <<; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12585,8 +12566,8 @@ CREATE OPERATOR << (
 ALTER OPERATOR public.<< (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1900 (class 2617 OID 19189)
--- Dependencies: 201 1102 6 1102
+-- TOC entry 1901 (class 2617 OID 19189)
+-- Dependencies: 6 1102 1102 201
 -- Name: <<|; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12603,8 +12584,8 @@ CREATE OPERATOR <<| (
 ALTER OPERATOR public.<<| (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1901 (class 2617 OID 19190)
--- Dependencies: 1102 210 6 1102
+-- TOC entry 1902 (class 2617 OID 19190)
+-- Dependencies: 1102 6 210 1102
 -- Name: <=; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12622,8 +12603,8 @@ CREATE OPERATOR <= (
 ALTER OPERATOR public.<= (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1902 (class 2617 OID 19191)
--- Dependencies: 1099 6 183 1099
+-- TOC entry 1903 (class 2617 OID 19191)
+-- Dependencies: 183 1099 1099 6
 -- Name: <=; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12641,8 +12622,8 @@ CREATE OPERATOR <= (
 ALTER OPERATOR public.<= (geography, geography) OWNER TO postgres;
 
 --
--- TOC entry 1903 (class 2617 OID 19192)
--- Dependencies: 205 1102 6 1102
+-- TOC entry 1904 (class 2617 OID 19192)
+-- Dependencies: 205 6 1102 1102
 -- Name: =; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12659,8 +12640,8 @@ CREATE OPERATOR = (
 ALTER OPERATOR public.= (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1904 (class 2617 OID 19193)
--- Dependencies: 1099 6 171 1099
+-- TOC entry 1905 (class 2617 OID 19193)
+-- Dependencies: 1099 171 1099 6
 -- Name: =; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12677,8 +12658,8 @@ CREATE OPERATOR = (
 ALTER OPERATOR public.= (geography, geography) OWNER TO postgres;
 
 --
--- TOC entry 1896 (class 2617 OID 19180)
--- Dependencies: 1102 6 1102 209
+-- TOC entry 1897 (class 2617 OID 19180)
+-- Dependencies: 209 6 1102 1102
 -- Name: >; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12696,8 +12677,8 @@ CREATE OPERATOR > (
 ALTER OPERATOR public.> (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1905 (class 2617 OID 19183)
--- Dependencies: 1099 6 182 1099
+-- TOC entry 1906 (class 2617 OID 19183)
+-- Dependencies: 1099 1099 6 182
 -- Name: >; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12715,8 +12696,8 @@ CREATE OPERATOR > (
 ALTER OPERATOR public.> (geography, geography) OWNER TO postgres;
 
 --
--- TOC entry 1906 (class 2617 OID 19181)
--- Dependencies: 1102 1102 6 206
+-- TOC entry 1907 (class 2617 OID 19181)
+-- Dependencies: 206 1102 1102 6
 -- Name: >=; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12734,8 +12715,8 @@ CREATE OPERATOR >= (
 ALTER OPERATOR public.>= (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1907 (class 2617 OID 19184)
--- Dependencies: 1099 172 1099 6
+-- TOC entry 1908 (class 2617 OID 19184)
+-- Dependencies: 6 1099 1099 172
 -- Name: >=; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12753,7 +12734,7 @@ CREATE OPERATOR >= (
 ALTER OPERATOR public.>= (geography, geography) OWNER TO postgres;
 
 --
--- TOC entry 1908 (class 2617 OID 19186)
+-- TOC entry 1909 (class 2617 OID 19186)
 -- Dependencies: 6 218 1102 1102
 -- Name: >>; Type: OPERATOR; Schema: public; Owner: postgres
 --
@@ -12771,8 +12752,8 @@ CREATE OPERATOR >> (
 ALTER OPERATOR public.>> (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1909 (class 2617 OID 19195)
--- Dependencies: 1102 6 1102 204
+-- TOC entry 1910 (class 2617 OID 19195)
+-- Dependencies: 1102 6 204 1102
 -- Name: @; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12789,8 +12770,8 @@ CREATE OPERATOR @ (
 ALTER OPERATOR public.@ (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1897 (class 2617 OID 19178)
--- Dependencies: 1102 6 213 1102
+-- TOC entry 1898 (class 2617 OID 19178)
+-- Dependencies: 1102 1102 213 6
 -- Name: |&>; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12807,8 +12788,8 @@ CREATE OPERATOR |&> (
 ALTER OPERATOR public.|&> (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1910 (class 2617 OID 19188)
--- Dependencies: 1102 6 1102 200
+-- TOC entry 1911 (class 2617 OID 19188)
+-- Dependencies: 200 1102 6 1102
 -- Name: |>>; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12825,7 +12806,7 @@ CREATE OPERATOR |>> (
 ALTER OPERATOR public.|>> (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1911 (class 2617 OID 19194)
+-- TOC entry 1912 (class 2617 OID 19194)
 -- Dependencies: 6 1102 1102 203
 -- Name: ~; Type: OPERATOR; Schema: public; Owner: postgres
 --
@@ -12843,8 +12824,8 @@ CREATE OPERATOR ~ (
 ALTER OPERATOR public.~ (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 1912 (class 2617 OID 19196)
--- Dependencies: 1102 220 1102 6
+-- TOC entry 1913 (class 2617 OID 19196)
+-- Dependencies: 1102 220 6 1102
 -- Name: ~=; Type: OPERATOR; Schema: public; Owner: postgres
 --
 
@@ -12861,8 +12842,8 @@ CREATE OPERATOR ~= (
 ALTER OPERATOR public.~= (geometry, geometry) OWNER TO postgres;
 
 --
--- TOC entry 2025 (class 2616 OID 19198)
--- Dependencies: 1099 2136 6
+-- TOC entry 2026 (class 2616 OID 19198)
+-- Dependencies: 2137 6 1099
 -- Name: btree_geography_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
 --
 
@@ -12879,8 +12860,8 @@ CREATE OPERATOR CLASS btree_geography_ops
 ALTER OPERATOR CLASS public.btree_geography_ops USING btree OWNER TO postgres;
 
 --
--- TOC entry 2026 (class 2616 OID 19206)
--- Dependencies: 6 1102 2137
+-- TOC entry 2027 (class 2616 OID 19206)
+-- Dependencies: 1102 2138 6
 -- Name: btree_geometry_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
 --
 
@@ -12897,8 +12878,8 @@ CREATE OPERATOR CLASS btree_geometry_ops
 ALTER OPERATOR CLASS public.btree_geometry_ops USING btree OWNER TO postgres;
 
 --
--- TOC entry 2027 (class 2616 OID 19214)
--- Dependencies: 2138 6 1099 1107
+-- TOC entry 2028 (class 2616 OID 19214)
+-- Dependencies: 1099 1107 6 2139
 -- Name: gist_geography_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
 --
 
@@ -12918,8 +12899,8 @@ CREATE OPERATOR CLASS gist_geography_ops
 ALTER OPERATOR CLASS public.gist_geography_ops USING gist OWNER TO postgres;
 
 --
--- TOC entry 2028 (class 2616 OID 19224)
--- Dependencies: 6 1087 1102 2139
+-- TOC entry 2029 (class 2616 OID 19224)
+-- Dependencies: 2140 6 1087 1102
 -- Name: gist_geometry_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
 --
 
@@ -12953,7 +12934,7 @@ SET search_path = pg_catalog;
 
 --
 -- TOC entry 2708 (class 2605 OID 19244)
--- Dependencies: 110 1090 1087 110
+-- Dependencies: 110 110 1087 1090
 -- Name: CAST (public.box2d AS public.box3d); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -12962,7 +12943,7 @@ CREATE CAST (public.box2d AS public.box3d) WITH FUNCTION public.box3d(public.box
 
 --
 -- TOC entry 2709 (class 2605 OID 19245)
--- Dependencies: 194 1087 1102 194
+-- Dependencies: 194 194 1102 1087
 -- Name: CAST (public.box2d AS public.geometry); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -12971,7 +12952,7 @@ CREATE CAST (public.box2d AS public.geometry) WITH FUNCTION public.geometry(publ
 
 --
 -- TOC entry 2710 (class 2605 OID 19246)
--- Dependencies: 105 105 1090
+-- Dependencies: 105 1090 105
 -- Name: CAST (public.box3d AS box); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -12989,7 +12970,7 @@ CREATE CAST (public.box3d AS public.box2d) WITH FUNCTION public.box2d(public.box
 
 --
 -- TOC entry 2712 (class 2605 OID 19248)
--- Dependencies: 195 195 1102 1090
+-- Dependencies: 195 1102 1090 195
 -- Name: CAST (public.box3d AS public.geometry); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -12998,7 +12979,7 @@ CREATE CAST (public.box3d AS public.geometry) WITH FUNCTION public.geometry(publ
 
 --
 -- TOC entry 2713 (class 2605 OID 19249)
--- Dependencies: 106 1087 1093 106
+-- Dependencies: 106 106 1087 1093
 -- Name: CAST (public.box3d_extent AS public.box2d); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13007,7 +12988,7 @@ CREATE CAST (public.box3d_extent AS public.box2d) WITH FUNCTION public.box2d(pub
 
 --
 -- TOC entry 2714 (class 2605 OID 19250)
--- Dependencies: 111 1090 1093 111
+-- Dependencies: 111 1093 1090 111
 -- Name: CAST (public.box3d_extent AS public.box3d); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13016,7 +12997,7 @@ CREATE CAST (public.box3d_extent AS public.box3d) WITH FUNCTION public.box3d_ext
 
 --
 -- TOC entry 2715 (class 2605 OID 19251)
--- Dependencies: 193 1102 193 1093
+-- Dependencies: 193 1093 1102 193
 -- Name: CAST (public.box3d_extent AS public.geometry); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13025,7 +13006,7 @@ CREATE CAST (public.box3d_extent AS public.geometry) WITH FUNCTION public.geomet
 
 --
 -- TOC entry 2519 (class 2605 OID 19252)
--- Dependencies: 198 198 1102
+-- Dependencies: 198 1102 198
 -- Name: CAST (bytea AS public.geometry); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13034,7 +13015,7 @@ CREATE CAST (bytea AS public.geometry) WITH FUNCTION public.geometry(bytea) AS I
 
 --
 -- TOC entry 2716 (class 2605 OID 19253)
--- Dependencies: 197 1102 197 1096
+-- Dependencies: 197 197 1096 1102
 -- Name: CAST (public.chip AS public.geometry); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13061,7 +13042,7 @@ CREATE CAST (public.geography AS public.geometry) WITH FUNCTION public.geometry(
 
 --
 -- TOC entry 2721 (class 2605 OID 19256)
--- Dependencies: 104 104 1102
+-- Dependencies: 104 1102 104
 -- Name: CAST (public.geometry AS box); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13070,7 +13051,7 @@ CREATE CAST (public.geometry AS box) WITH FUNCTION public.box(public.geometry) A
 
 --
 -- TOC entry 2722 (class 2605 OID 19257)
--- Dependencies: 107 107 1102 1087
+-- Dependencies: 107 1087 1102 107
 -- Name: CAST (public.geometry AS public.box2d); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13106,7 +13087,7 @@ CREATE CAST (public.geometry AS public.geography) WITH FUNCTION public.geography
 
 --
 -- TOC entry 2720 (class 2605 OID 19261)
--- Dependencies: 777 777 1102
+-- Dependencies: 777 1102 777
 -- Name: CAST (public.geometry AS text); Type: CAST; Schema: pg_catalog; Owner: 
 --
 
@@ -13129,7 +13110,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 2427 (class 1259 OID 40481)
+-- TOC entry 2423 (class 1259 OID 40481)
 -- Dependencies: 6
 -- Name: agency; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13146,7 +13127,7 @@ CREATE TABLE agency (
 ALTER TABLE public.agency OWNER TO postgres;
 
 --
--- TOC entry 2408 (class 1259 OID 19269)
+-- TOC entry 2409 (class 1259 OID 19269)
 -- Dependencies: 6
 -- Name: calendar; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13168,7 +13149,7 @@ CREATE TABLE calendar (
 ALTER TABLE public.calendar OWNER TO postgres;
 
 --
--- TOC entry 2409 (class 1259 OID 19275)
+-- TOC entry 2410 (class 1259 OID 19275)
 -- Dependencies: 6
 -- Name: calendar_dates; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13183,7 +13164,7 @@ CREATE TABLE calendar_dates (
 ALTER TABLE public.calendar_dates OWNER TO postgres;
 
 --
--- TOC entry 2410 (class 1259 OID 19281)
+-- TOC entry 2411 (class 1259 OID 19281)
 -- Dependencies: 2514 6
 -- Name: geography_columns; Type: VIEW; Schema: public; Owner: postgres
 --
@@ -13197,7 +13178,7 @@ ALTER TABLE public.geography_columns OWNER TO postgres;
 SET default_with_oids = true;
 
 --
--- TOC entry 2411 (class 1259 OID 19286)
+-- TOC entry 2412 (class 1259 OID 19286)
 -- Dependencies: 6
 -- Name: geometry_columns; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13218,7 +13199,7 @@ ALTER TABLE public.geometry_columns OWNER TO postgres;
 SET default_with_oids = false;
 
 --
--- TOC entry 2412 (class 1259 OID 19292)
+-- TOC entry 2413 (class 1259 OID 19292)
 -- Dependencies: 6
 -- Name: myway_observations; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13234,92 +13215,59 @@ CREATE TABLE myway_observations (
 ALTER TABLE public.myway_observations OWNER TO postgres;
 
 --
--- TOC entry 2413 (class 1259 OID 19298)
+-- TOC entry 2427 (class 1259 OID 40519)
 -- Dependencies: 6
 -- Name: myway_routes; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE myway_routes (
     myway_route text NOT NULL,
-    route_full_name text
+    route_short_name text,
+    trip_headsign text
 );
 
 
 ALTER TABLE public.myway_routes OWNER TO postgres;
 
 --
--- TOC entry 2414 (class 1259 OID 19304)
--- Dependencies: 2413 6
--- Name: myway_routes_myway_route_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- TOC entry 2424 (class 1259 OID 40489)
+-- Dependencies: 6
+-- Name: myway_stops; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE SEQUENCE myway_routes_myway_route_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+CREATE TABLE myway_stops (
+    myway_stop text NOT NULL,
+    stop_id text
+);
 
 
-ALTER TABLE public.myway_routes_myway_route_seq OWNER TO postgres;
+ALTER TABLE public.myway_stops OWNER TO postgres;
 
 --
--- TOC entry 2769 (class 0 OID 0)
--- Dependencies: 2414
--- Name: myway_routes_myway_route_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE myway_routes_myway_route_seq OWNED BY myway_routes.myway_route;
-
-
---
--- TOC entry 2415 (class 1259 OID 19306)
--- Dependencies: 2413 6
--- Name: myway_routes_route_full_name_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE myway_routes_route_full_name_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.myway_routes_route_full_name_seq OWNER TO postgres;
-
---
--- TOC entry 2770 (class 0 OID 0)
--- Dependencies: 2415
--- Name: myway_routes_route_full_name_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE myway_routes_route_full_name_seq OWNED BY myway_routes.route_full_name;
-
-
---
--- TOC entry 2416 (class 1259 OID 19314)
+-- TOC entry 2425 (class 1259 OID 40498)
 -- Dependencies: 6
 -- Name: myway_timingdeltas; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE myway_timingdeltas (
     observation_id text NOT NULL,
-    route_full_name text,
-    stop_code text,
+    route_id text,
+    stop_id text,
     timing_delta integer,
     "time" time with time zone,
     date date,
     timing_period text,
-    stop_sequence integer
+    stop_sequence integer,
+    myway_stop text,
+    route_name text
 );
 
 
 ALTER TABLE public.myway_timingdeltas OWNER TO postgres;
 
 --
--- TOC entry 2417 (class 1259 OID 19320)
--- Dependencies: 6 2416
+-- TOC entry 2426 (class 1259 OID 40504)
+-- Dependencies: 6 2425
 -- Name: myway_timingdeltas_timing_period_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -13335,7 +13283,7 @@ ALTER TABLE public.myway_timingdeltas_timing_period_seq OWNER TO postgres;
 
 --
 -- TOC entry 2771 (class 0 OID 0)
--- Dependencies: 2417
+-- Dependencies: 2426
 -- Name: myway_timingdeltas_timing_period_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -13343,7 +13291,7 @@ ALTER SEQUENCE myway_timingdeltas_timing_period_seq OWNED BY myway_timingdeltas.
 
 
 --
--- TOC entry 2424 (class 1259 OID 40443)
+-- TOC entry 2420 (class 1259 OID 40443)
 -- Dependencies: 6
 -- Name: routes; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13363,7 +13311,7 @@ CREATE TABLE routes (
 ALTER TABLE public.routes OWNER TO postgres;
 
 --
--- TOC entry 2418 (class 1259 OID 19328)
+-- TOC entry 2414 (class 1259 OID 19328)
 -- Dependencies: 6
 -- Name: servicealerts_alerts; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13373,15 +13321,18 @@ CREATE TABLE servicealerts_alerts (
     url text,
     description text,
     start timestamp with time zone,
-    "end" timestamp with time zone
+    "end" timestamp with time zone,
+    cause text,
+    effect text,
+    header text
 );
 
 
 ALTER TABLE public.servicealerts_alerts OWNER TO postgres;
 
 --
--- TOC entry 2419 (class 1259 OID 19334)
--- Dependencies: 6 2418
+-- TOC entry 2415 (class 1259 OID 19334)
+-- Dependencies: 2414 6
 -- Name: servicealerts_alerts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -13397,7 +13348,7 @@ ALTER TABLE public.servicealerts_alerts_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 2772 (class 0 OID 0)
--- Dependencies: 2419
+-- Dependencies: 2415
 -- Name: servicealerts_alerts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -13405,7 +13356,7 @@ ALTER SEQUENCE servicealerts_alerts_id_seq OWNED BY servicealerts_alerts.id;
 
 
 --
--- TOC entry 2420 (class 1259 OID 19336)
+-- TOC entry 2416 (class 1259 OID 19336)
 -- Dependencies: 6
 -- Name: servicealerts_informed; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13421,7 +13372,7 @@ CREATE TABLE servicealerts_informed (
 ALTER TABLE public.servicealerts_informed OWNER TO postgres;
 
 --
--- TOC entry 2421 (class 1259 OID 19342)
+-- TOC entry 2417 (class 1259 OID 19342)
 -- Dependencies: 6
 -- Name: shapes; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13438,7 +13389,7 @@ CREATE TABLE shapes (
 ALTER TABLE public.shapes OWNER TO postgres;
 
 --
--- TOC entry 2422 (class 1259 OID 19348)
+-- TOC entry 2418 (class 1259 OID 19348)
 -- Dependencies: 6
 -- Name: spatial_ref_sys; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13455,7 +13406,7 @@ CREATE TABLE spatial_ref_sys (
 ALTER TABLE public.spatial_ref_sys OWNER TO postgres;
 
 --
--- TOC entry 2423 (class 1259 OID 20682)
+-- TOC entry 2419 (class 1259 OID 20682)
 -- Dependencies: 6
 -- Name: stop_times; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13476,8 +13427,8 @@ CREATE TABLE stop_times (
 ALTER TABLE public.stop_times OWNER TO postgres;
 
 --
--- TOC entry 2425 (class 1259 OID 40452)
--- Dependencies: 1099 6
+-- TOC entry 2421 (class 1259 OID 40452)
+-- Dependencies: 6 1099
 -- Name: stops; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13498,7 +13449,7 @@ CREATE TABLE stops (
 ALTER TABLE public.stops OWNER TO postgres;
 
 --
--- TOC entry 2426 (class 1259 OID 40466)
+-- TOC entry 2422 (class 1259 OID 40466)
 -- Dependencies: 6
 -- Name: trips; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
@@ -13518,7 +13469,7 @@ ALTER TABLE public.trips OWNER TO postgres;
 
 --
 -- TOC entry 2725 (class 2604 OID 19372)
--- Dependencies: 2419 2418
+-- Dependencies: 2415 2414
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -13526,8 +13477,8 @@ ALTER TABLE servicealerts_alerts ALTER COLUMN id SET DEFAULT nextval('serviceale
 
 
 --
--- TOC entry 2762 (class 2606 OID 40488)
--- Dependencies: 2427 2427
+-- TOC entry 2758 (class 2606 OID 40488)
+-- Dependencies: 2423 2423
 -- Name: agency_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13537,7 +13488,7 @@ ALTER TABLE ONLY agency
 
 --
 -- TOC entry 2729 (class 2606 OID 19376)
--- Dependencies: 2409 2409 2409
+-- Dependencies: 2410 2410 2410
 -- Name: calendar_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13547,7 +13498,7 @@ ALTER TABLE ONLY calendar_dates
 
 --
 -- TOC entry 2727 (class 2606 OID 19378)
--- Dependencies: 2408 2408
+-- Dependencies: 2409 2409
 -- Name: calendar_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13557,7 +13508,7 @@ ALTER TABLE ONLY calendar
 
 --
 -- TOC entry 2731 (class 2606 OID 19380)
--- Dependencies: 2411 2411 2411 2411 2411
+-- Dependencies: 2412 2412 2412 2412 2412
 -- Name: geometry_columns_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13567,7 +13518,7 @@ ALTER TABLE ONLY geometry_columns
 
 --
 -- TOC entry 2733 (class 2606 OID 19382)
--- Dependencies: 2412 2412
+-- Dependencies: 2413 2413
 -- Name: myway_observations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13576,8 +13527,8 @@ ALTER TABLE ONLY myway_observations
 
 
 --
--- TOC entry 2735 (class 2606 OID 19384)
--- Dependencies: 2413 2413
+-- TOC entry 2764 (class 2606 OID 40526)
+-- Dependencies: 2427 2427
 -- Name: myway_routes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13586,8 +13537,8 @@ ALTER TABLE ONLY myway_routes
 
 
 --
--- TOC entry 2737 (class 2606 OID 19386)
--- Dependencies: 2416 2416
+-- TOC entry 2762 (class 2606 OID 40507)
+-- Dependencies: 2425 2425
 -- Name: myway_timingdeltas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13596,8 +13547,18 @@ ALTER TABLE ONLY myway_timingdeltas
 
 
 --
--- TOC entry 2753 (class 2606 OID 40450)
+-- TOC entry 2760 (class 2606 OID 40496)
 -- Dependencies: 2424 2424
+-- Name: mywaystops_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY myway_stops
+    ADD CONSTRAINT mywaystops_pkey PRIMARY KEY (myway_stop);
+
+
+--
+-- TOC entry 2749 (class 2606 OID 40450)
+-- Dependencies: 2420 2420
 -- Name: routes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13606,8 +13567,8 @@ ALTER TABLE ONLY routes
 
 
 --
--- TOC entry 2739 (class 2606 OID 19392)
--- Dependencies: 2418 2418
+-- TOC entry 2735 (class 2606 OID 19392)
+-- Dependencies: 2414 2414
 -- Name: servicealerts_alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13616,8 +13577,8 @@ ALTER TABLE ONLY servicealerts_alerts
 
 
 --
--- TOC entry 2741 (class 2606 OID 19394)
--- Dependencies: 2420 2420 2420 2420
+-- TOC entry 2737 (class 2606 OID 19394)
+-- Dependencies: 2416 2416 2416 2416
 -- Name: servicealerts_informed_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13626,8 +13587,8 @@ ALTER TABLE ONLY servicealerts_informed
 
 
 --
--- TOC entry 2743 (class 2606 OID 19396)
--- Dependencies: 2421 2421 2421
+-- TOC entry 2739 (class 2606 OID 19396)
+-- Dependencies: 2417 2417 2417
 -- Name: shapes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13636,8 +13597,8 @@ ALTER TABLE ONLY shapes
 
 
 --
--- TOC entry 2745 (class 2606 OID 19398)
--- Dependencies: 2422 2422
+-- TOC entry 2741 (class 2606 OID 19398)
+-- Dependencies: 2418 2418
 -- Name: spatial_ref_sys_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13646,8 +13607,8 @@ ALTER TABLE ONLY spatial_ref_sys
 
 
 --
--- TOC entry 2748 (class 2606 OID 40421)
--- Dependencies: 2423 2423 2423
+-- TOC entry 2744 (class 2606 OID 40421)
+-- Dependencies: 2419 2419 2419
 -- Name: stop_times_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13656,8 +13617,8 @@ ALTER TABLE ONLY stop_times
 
 
 --
--- TOC entry 2755 (class 2606 OID 40459)
--- Dependencies: 2425 2425
+-- TOC entry 2751 (class 2606 OID 40459)
+-- Dependencies: 2421 2421
 -- Name: stops_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13666,8 +13627,8 @@ ALTER TABLE ONLY stops
 
 
 --
--- TOC entry 2757 (class 2606 OID 40461)
--- Dependencies: 2425 2425
+-- TOC entry 2753 (class 2606 OID 40461)
+-- Dependencies: 2421 2421
 -- Name: stops_stop_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13676,8 +13637,8 @@ ALTER TABLE ONLY stops
 
 
 --
--- TOC entry 2760 (class 2606 OID 40473)
--- Dependencies: 2426 2426
+-- TOC entry 2756 (class 2606 OID 40473)
+-- Dependencies: 2422 2422
 -- Name: trips_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13686,8 +13647,8 @@ ALTER TABLE ONLY trips
 
 
 --
--- TOC entry 2751 (class 1259 OID 40451)
--- Dependencies: 2424
+-- TOC entry 2747 (class 1259 OID 40451)
+-- Dependencies: 2420
 -- Name: routenumber; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13695,8 +13656,8 @@ CREATE INDEX routenumber ON routes USING btree (route_short_name);
 
 
 --
--- TOC entry 2758 (class 1259 OID 40474)
--- Dependencies: 2426
+-- TOC entry 2754 (class 1259 OID 40474)
+-- Dependencies: 2422
 -- Name: routetrips; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13704,8 +13665,8 @@ CREATE INDEX routetrips ON trips USING btree (route_id);
 
 
 --
--- TOC entry 2746 (class 1259 OID 40418)
--- Dependencies: 2423 2423 2423
+-- TOC entry 2742 (class 1259 OID 40418)
+-- Dependencies: 2419 2419 2419
 -- Name: starttime; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13713,8 +13674,8 @@ CREATE UNIQUE INDEX starttime ON stop_times USING btree (trip_id, stop_id, stop_
 
 
 --
--- TOC entry 2749 (class 1259 OID 40406)
--- Dependencies: 2423 2423
+-- TOC entry 2745 (class 1259 OID 40406)
+-- Dependencies: 2419 2419
 -- Name: stoptimes; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13722,8 +13683,8 @@ CREATE INDEX stoptimes ON stop_times USING btree (arrival_time, stop_id);
 
 
 --
--- TOC entry 2750 (class 1259 OID 40419)
--- Dependencies: 2423 2423
+-- TOC entry 2746 (class 1259 OID 40419)
+-- Dependencies: 2419 2419
 -- Name: triptimes; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -13731,8 +13692,8 @@ CREATE INDEX triptimes ON stop_times USING btree (trip_id, arrival_time);
 
 
 --
--- TOC entry 2763 (class 2606 OID 19412)
--- Dependencies: 2418 2420 2738
+-- TOC entry 2765 (class 2606 OID 19412)
+-- Dependencies: 2734 2414 2416
 -- Name: servicealerts_alertid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -13741,7 +13702,7 @@ ALTER TABLE ONLY servicealerts_informed
 
 
 --
--- TOC entry 2768 (class 0 OID 0)
+-- TOC entry 2770 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -13752,7 +13713,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2011-10-10 16:28:14
+-- Completed on 2011-10-11 23:16:12
 
 --
 -- PostgreSQL database dump complete
