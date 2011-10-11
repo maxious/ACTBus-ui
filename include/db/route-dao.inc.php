@@ -140,10 +140,10 @@ arrival_time DESC limit 1";
     return $r;
 }
 
-function getTimeInterpolatedRouteAtStop($routeID, $stop_id) {
+function getRouteAtStop($routeID, $stop_id) {
     $nextTrip = getRouteNextTrip($routeID);
     if ($nextTrip['trip_id']) {
-        foreach (getTimeInterpolatedTrip($nextTrip['trip_id']) as $tripStop) {
+        foreach (getTripStopTimes($nextTrip['trip_id']) as $tripStop) {
             if ($tripStop['stop_id'] == $stop_id)
                 return $tripStop;
         }
@@ -220,6 +220,9 @@ WHERE zone_id LIKE ':suburb AND service_id=:service_period ORDER BY route_short_
 function getRoutesNearby($lat, $lng, $limit = "", $distance = 500) {
     if ($service_period == "")
         $service_period = service_period();
+        $service_ids = service_ids($service_period);
+    $sidA = $service_ids[0];
+    $sidB = $service_ids[1];
     if ($limit != "")
         $limitSQL = " LIMIT :limit ";
     global $conn;
@@ -229,13 +232,14 @@ FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 join stops on stops.stop_id = stop_times.stop_id
-WHERE service_id=:service_period
+WHERE (service_id=:service_periodA OR service_id=:service_periodB)
 AND ST_DWithin(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), :distance, FALSE)
         group by service_id,trips.route_id,route_short_name,route_long_name
         order by distance $limitSQL";
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":service_period", $service_period);
+    $query->bindParam(":service_periodA", $sidA);
+    $query->bindParam(":service_periodB", $sidB);
     $query->bindParam(":distance", $distance);
     if ($limit != "")
         $query->bindParam(":limit", $limit);

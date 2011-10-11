@@ -141,13 +141,19 @@ function getStopsByStopCode($stop_code, $startsWith = "") {
 function getStopRoutes($stopID, $service_period) {
     if ($service_period == "")
         $service_period = service_period();
+    
+    $service_ids = service_ids($service_period);
+    $sidA = $service_ids[0];
+    $sidB = $service_ids[1];
     global $conn;
     $query = "SELECT distinct service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times join trips on trips.trip_id =
-stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id = :stopID AND service_id=:service_period";
+stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id = :stopID 
+AND (service_id=:service_periodA OR service_id=:service_periodB)";
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":service_period", $service_period);
+    $query->bindParam(":service_periodA", $sidA);
+    $query->bindParam(":service_periodB", $sidB);
     $query->bindParam(":stopID", $stopID);
     $query->execute();
     if (!$query) {
@@ -160,6 +166,9 @@ stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id
 function getStopTrips($stopID, $service_period = "", $afterTime = "", $limit = "") {
     if ($service_period == "")
         $service_period = service_period();
+        $service_ids = service_ids($service_period);
+    $sidA = $service_ids[0];
+    $sidB = $service_ids[1];
     if ($limit != "")
         $limitSQL = " LIMIT :limit ";
     global $conn;
@@ -172,7 +181,7 @@ join routes on trips.route_id = routes.route_id , (SELECT trip_id,max(arrival_ti
 	WHERE stop_times.arrival_time IS NOT NULL group by trip_id) as end_times 
 WHERE stop_times.stop_id = :stopID
 AND stop_times.trip_id = end_times.trip_id
-AND service_id=:service_period
+AND (service_id=:service_periodA OR service_id=:service_periodB)
 AND end_times.arrival_time > :afterTime
 ORDER BY end_time $limitSQL";
     } else {
@@ -182,12 +191,13 @@ join trips on trips.trip_id =
 stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 WHERE stop_times.stop_id = :stopID
-AND service_id=:service_period
+AND (service_id=:service_periodA OR service_id=:service_periodB)
 ORDER BY arrival_time $limitSQL";
     }
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":service_period", $service_period);
+    $query->bindParam(":service_periodA", $sidA);
+    $query->bindParam(":service_periodB", $sidB);
     $query->bindParam(":stopID", $stopID);
     if ($limit != "")
         $query->bindParam(":limit", $limit);
@@ -219,7 +229,7 @@ function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_
                     $timedTrips[] = $trip;
                 }
             } else {
-                $timedTrip = getTimeInterpolatedTripAtStop($trip['trip_id'], $trip['stop_sequence']);
+                $timedTrip = getTripAtStop($trip['trip_id'], $trip['stop_sequence']);
                 if ($timedTrip['arrival_time'] > $time and strtotime($timedTrip['arrival_time']) < (strtotime($time) + $time_range)) {
                     $timedTrips[] = $timedTrip;
                 }

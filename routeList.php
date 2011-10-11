@@ -71,7 +71,7 @@ if (isset($bysuburbs)) {
         foreach ($routes as $route) {
             echo '<li><a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>";
             if (isset($nearby)) {
-                $time = getTimeInterpolatedRouteAtStop($route['route_id'], $route['stop_id']);
+                $time = getRouteAtStop($route['route_id'], $route['stop_id']);
                 echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
             }
             echo "</a></li>\n";

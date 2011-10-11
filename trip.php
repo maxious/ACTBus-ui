@@ -66,7 +66,7 @@ if ($prevTrip)
 echo "</div>";
 echo '  <ul data-role="listview"  data-inset="true">';
 $stopsGrouped = Array();
-$tripStopTimes = getTimeInterpolatedTrip($tripid);
+$tripStopTimes = getTripStopTimes($tripid);
 echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' ' . $trip['route_long_name'] . ' (' . ucwords($tripStopTimes[0]['service_id']) . ')</li>';
 foreach ($tripStopTimes as $key => $tripStopTime) {
     if ($key + 1 > sizeof($tripStopTimes) || ($tripStopTimes[$key]["stop_name"] != $tripStopTimes[$key + 1]["stop_name"])) {
