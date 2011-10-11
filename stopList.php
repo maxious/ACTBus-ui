@@ -21,7 +21,7 @@ function stopCompare($stopName) {
     return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)),0,9);
 }
 function stopGroupTitle($stopName,$stopdesc) {
-    if (preg_match("/Dr |Cct |Cir |Av |St /",$stopName)) {
+    if (preg_match("/Dr |Cct |Cir |Av |St |Cr |Parade |Way |Bank /",$stopName)) {
         $descParts =  explode("<br>",$stopdesc);
          return trim(str_replace("Street: ","",$descParts[0]));
     } else {
@@ -32,10 +32,9 @@ function navbar() {
     echo '
 		<div data-role="navbar">
 			<ul> 
-				<li><a href="stopList.php">Timing Points</a></li>
+				<li><a href="stopList.php">Stops by Name</a></li>
 				<li><a href="stopList.php?bysuburbs=yes">By Suburb</a></li>
 				<li><a href="stopList.php?nearby=yes">Nearby Stops</a></li>
-				<li><a href="stopList.php?allstops=yes">All Stops</a></li> 
 			</ul>
                 </div>
 	';
@@ -60,12 +59,7 @@ if (isset($bysuburbs)) {
     echo '</ul>';
 } else {
     // Timing Points / All stops
-    if (isset($allstops)) {
-        $listType = 'allstops=yes';
-        $stops = getStops($firstLetter);
-        include_header("All Stops", "stopList");
-        navbar();
-    } else if (isset($nearby)) {
+     if (isset($nearby)) {
         $listType = 'nearby=yes';
         include_header("Nearby Stops", "stopList", true, true);
         trackEvent("Stop Lists", "Stops Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
@@ -96,10 +90,11 @@ if (isset($bysuburbs)) {
         navbar();
         trackEvent("Stop Lists", "Stops By Suburb", $suburb);
     } else {
-        $stops = getStops(true, $firstLetter);
-        include_header("Timing Points / Major Stops", "stopList");
+        $listType = 'allstops=yes';
+        $stops = getStops($firstLetter);
+        include_header("Stops by Name", "stopList");
         navbar();
-    }
+    } 
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
     if (!isset($firstLetter) && !isset($suburb) && !isset($nearby)) {
         foreach (range('A', 'Z') as $letter) {

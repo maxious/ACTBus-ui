@@ -26,8 +26,7 @@ include_header("bus.lambdacomplex.org", "index", false)
         <a href="tripPlanner.php" data-role="button" data-icon="navigation">Launch Trip Planner...</a>
         <ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
             <li data-role="list-divider">Timetables - Stops</li>
-            <li><a href="stopList.php">Major (Timing Point) Stops</a></li>
-            <li><a href="stopList.php?allstops=yes">All Stops</a></li>
+            <li><a href="stopList.php">Stops By Name</a></li>
             <li><a href="stopList.php?bysuburbs=yes">Stops By Suburb</a></li>
             <li><a class="nearby" href="stopList.php?nearby=yes">Nearby Stops</a></li>
         </ul>
