@@ -23,11 +23,10 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 {
 "label": "<?php echo $_REQUEST['stopid']; ?>",
 "data": <?php
-$query = "select * from myway_timingdeltas INNER JOIN myway_observations
-ON myway_observations.observation_id=myway_timingdeltas.observation_id
+$query = "select * from myway_timingdeltas
    where myway_stop = :myway_stop
    AND abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)
-   order by myway_timingdeltas.time;";
+   order by time;";
 $query = $conn->prepare($query);
 $query->bindParam(':myway_stop', $_REQUEST['stopid'], PDO::PARAM_STR, 42);
 

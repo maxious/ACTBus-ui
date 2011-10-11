@@ -77,8 +77,7 @@ include_header("MyWay Deltas", "mywayDelta");
 
     <th>Stop </th>
     <?php
-    $query = "select myway_stop, avg(timing_delta), stddev(timing_delta), count(*)  from myway_timingdeltas INNER JOIN myway_observations
-ON myway_observations.observation_id=myway_timingdeltas.observation_id group by myway_stop having  count(*) > 1 order by myway_stop";
+    $query = "select myway_stop, avg(timing_delta), stddev(timing_delta), count(*)  from myway_timingdeltas group by myway_stop having  count(*) > 1 order by myway_stop";
     $query = $conn->prepare($query);
     $query->execute();
     if (!$query) {
@@ -91,7 +90,7 @@ ON myway_observations.observation_id=myway_timingdeltas.observation_id group by 
     ?>
     <th>Route </th>
     <?php
-    $query = "select route_full_name, avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas  group by route_full_name having  count(*) > 1 order by route_full_name";
+    $query = "select route_name, avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas  group by route_name having  count(*) > 1 order by route_name";
     $query = $conn->prepare($query);
     $query->execute();
     if (!$query) {

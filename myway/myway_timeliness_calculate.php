@@ -108,6 +108,7 @@ foreach ($uncalcdObservations as $obsv) {
                                 "timeDiff" => $timeDiff,
                                 "stop_id" => $potentialStop['stop_id'],
                                 "stop_sequence" => $trip['stop_sequence'],
+                                "route_name" => "{$potentialRoute['route_short_name']} {$potentialRoute['route_long_name']}",
                                 "route_id" => $trip['route_id']
                             );
                             echo "Found trip {$trip['trip_id']} at stop {$potentialStop['stop_id']} (#{$potentialStop['stop_name']}, sequence #{$trip['stop_sequence']})<br>";
@@ -130,17 +131,25 @@ foreach ($uncalcdObservations as $obsv) {
     usort($timeDeltas, "abssort");
     $lowestDelta = $timeDeltas[0]["timeDiff"];
     if (sizeof($timeDeltas) != 0) {
+        if (abs($lowestDelta) > 9999) {
+             echo "Difference of " . round($lowestDelta / 60, 2) . " minutes is too high. Will not record this observation<br>";
+        } else {
         echo "Lowest difference of " . round($lowestDelta / 60, 2) . " minutes will be recorded for this observation<br>";
         
         $observation_id = $obsv['observation_id'];
+        
+        $route_name = $timeDeltas[0]["route_name"];
         $route_id = $timeDeltas[0]["route_id"];
         $stop_id = $timeDeltas[0]["stop_id"];
+        $myway_stop = $obsv["myway_stop"];
         $stop_sequence = $timeDeltas[0]["stop_sequence"];
-        $stmt = $conn->prepare("insert into myway_timingdeltas (observation_id, route_id, stop_id, timing_delta, time, date, timing_period, stop_sequence)
-				      values (:observation_id, :route_id, :stop_id, :timing_delta, :time, :date, :timing_period, :stop_sequence)");
+        $stmt = $conn->prepare("insert into myway_timingdeltas (observation_id, route_id, stop_id, timing_delta, time, date, timing_period, stop_sequence,myway_stop,route_name)
+				      values (:observation_id, :route_id, :stop_id, :timing_delta, :time, :date, :timing_period, :stop_sequence,:myway_stop,:route_name)");
         $stmt->bindParam(':observation_id', $observation_id);
         $stmt->bindParam(':route_id', $route_id);
+        $stmt->bindParam(':route_name', $route_name);
         $stmt->bindParam(':stop_id', $stop_id);
+        $stmt->bindParam(':myway_stop', $myway_stop);
         $stmt->bindParam(':timing_delta', $lowestDelta);
         $stmt->bindParam(':time', $time_tz);
         $stmt->bindParam(':date', $date);
@@ -153,6 +162,7 @@ foreach ($uncalcdObservations as $obsv) {
         }
         var_dump($conn->errorInfo());
         flush();
+        }
     }
     flush();
 }

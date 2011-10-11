@@ -24,7 +24,7 @@ include_header("MyWay Deltas", "mywayDelta");
 <form method="get" action="">
     <select id="routeid" name="routeid">
         <?php
-        $query = "select distinct route_full_name from myway_routes where myway_route != '' order by route_full_name";
+        $query = "select distinct route_name from myway_timingdeltas order by route_name";
         $query = $conn->prepare($query);
         $query->execute();
         if (!$query) {
@@ -32,7 +32,7 @@ include_header("MyWay Deltas", "mywayDelta");
             return Array();
         }
         foreach ($query->fetchAll() as $route) {
-            echo "<option value=\"{$route['route_full_name']}\">{$route['route_full_name']}</option>";
+            echo "<option value=\"{$route['route_name']}\">{$route['route_name']}</option>";
         };
         ?>    </select>
     <center><div id="placeholder" style="width:900px;height:550px"></div></center>

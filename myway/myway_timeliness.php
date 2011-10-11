@@ -30,7 +30,7 @@ include_header("MyWay Deltas", "mywayDelta");
         var midnight = d.getTime();
 
 <?php
-$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by route_full_name;";
+$query = "select * from myway_timingdeltas where abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas) order by route_name;";
 $query = $conn->prepare($query);
 $query->execute();
 if (!$query) {
@@ -41,11 +41,12 @@ $i = 0;
 $labels = Array();
 $lastRoute = "";
 foreach ($query->fetchAll() as $delta) {
-    $routeName = $delta['route_full_name'];
-    if (strstr($routeName, " 3"))
+    $routeName = $delta['route_name'];
+    if (preg_match('/z/',$routeName)) {
         $routeName = "312-319";
-    else
+    } else {
         $routeName = preg_replace('/\D/', '', $routeName);
+    }
     if ($routeName != $lastRoute) {
         $i++;
         echo "    var d$i = [];";
@@ -78,7 +79,7 @@ foreach ($labels as $key => $label) {
             yaxis: {
                 tickFormatter: yformatter
             },
-            grid: { hoverable: true, clickable: true, labelMargin: 32   },
+            grid: { hoverable: true, clickable: true, labelMargin: 32   }
         });
         var o;
         o = plot.pointOffset({ x: midnight+ (9*60*60*1000), y: -1.2});

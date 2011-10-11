@@ -16,7 +16,7 @@
  */
 include ('../include/common.inc.php');
 
-include_header("Busness R&amp;D", "index");
+include_header("MyWay Balance and Timeliness Survey Results", "index");
 if ($_SESSION['authed'] == true) {
     echo '<ul data-role="listview" data-theme="e" data-groupingtheme="e">
 		<li data-role="list-divider" > Admin Features </li>
@@ -35,6 +35,9 @@ if ($_SESSION['authed'] == true) {
 <ul data-role="listview" data-theme="e" data-groupingtheme="e">
 
     <li data-role="list-divider" > MyWay Timeliness Graphs </li>
+    
+    <li><a href="myway_timeliness_overview.php"><h3>Timeliness Overview</h3>
+            <p>Displays statistics on timeliness split by day/time/month/stop etc.</p></a></li>
     <li><a href="myway_timeliness.php"><h3>Timeliness over Day</h3>
             <p>Displays the deviation from the timetable over the day</p></a></li>
     <li><a href="myway_timeliness_freqdist.php"><h3>Frequency Distribution of Time Deviation</h3>

@@ -24,7 +24,7 @@ include_header("MyWay Deltas", "mywayDelta");
 <form method="get" action="">
     <select id="stopid" name="stopid">
         <?php
-        $query = "select distinct myway_stop from myway_stops where myway_stop != '' order by myway_stop";
+        $query = "select distinct myway_stop from myway_timingdeltas where myway_stop != '' order by myway_stop";
         $query = $conn->prepare($query);
         $query->execute();
         if (!$query) {
