@@ -34,6 +34,7 @@ function getTrip($tripID) {
 }
 
 function getTripShape($tripID) {
+    // todo, use shapes table if shape_id specified
     global $conn;
     $query = "SELECT ST_AsKML(ST_MakeLine(geometry(a.position))) as the_route
 FROM (SELECT position,
@@ -52,7 +53,36 @@ WHERE trips.trip_id = :tripID ORDER BY stop_sequence) as a group by a.trip_id";
     }
     return $query->fetchColumn(0);
 }
+function getTripStopTimes($tripID) {
+    global $conn;
+    $query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
+	stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
+FROM stop_times
+join trips on trips.trip_id = stop_times.trip_id
+join routes on trips.route_id = routes.route_id
+join stops on stops.stop_id = stop_times.stop_id
+WHERE trips.trip_id = :tripID $range ORDER BY stop_sequence";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":tripID", $tripID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    $stopTimes = $query->fetchAll();
+     return $stopTimes;
 
+}
+function getTripAtStop($tripID, $stop_sequence) {
+    global $conn;
+     foreach (getTripStopTimes($tripID) as $tripStop) {
+        if ($tripStop['stop_sequence'] == $stop_sequence)
+            return $tripStop;
+    }
+    return Array();
+}
+/* DEPRECIATED 
 function getTimeInterpolatedTrip($tripID, $range = "") {
     global $conn;
     $query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
@@ -152,6 +182,8 @@ and stop_times.arrival_time IS NOT NULL ORDER BY stop_sequence LIMIT 1";
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
 
+
+
 function getTimeInterpolatedTripAtStop($tripID, $stop_sequence) {
     global $conn;
     // limit interpolation to between nearest actual points.
@@ -168,7 +200,7 @@ function getTimeInterpolatedTripAtStop($tripID, $stop_sequence) {
             return $tripStop;
     }
     return Array();
-}
+}*/
 
 function getTripStartTime($tripID) {
     global $conn;
