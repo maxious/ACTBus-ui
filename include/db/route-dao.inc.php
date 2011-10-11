@@ -45,8 +45,8 @@ function getRoutesByShortName($routeShortName) {
 
 function getRouteHeadsigns($routeID) {
     global $conn;
-    $query = "select distinct trip_headsign,direction_id from routes join trips on trips.route_id = routes.route_id
-join stop_times on stop_times.trip_id = trips.trip_id ";
+    $query = "select distinct stops.stop_name, trip_headsign,direction_id from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id join stops on stop_times.stop_id = stops.stop_id where trips.route_id = :routeID and stop_times.stop_sequence = 1";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":routeID", $routeID);

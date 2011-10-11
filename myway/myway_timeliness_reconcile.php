@@ -19,12 +19,16 @@ auth();
 foreach ($_REQUEST as $key => $value) {
       if (strstr($key, "route") && !strstr($value, "Select")) {
         $myway_route = str_replace("route", "", $key);
-        $route_id = $value;
-        $query = "update myway_routes set route_id = :route_id where myway_route = :myway_route";
+        $vparts = explode("-",$value);
+        $route_short_name = $vparts[0];
+        $trip_headsign = $vparts[1];
+        $query = "update myway_routes set route_short_name = :route_short_name, trip_headsign = :trip_headsign where myway_route = :myway_route";
         debug($query, "database");
         $query = $conn->prepare($query);
         $query->bindParam(":myway_route", $myway_route, PDO::PARAM_STR, 5);
-        $query->bindParam(":route_id", $route_id, PDO::PARAM_STR, 42);
+        
+        $query->bindParam(":route_short_name", $route_short_name, PDO::PARAM_STR, 42);
+        $query->bindParam(":trip_headsign", $trip_headsign, PDO::PARAM_STR, 42);
         $query->execute();
         die(print_r($conn->errorInfo(), true));
     }
@@ -132,8 +136,8 @@ foreach ($query->fetchAll() as $myway_route) {
 <option>Select a from/to pair...</option>';
     foreach (getRoutesByShortName($searchRouteNo) as $routeResult) {
         foreach(getRouteHeadsigns($routeResult['route_id']) as $headsign ) {
-        echo "<option value=\"{$routeResult['route_short_name']}{$routeResult['route_long_name']}\">
-        {$routeResult['route_short_name']}{$routeResult['route_long_name']} {$headsign['trip_headsign']}</option>\n";
+        echo "<option value=\"{$routeResult['route_short_name']}-{$headsign['trip_headsign']}\">
+        {$routeResult['route_short_name']}{$routeResult['route_long_name']} - {$headsign['trip_headsign']} {$headsign['direction_id']} @ {$headsign['stop_name']} </option>\n";
         }
         
     }
