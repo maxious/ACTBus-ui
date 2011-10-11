@@ -71,8 +71,7 @@ echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to 
 foreach ($tripStopTimes as $key => $tripStopTime) {
     if ($key + 1 > sizeof($tripStopTimes) || ($tripStopTimes[$key]["stop_name"] != $tripStopTimes[$key + 1]["stop_name"])) {
         echo '<li>';
-        if (!startsWith($tripStopTime['stop_code'], "Wj"))
-            echo '<img src="css/images/time.png" alt="Timing Point" class="ui-li-icon">';
+       
         if (sizeof($stopsGrouped) > 0) {
             // print and empty grouped stops
             // subsequent duplicates
@@ -84,7 +83,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
                 echo '<br>' . distance($tripStopTime['stop_lat'], $tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
             }
             echo '</p>';
-            echo bracketsMeanNewLine($tripStopTime["stop_name"]);
+            echo $tripStopTime["stop_name"];
             echo '</a></li>';
             flush();
             @ob_flush();
@@ -97,7 +96,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
                 echo '<br>' . distance($tripStopTime['stop_lat'], $tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
             }
             echo '</p>';
-            echo bracketsMeanNewLine($tripStopTime['stop_name']);
+            echo $tripStopTime['stop_name'];
             echo '</a></li>';
             flush();
             @ob_flush();

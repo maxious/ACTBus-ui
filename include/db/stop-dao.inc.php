@@ -30,11 +30,9 @@ function getStop($stopID) {
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
 
-function getStops($timingPointsOnly = false, $firstLetter = "", $startsWith = "") {
+function getStops($firstLetter = "", $startsWith = "") {
     global $conn;
     $conditions = Array();
-    if ($timingPointsOnly)
-        $conditions[] = "substr(stop_code,1,2) != 'Wj'";
     if ($firstLetter != "")
         $conditions[] = "substr(stop_name,1,1) = :firstLetter";
     if ($startsWith != "")
@@ -48,6 +46,7 @@ function getStops($timingPointsOnly = false, $firstLetter = "", $startsWith = ""
         }
     }
     $query .= " order by stop_name;";
+    debug($query,"database");
     $query = $conn->prepare($query);
     if ($firstLetter != "")
         $query->bindParam(":firstLetter", $firstLetter);

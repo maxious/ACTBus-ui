@@ -55,6 +55,7 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
     $basePath = "../";
 
 function isDebugServer() {
+    
     return php_sapi_name() == "cli" || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "azusa" || $_SERVER['SERVER_NAME'] == "vanille"
             || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1");
 }
@@ -71,7 +72,7 @@ include_once ("common-template.inc.php");
 
 function isAnalyticsOn() {
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
-    return!isDebugServer() && !preg_match('/cloudkick/i', $user_agent) && !preg_match('/googlebot/i', $user_agent) &&
+    return !isDebugServer() && !preg_match('/cloudkick/i', $user_agent) && !preg_match('/googlebot/i', $user_agent) &&
             !preg_match('/baidu/i', $user_agent);
 }
 
@@ -133,10 +134,6 @@ function endsWith($haystack, $needle, $case = true) {
         return (strcmp(substr($haystack, strlen($haystack) - strlen($needle)), $needle) === 0);
     }
     return (strcasecmp(substr($haystack, strlen($haystack) - strlen($needle)), $needle) === 0);
-}
-
-function bracketsMeanNewLine($input) {
-    return str_replace(")", "</small>", str_replace("(", "<br><small>", $input));
 }
 
 function sksort(&$array, $subkey = "id", $sort_ascending = false) {
@@ -201,5 +198,6 @@ function r_implode($glue, $pieces) {
     }
     return implode($glue, $retVal);
 }
+
 
 ?>

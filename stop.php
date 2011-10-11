@@ -43,16 +43,12 @@ if (isset($stopids)) {
     }
     $stop = $stops[0];
     $stopid = $stops[0]["stop_id"];
-    $stopLinks.= "Individual stop pages: ";
+    $stopLinks.= "Individual stop pages: <br>";
     foreach ($stops as $key => $sub_stop) {
-        //	$stopNames[$key] = $sub_stop[1] . ' Stop #' . ($key + 1);
-        if (strpos($stop["stop_name"], "Station")) {
-            $stopNames[$key] = 'Platform ' . ($key + 1);
-            $stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&amp;stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . '</a> ';
-        } else {
-            $stopNames[$key] = '#' . ($key + 1);
-            $stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&amp;stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . ' Stop #' . ($key + 1) . '</a> ';
-        }
+
+        $stopNames[$key] = $sub_stop["stop_name"];
+        $stopLinks.= '<a href="stop.php?stopid=' . $sub_stop["stop_id"] . '&amp;stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] . '</a>  ';
+
         $stopPositions[$key] = Array(
             $sub_stop["stop_lat"],
             $sub_stop["stop_lon"]
@@ -143,8 +139,12 @@ if (sizeof($trips) == 0) {
             echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
         if (sizeof($tripStopNumbers) > 0) {
             echo '<br><small>Boarding At: ';
-            foreach ($tripStopNumbers[$trip['trip_id']] as $key) {
-                echo $stopNames[$key] . ' ';
+            if (sizeof($tripStopNumbers[$trip['trip_id']]) == sizeof($stopids)) {
+                echo "All Stops";
+            } else {
+                foreach ($tripStopNumbers[$trip['trip_id']] as $key) {
+                    echo $stopNames[$key] . ', ';
+                }
             }
             echo '</small>';
         }
