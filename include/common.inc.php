@@ -57,7 +57,7 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
 function isDebugServer() {
     
     return php_sapi_name() == "cli" || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "azusa" || $_SERVER['SERVER_NAME'] == "vanille"
-            || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1");
+            || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" ||  $_SERVER['SERVER_NAME'] == "192.168.1.8");
 }
 
 include_once ("common-geo.inc.php");

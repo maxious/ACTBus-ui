@@ -29,7 +29,19 @@ function getRoute($routeID) {
     }
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
-
+function getRoutesByShortName($routeShortName) {
+    global $conn;
+    $query = "Select * from routes where route_short_name = :routeShortName";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":routeShortName", $routeShortName);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return $query->fetchAll();
+}
 function getRouteByFullName($routeFullName) {
     global $conn;
     $query = "Select * from routes where route_short_name||route_long_name = :routeFullName LIMIT 1";

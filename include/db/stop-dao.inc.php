@@ -139,9 +139,9 @@ function getStopsByStopCode($stop_code, $startsWith = "") {
 }
 
 function getStopRoutes($stopID, $service_period) {
-    if ($service_period == "")
+    if ($service_period == "") {
         $service_period = service_period();
-    
+    }
     $service_ids = service_ids($service_period);
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
@@ -164,9 +164,11 @@ AND (service_id=:service_periodA OR service_id=:service_periodB)";
 }
 
 function getStopTrips($stopID, $service_period = "", $afterTime = "", $limit = "") {
-    if ($service_period == "")
+    if ($service_period == "") {
         $service_period = service_period();
+    }
         $service_ids = service_ids($service_period);
+
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
     if ($limit != "")
