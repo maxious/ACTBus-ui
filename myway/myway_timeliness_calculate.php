@@ -50,10 +50,6 @@ foreach ($uncalcdObservations as $obsv) {
     //var_dump($obsv);
     echo "<h3>Observation {$obsv['observation_id']}:</h1>
 <small>{$obsv['myway_stop']} @ {$obsv['time']} on {$obsv['myway_route']}</small><br>";
-    if ($obsv["stop_id"] == "") {
-        echo "error, stop '{$obsv['myway_stop']}' unknown";
-        continue;
-    }
     // convert timestamp into time of day and date
 // timezones from http://www.postgresql.org/docs/8.0/static/datetime-keywords.html
     $time = date("H:i:s", strtotime($obsv['time']));
@@ -61,7 +57,12 @@ foreach ($uncalcdObservations as $obsv) {
     $search_time = date("H:i:s", strtotime($obsv['time']) - (30 * 60)); // 30 minutes margin
     $date = date("c", strtotime($obsv['time']));
     $timing_period = service_period(strtotime($date));
+    if (isset($obsv["stop_id"]) && $obsv["stop_id"] != "" ) {
     $potentialStops = Array(getStop($obsv["stop_id"]));
+    } else {
+        echo "Potential stops are a bus station<br>";
+        $potentialStops = getStops("",  trim(str_replace(Array("Arrival","Arrivals","Arrive Platform 3 Set down only.","Arrive","Set Down Only"), "", $obsv["myway_stop"])));
+    }
     //:get myway_stops records
     //:search by starts with stopcode and starts with street if street is not null
     //no result, skip and display error
@@ -108,7 +109,7 @@ foreach ($uncalcdObservations as $obsv) {
                                 "timeDiff" => $timeDiff,
                                 "stop_id" => $potentialStop['stop_id'],
                                 "stop_sequence" => $trip['stop_sequence'],
-                                "route_name" => "{$potentialRoute['route_short_name']} {$potentialRoute['route_long_name']}",
+                                "route_name" => "{$potentialRoute['route_short_name']} {$potentialRoute['route_long_name']} {$trip['direction']}",
                                 "route_id" => $trip['route_id']
                             );
                             echo "Found trip {$trip['trip_id']} at stop {$potentialStop['stop_id']} (#{$potentialStop['stop_name']}, sequence #{$trip['stop_sequence']})<br>";

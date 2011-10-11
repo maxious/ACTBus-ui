@@ -17,7 +17,7 @@
 include ('../include/common.inc.php');
 auth();
 foreach ($_REQUEST as $key => $value) {
-    if (strstr($key, "route") && !strstr($value, "Select")) {
+      if (strstr($key, "route") && !strstr($value, "Select")) {
         $myway_route = str_replace("route", "", $key);
         $route_id = $value;
         $query = "update myway_routes set route_id = :route_id where myway_route = :myway_route";
@@ -98,6 +98,46 @@ foreach ($query->fetchAll() as $myway_stop) {
         <input type="text" name="stop_id" id="stop_id" value="' . $foundStops[0]['stop_id'] . '"  />
     </div>         <input type="button" onclick="$.post(\'myway_timeliness_reconcile.php\', $(\'#inputform' . md5($myway_stop[0]) . '\').serialize())" value="Go!"></form>
 ';
+    echo '<hr>';
+}
+echo '<h2>Routes</h2>';
+/* routes
+  remove alpha char, search present dropdown */
+$query = "Select * from myway_routes where route_short_name is NUll;";
+debug($query, "database");
+$query = $conn->prepare($query);
+$query->execute();
+if (!$query) {
+    databaseError($conn->errorInfo());
+    return Array();
+}
+foreach ($query->fetchAll() as $myway_route) {
+    echo "<h3>{$myway_route[0]}</h3>";
+    $query = "Select * from myway_observations where myway_route = :route order by time";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":route", $myway_route[0]);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    foreach ($query->fetchAll() as $myway_obvs) {
+        echo $myway_obvs['myway_stop'] . $myway_obvs['time'] . "<br>";
+    }
+    $searchRouteNo = preg_replace("/[A-Z]/", "", $myway_route[0]);
+    echo $searchRouteNo;
+    echo '<form id="inputform' . $myway_route[0] . '">
+<select name="route' . $myway_route[0] . '" onchange=\'$.post("myway_timeliness_reconcile.php", $("#inputform' . $myway_route[0] . '").serialize())\'>
+<option>Select a from/to pair...</option>';
+    foreach (getRoutesByShortName($searchRouteNo) as $routeResult) {
+        foreach(getRouteHeadsigns($routeResult['route_id']) as $headsign ) {
+        echo "<option value=\"{$routeResult['route_short_name']}{$routeResult['route_long_name']}\">
+        {$routeResult['route_short_name']}{$routeResult['route_long_name']} {$headsign['trip_headsign']}</option>\n";
+        }
+        
+    }
+    echo "</select></form>";
     echo '<hr>';
 }
 include_footer();

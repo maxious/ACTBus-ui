@@ -31,7 +31,7 @@ function getRoute($routeID) {
 }
 function getRoutesByShortName($routeShortName) {
     global $conn;
-    $query = "Select * from routes where route_short_name = :routeShortName";
+    $query = "Select distinct route_id, route_short_name from routes where route_short_name = :routeShortName";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":routeShortName", $routeShortName);
@@ -42,6 +42,22 @@ function getRoutesByShortName($routeShortName) {
     }
     return $query->fetchAll();
 }
+
+function getRouteHeadsigns($routeID) {
+    global $conn;
+    $query = "select distinct trip_headsign,direction_id from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id ";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":routeID", $routeID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+return $query->fetchAll();
+}
+
 function getRouteByFullName($routeFullName) {
     global $conn;
     $query = "Select * from routes where route_short_name||route_long_name = :routeFullName LIMIT 1";

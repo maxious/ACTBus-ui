@@ -56,7 +56,7 @@ WHERE trips.trip_id = :tripID ORDER BY stop_sequence) as a group by a.trip_id";
 
 function getTripStopTimes($tripID) {
     global $conn;
-    $query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
+    $query = "SELECT stop_times.trip_id,trip_headsign,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
 	stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
@@ -83,127 +83,6 @@ function getTripAtStop($tripID, $stop_sequence) {
     }
     return Array();
 }
-
-/* DEPRECIATED 
-  function getTimeInterpolatedTrip($tripID, $range = "") {
-  global $conn;
-  $query = "SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
-  stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
-  FROM stop_times
-  join trips on trips.trip_id = stop_times.trip_id
-  join routes on trips.route_id = routes.route_id
-  join stops on stops.stop_id = stop_times.stop_id
-  WHERE trips.trip_id = :tripID $range ORDER BY stop_sequence";
-  debug($query, "database");
-  $query = $conn->prepare($query);
-  $query->bindParam(":tripID", $tripID);
-  $query->execute();
-  if (!$query) {
-  databaseError($conn->errorInfo());
-  return Array();
-  }
-  $stopTimes = $query->fetchAll();
-  $cur_timepoint = Array();
-  $next_timepoint = Array();
-  $distance_between_timepoints = 0.0;
-  $distance_traveled_between_timepoints = 0.0;
-  $rv = Array();
-  foreach ($stopTimes as $i => $stopTime) {
-  if ($stopTime['arrival_time'] != "") {
-  // is timepoint
-  $cur_timepoint = $stopTime;
-  $distance_between_timepoints = 0.0;
-  $distance_traveled_between_timepoints = 0.0;
-  if ($i + 1 < sizeof($stopTimes)) {
-  $k = $i + 1;
-  $distance_between_timepoints += distance($stopTimes[$k - 1]["stop_lat"], $stopTimes[$k - 1]["stop_lon"], $stopTimes[$k]["stop_lat"], $stopTimes[$k]["stop_lon"]);
-  while ($stopTimes[$k]["arrival_time"] == "" && $k + 1 < sizeof($stopTimes)) {
-  $k += 1;
-  // echo "k".$k;
-  $distance_between_timepoints += distance($stopTimes[$k - 1]["stop_lat"], $stopTimes[$k - 1]["stop_lon"], $stopTimes[$k]["stop_lat"], $stopTimes[$k]["stop_lon"]);
-  }
-  $next_timepoint = $stopTimes[$k];
-  }
-  $rv[] = $stopTime;
-  } else {
-  // is untimed point
-  // echo "i".$i;
-  $distance_traveled_between_timepoints += distance($stopTimes[$i - 1]["stop_lat"], $stopTimes[$i - 1]["stop_lon"], $stopTimes[$i]["stop_lat"], $stopTimes[$i]["stop_lon"]);
-  // echo "$distance_traveled_between_timepoints / $distance_between_timepoints<br>";
-  $distance_percent = $distance_traveled_between_timepoints / $distance_between_timepoints;
-  if ($next_timepoint["arrival_time"] != "") {
-  $total_time = strtotime($next_timepoint["arrival_time"]) - strtotime($cur_timepoint["arrival_time"]);
-  // echo strtotime($next_timepoint["arrival_time"])." - ".strtotime($cur_timepoint["arrival_time"])."<br>";
-  $time_estimate = ($distance_percent * $total_time) + strtotime($cur_timepoint["arrival_time"]);
-  $stopTime["arrival_time"] = date("H:i:s", $time_estimate);
-  } else {
-  $stopTime["arrival_time"] = $cur_timepoint["arrival_time"];
-  }
-  $rv[] = $stopTime;
-  }
-  }
-  // var_dump($rv);
-  return $rv;
-  }
-
-  function getTripPreviousTimePoint($tripID, $stop_sequence) {
-  global $conn;
-  $query = " SELECT trip_id,stop_id,
-  stop_sequence
-  FROM stop_times
-  WHERE trip_id = :tripID and stop_sequence < :stop_sequence
-  and stop_times.arrival_time IS NOT NULL ORDER BY stop_sequence DESC LIMIT 1";
-  debug($query, "database");
-  $query = $conn->prepare($query);
-  $query->bindParam(":tripID", $tripID);
-  $query->bindParam(":stop_sequence", $stop_sequence);
-  $query->execute();
-  if (!$query) {
-  databaseError($conn->errorInfo());
-  return Array();
-  }
-  return $query->fetch(PDO :: FETCH_ASSOC);
-  }
-
-  function getTripNextTimePoint($tripID, $stop_sequence) {
-  global $conn;
-  $query = " SELECT trip_id,stop_id,
-  stop_sequence
-  FROM stop_times
-  WHERE trip_id = :tripID and stop_sequence > :stop_sequence
-  and stop_times.arrival_time IS NOT NULL ORDER BY stop_sequence LIMIT 1";
-  debug($query, "database");
-  $query = $conn->prepare($query);
-  $query->bindParam(":tripID", $tripID);
-  $query->bindParam(":stop_sequence", $stop_sequence);
-  $query->execute();
-  if (!$query) {
-  databaseError($conn->errorInfo());
-  return Array();
-  }
-  return $query->fetch(PDO :: FETCH_ASSOC);
-  }
-
-
-
-  function getTimeInterpolatedTripAtStop($tripID, $stop_sequence) {
-  global $conn;
-  // limit interpolation to between nearest actual points.
-  $prevTimePoint = getTripPreviousTimePoint($tripID, $stop_sequence);
-  $nextTimePoint = getTripNextTimePoint($tripID, $stop_sequence);
-  // echo " prev {$lowestDelta['stop_sequence']} next {$nextTimePoint['stop_sequence']} ";
-  $range = "";
-  if ($prevTimePoint != "")
-  $range .= " AND stop_sequence >= '{$prevTimePoint['stop_sequence']}'";
-  if ($nextTimePoint != "")
-  $range .= " AND stop_sequence <= '{$nextTimePoint['stop_sequence']}'";
-  foreach (getTimeInterpolatedTrip($tripID, $range) as $tripStop) {
-  if ($tripStop['stop_sequence'] == $stop_sequence)
-  return $tripStop;
-  }
-  return Array();
-  } */
-
 function getTripStartTime($tripID) {
     global $conn;
     $query = "Select * from stop_times
