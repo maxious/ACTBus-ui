@@ -31,7 +31,7 @@ if (isset($_REQUEST['feedback']) || isset($_REQUEST['newlocation'])){
 } else {
 $stopid = "";
 $stopcode = "";
-$urlparts = explode("?",$_SERVER["HTTP_REFERER"]);
+if (isset($_SERVER["HTTP_REFERER"])) $urlparts = explode("?",$_SERVER["HTTP_REFERER"]);
 if (isset($urlparts[1])) {
     $getparams = explode("&",$urlparts[1]);
     foreach ($getparams as $param) {
@@ -60,7 +60,7 @@ Please leave feedback about bugs/errors or general suggestions about improvement
 </textarea>
 <textarea name="extrainfo" id="extrainfo">
 <?php
-  echo "Referrer URL: ".$_SERVER["HTTP_REFERER"];
+  echo "Referrer URL: ".($_SERVER["HTTP_REFERER"] ? $_SERVER["HTTP_REFERER"] : "");
   echo "\nCurrent page URL: ".curPageURL();
   echo "\nUser Agent: ".$_SERVER["HTTP_USER_AGENT"];
   echo "\nUser host/IP: ".$_SERVER["HTTP_X_FORWARDED_FOR"]." ".$_SERVER["REMOTE_ADDR"]; 
