@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
  */
-if (php_uname('n') == "actbus-www") {
+if (strstr(php_uname('n'),"actbus")) {
     $conn = new PDO("pgsql:dbname=transitdata;user=transitdata;password=transitdata;host=bus-main.lambdacomplex.org");
 } else if (isDebugServer()) {
     $conn = new PDO("pgsql:dbname=transitdata;user=postgres;password=snmc;host=localhost");
