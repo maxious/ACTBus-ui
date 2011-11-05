@@ -63,7 +63,9 @@ function isDebugServer() {
 include_once ("common-geo.inc.php");
 include_once ("common-net.inc.php");
 include_once ("common-transit.inc.php");
-include_once ("common-db.inc.php");
+if (!strstr($_SERVER['PHP_SELF'], "feedback")) {
+	include_once ("common-db.inc.php");
+}
 
 include_once ("common-request.inc.php");
 include_once ("common-session.inc.php");

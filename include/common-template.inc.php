@@ -169,6 +169,7 @@ $(document).ready(function() {
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
+        if ($GTFSREnabled) {
         $overrides = getServiceOverride();
         if ($overrides['service_id']) {
             if ($overrides['service_id'] == "noservice") {
@@ -178,7 +179,6 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
                 echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
             }
         }
-        if ($GTFSREnabled) {
             $serviceAlerts = getServiceAlertsAsArray("agency", "0");
             if (isset($serviceAlerts['entity']) && sizeof($serviceAlerts['entity']) > 0) {
                 foreach ($serviceAlerts['entity'] as $entity) {
