@@ -1,5 +1,6 @@
 <?php
 include ("include/common.inc.php");
+ $GTFSREnabled = false;
 include_header("Feedback", "feedback");
 function sendEmail($topic, $message)
 {
