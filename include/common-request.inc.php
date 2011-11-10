@@ -58,7 +58,7 @@ if (isset($_REQUEST['stopids'])) {
     $stopids = explode(",", filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
 }
 if (isset($_REQUEST['tripid'])) {
-    $tripid = filter_var($_REQUEST['tripid'], FILTER_SANITIZE_NUMBER_INT);
+    $tripid = filter_var($_REQUEST['tripid'], FILTER_SANITIZE_STRING);
 }
 if (isset($_REQUEST['stopid'])) {
     $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);

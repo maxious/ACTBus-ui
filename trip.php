@@ -24,7 +24,6 @@ if (isset($routeid) && !isset($tripid)) {
     $trip = getTrip($tripid);
     $routeid = $trip["route_id"];
 }
-
 include_header("Stops on " . $trip['route_short_name'] . ' ' . $trip['route_long_name'], "trip");
 trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $trip['route_long_name'], $routeid);
 echo '<span class="content-secondary">';
@@ -69,9 +68,9 @@ $stopsGrouped = Array();
 $tripStopTimes = getTripStopTimes($tripid);
 echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' ' . $trip['route_long_name'] . ' (' . ucwords($tripStopTimes[0]['service_id']) . ')</li>';
 foreach ($tripStopTimes as $key => $tripStopTime) {
-    if ($key + 1 > sizeof($tripStopTimes) || ($tripStopTimes[$key]["stop_name"] != $tripStopTimes[$key + 1]["stop_name"])) {
+    if ($key + 1 > sizeof($tripStopTimes) || stopCompare($tripStopTimes[$key]["stop_name"]) != stopCompare($tripStopTimes[$key + 1]["stop_name"])) {
         echo '<li>';
-       
+
         if (sizeof($stopsGrouped) > 0) {
             // print and empty grouped stops
             // subsequent duplicates
@@ -83,7 +82,8 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
                 echo '<br>' . distance($tripStopTime['stop_lat'], $tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
             }
             echo '</p>';
-            echo $tripStopTime["stop_name"];
+            echo stopGroupTitle($tripStopTime['stop_name'],$tripStopTime['stop_desc']) . '<br><small>' . sizeof($stopsGrouped["stop_ids"]) . ' stops</small>';
+                    
             echo '</a></li>';
             flush();
             @ob_flush();
@@ -103,10 +103,10 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
         }
     } else {
         // this is a duplicated line item
-        if ($key - 1 <= 0 || ($tripStopTimes[$key]['stop_name'] != $tripStopTimes[$key - 1]['stop_name'])) {
+        if ($key - 1 <= 0 || stopCompare($tripStopTimes[$key]['stop_name']) != stopCompare($tripStopTimes[$key - 1]['stop_name'])) {
             // first duplicate
             $stopsGrouped = Array(
-                "name" => $tripStopTime['stop_name'],
+                "name" => trim(preg_replace("/\(Platform.*/", "", $stop['stop_name'])),
                 "startTime" => $tripStopTime['arrival_time'],
                 "stop_ids" => Array(
                     $tripStopTime['stop_id']

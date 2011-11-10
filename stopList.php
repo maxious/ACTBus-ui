@@ -17,17 +17,7 @@
  */
 include ('include/common.inc.php');
 $stops = Array();
-function stopCompare($stopName) {
-    return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)),0,9);
-}
-function stopGroupTitle($stopName,$stopdesc) {
-    if (preg_match("/Dr |Cct |Cir |Av |St |Cr |Parade |Way |Bank /",$stopName)) {
-        $descParts =  explode("<br>",$stopdesc);
-         return trim(str_replace("Street: ","",$descParts[0]));
-    } else {
-        return trim(preg_replace("/\(Platform.*/", "",$stopName));
-    }
-}
+
 function navbar() {
     echo '
 		<div data-role="navbar">
@@ -149,7 +139,7 @@ if (isset($bysuburbs)) {
                 } else {
                     // subsequent duplicates
                     $stopsGrouped["stop_ids"][] = $stop['stop_id'];
-                    ;
+                    
                 }
             }
         }

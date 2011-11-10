@@ -241,4 +241,35 @@ function trackEvent($category, $action, $label = "", $value = - 1) {
     }
 }
 
+//stop list collapsing
+function stopCompare($stopName) {
+    return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)),0,9);
+}
+function stopGroupTitle($stopName,$stopdesc) {
+    if (preg_match("/Dr |Cct |Cir |Av |St |Cr |Parade |Way |Bank /",$stopName)) {
+        $descParts =  explode("<br>",$stopdesc);
+         return trim(str_replace("Street: ","",$descParts[0]));
+    } else {
+        return trim(preg_replace("/\(Platform.*/", "",$stopName));
+    }
+}
+
+function viaPointNames($tripid, $stop_sequence = "") {
+    $viaPointNames = Array();
+    foreach (viaPoints($tripid, $stop_sequence) as $point) {
+        if (strstr($point['stop_name'], "Station")
+                || strstr($point['stop_name'], "Shops")
+                || strstr($point['stop_name'], "CIT")
+                || strstr($point['stop_name'], "School")
+                || strstr($point['stop_name'], "University")
+        ) {
+            $viaPointNames[] = $point['stop_name'];
+        }
+    }
+    if (sizeof($viaPointNames) > 0) {
+        return r_implode(", ", $viaPointNames);
+    } else {
+        return "";
+    }
+}
 ?>

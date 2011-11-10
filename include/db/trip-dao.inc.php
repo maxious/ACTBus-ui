@@ -28,6 +28,7 @@ function getTrip($tripID) {
     $query->execute();
     if (!$query) {
         databaseError($conn->errorInfo());
+
         return Array();
     }
     return $query->fetch(PDO :: FETCH_ASSOC);
@@ -56,7 +57,8 @@ WHERE trips.trip_id = :tripID ORDER BY stop_sequence) as a group by a.trip_id";
 
 function getTripStopTimes($tripID) {
     global $conn;
-    $query = "SELECT stop_times.trip_id,trip_headsign,arrival_time,stop_times.stop_id,stop_lat,stop_lon,stop_name,stop_code,
+    $query = "SELECT stop_times.trip_id,trip_headsign,arrival_time,stop_times.stop_id
+    ,stop_lat,stop_lon,stop_name,stop_desc,stop_code,
 	stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
@@ -83,6 +85,7 @@ function getTripAtStop($tripID, $stop_sequence) {
     }
     return Array();
 }
+
 function getTripStartTime($tripID) {
     global $conn;
     $query = "Select * from stop_times
@@ -154,16 +157,5 @@ WHERE stop_times.trip_id = :tripID
     return $query->fetchAll();
 }
 
-function viaPointNames($tripid, $stop_sequence = "") {
-    $viaPointNames = Array();
-    foreach (viaPoints($tripid, $stop_sequence) as $point) {
-        $viaPointNames[] = $point['stop_name'];
-    }
-    if (sizeof($viaPointNames) > 0) {
-        return r_implode(", ", $viaPointNames);
-    } else {
-        return "";
-    }
-}
 
 ?>
