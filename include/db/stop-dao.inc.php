@@ -101,10 +101,10 @@ function getStopsByName($name) {
 
 function getStopsBySuburb($suburb) {
     global $conn;
-    $query = "Select * from stops where zone_id LIKE :suburb order by stop_name;";
+    $query = "Select * from stops where stop_desc LIKE :suburb order by stop_name;";
     debug($query, "database");
     $query = $conn->prepare($query);
-    $suburb = "%" . $suburb . ";%";
+    $suburb = "%<br>Suburb: %" . $suburb . "%";
     $query->bindParam(":suburb", $suburb);
     $query->execute();
     if (!$query) {
