@@ -46,9 +46,7 @@ include_header("MyWay Deltas", "mywayDelta");
             var data = [];
             var options = {
                 xaxis: {
-                    mode: "time",
-                    min: midnight + (1000*60*60*8),
-                    max: midnight + (1000*60*60*23.5)
+                    mode: "time"
                 },
                 yaxis: {
                     tickFormatter: yformatter

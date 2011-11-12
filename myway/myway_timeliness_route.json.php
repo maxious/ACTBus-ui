@@ -25,7 +25,8 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 "data": <?php
 $query = "select * from myway_timingdeltas where route_name = :route_name AND abs(timing_delta) < 2*(select stddev(timing_delta) from myway_timingdeltas)  order by stop_sequence;";
 $query = $conn->prepare($query);
-$query->bindParam(':route_name', $_REQUEST['routeid'], PDO::PARAM_STR, 42);
+$_REQUEST['routeid'].=" ";
+$query->bindParam(':route_name', $_REQUEST['routeid'], PDO::PARAM_STR);
 
 $query->execute();
 if (!$query) {

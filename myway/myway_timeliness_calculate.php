@@ -29,7 +29,8 @@ function abssort($a, $b) {
 
 //collect all observation not in delta
 $query = "select * from myway_observations INNER JOIN myway_stops
-ON myway_observations.myway_stop=myway_stops.myway_stop 
+ON myway_observations.myway_stop=myway_stops.myway_stop INNER JOIN myway_routes
+ON myway_observations.myway_route=myway_routes.myway_route 
  WHERE observation_id NOT IN
 (
 SELECT  observation_id
@@ -54,10 +55,10 @@ foreach ($uncalcdObservations as $obsv) {
 // timezones from http://www.postgresql.org/docs/8.0/static/datetime-keywords.html
     $time = date("H:i:s", strtotime($obsv['time']));
     $time_tz = date("H:i:s", strtotime($obsv['time'])) . " AESST";
-    $search_time = date("H:i:s", strtotime($obsv['time']) - (30 * 60)); // 30 minutes margin
+    $search_time = date("H:i:s", strtotime($obsv['time']) - (60 * 60)); // 30 minutes margin
     $date = date("c", strtotime($obsv['time']));
     $timing_period = service_period(strtotime($date));
-    if (isset($obsv["stop_id"]) && $obsv["stop_id"] != "" ) {
+    if (isset($obsv["stop_id"]) && $obsv["stop_id"] != "" && $obsv["stop_id"] != "*") {
     $potentialStops = Array(getStop($obsv["stop_id"]));
     } else {
         echo "Potential stops are a bus station<br>";
@@ -79,7 +80,7 @@ foreach ($uncalcdObservations as $obsv) {
     //:get myway_route record
     //no result, skip and display error
     //print out route
-    $potentialRoutes = getRoutesByShortName(preg_replace("/[A-Z]/", "", $obsv["myway_route"]));
+    $potentialRoutes = getRoutesByShortName($obsv["route_short_name"]);
     if (sizeof($potentialRoutes) < 1) {
         echo "error, route '{$obsv["myway_route"]}' unknown";
         continue;
@@ -96,7 +97,7 @@ foreach ($uncalcdObservations as $obsv) {
                     echo "Matching route {$stopRoute['route_id']} found at stop #{$potentialStop['stop_id']}<br>";
                     $foundRoute = $stopRoute;
                     //if does get tripstoptimes for this route
-                    $trips = getStopTrips($potentialStop['stop_id'], $timing_period, $search_time);
+                    $trips = getStopTrips($potentialStop['stop_id'], $timing_period, $search_time, 10, $potentialRoute['route_short_name']);
                     foreach ($trips as $trip) {
                         //echo $trip['route_id']." ".$stopRoute['route_id'].";";
                         if ($trip['route_id'] == $stopRoute['route_id']) {
@@ -109,13 +110,16 @@ foreach ($uncalcdObservations as $obsv) {
                                 "timeDiff" => $timeDiff,
                                 "stop_id" => $potentialStop['stop_id'],
                                 "stop_sequence" => $trip['stop_sequence'],
-                                "route_name" => "{$potentialRoute['route_short_name']} {$potentialRoute['route_long_name']} {$trip['direction']}",
+                                "route_name" => "{$trip['route_short_name']} {$trip['route_long_name']} {$trip['direction']}",
                                 "route_id" => $trip['route_id']
                             );
                             echo "Found trip {$trip['trip_id']} at stop {$potentialStop['stop_id']} (#{$potentialStop['stop_name']}, sequence #{$trip['stop_sequence']})<br>";
                             echo "Arriving at {$timedTrip['arrival_time']}, difference of " . round($timeDiff / 60, 2) . " minutes<br>";
+                        } else {
+                            echo "{$trip['route_id']} != {$stopRoute['route_id']}<br>";
                         }
                     }
+                    if (sizeof($timeDeltas) == 0) echo "Error, no trips found.<bR>";
                     break; // because have found route
                 }
             }
@@ -163,6 +167,7 @@ foreach ($uncalcdObservations as $obsv) {
         }
         var_dump($conn->errorInfo());
         flush();
+       
         }
     }
     flush();

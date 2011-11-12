@@ -27,7 +27,8 @@ function service_period($date = "") {
         return $_SESSION['service_period'];
     $override = getServiceOverride($date);
     if ($override['service_id']) {
-        return $override['service_id'];
+        $idParts = explode("-",$override['service_id']);
+        return strtolower($idParts[2]);
     }
 
     switch (date('w', ($date != "" ? $date : time()))) {
