@@ -33,17 +33,31 @@ function getTrip($tripID) {
     }
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
-
-function getTripShape($tripID) {
-    // todo, use shapes table if shape_id specified
+function getTripStops($tripID) {
     global $conn;
-    $query = "SELECT ST_AsKML(ST_MakeLine(geometry(a.position))) as the_route
-FROM (SELECT position,
+    $query = "SELECT stop_id, stop_name, ST_AsKML(position) as positionkml,
 	stop_sequence, trips.trip_id
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
 join stops on stops.stop_id = stop_times.stop_id
-WHERE trips.trip_id = :tripID ORDER BY stop_sequence) as a group by a.trip_id";
+WHERE trips.trip_id = :tripID ORDER BY stop_sequence";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":tripID", $tripID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return $query->fetchColumn(0);
+}
+function getTripShape($tripID) {
+    // todo, use shapes table if shape_id specified
+    global $conn;
+    $query = "SELECT ST_AsKML(ST_MakeLine(geometry(a.shape_pt))) as the_route
+FROM (SELECT shapes.shape_id,shape_pt from shapes
+inner join trips on shapes.shape_id = trips.shape_id
+WHERE trips.trip_id = :tripID ORDER BY shape_pt_sequence) as a group by a.shape_id";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":tripID", $tripID);
