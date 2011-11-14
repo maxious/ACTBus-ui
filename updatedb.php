@@ -30,10 +30,11 @@ if (php_sapi_name() == "cli") {
       delete from stops;
       delete from trips;
      */
+
 // Unzip cbrfeed.zip, import all csv files to database
-    $unzip = true;
+    $unzip = false;
     $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
-    $tmpdir = "/tmp/cbrfeed/";
+    $tmpdir = "c:/tmp/";
     mkdir($tmpdir);
     if ($unzip) {
         if (is_resource($zip)) {
@@ -68,7 +69,10 @@ if (php_sapi_name() == "cli") {
                 $stmt->bindParam(':departure_time', $time);
             }
 
-
+            $distance = 0;
+            $lastshape = 0;
+            $lastlat = 0;
+            $lastlon = 0;
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 if ($line == 0) {
                     
@@ -79,8 +83,19 @@ if (php_sapi_name() == "cli") {
                         $query.=($valueCount > 0 ? "','" : "'") . pg_escape_string($value);
                         $valueCount++;
                     }
+
                     if ($tablename == "stops") {
                         $query.= "', ST_GeographyFromText('SRID=4326;POINT({$data[2]} {$data[0]})'));";
+                    } else if ($tablename == "shapes") {
+                        if ($data[0] != $lastshape) {
+                            $distance = 0;
+                            $lastshape = $data[0];
+                        } else {
+                            $distance += distance($lastlat, $lastlon, $data[1], $data[2]);
+                        }
+                        $lastlat = $data[1];
+                        $lastlon = $data[2];
+                        $query.= "', $distance,  ST_GeographyFromText('SRID=4326;POINT({$data[2]} {$data[1]})'));";
                     } else {
                         $query.= "');";
                     }

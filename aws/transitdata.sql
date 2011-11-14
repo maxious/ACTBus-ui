@@ -13382,7 +13382,8 @@ CREATE TABLE shapes (
     shape_pt_lat double precision,
     shape_pt_lon double precision,
     shape_pt_sequence integer NOT NULL,
-    shape_dist_traveled integer
+    shape_dist_traveled integer,
+    shape_pt geography,
 );
 
 
