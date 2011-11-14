@@ -61,9 +61,12 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
         $jqmjs = $basePath . "js/jquery.mobile-$jqmVersion.js";
     } else {
         $jqmcss = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.css";
-        $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js";
+        $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js";
         $jqmjs = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.js";
+
     }
+        $jqmcss = $basePath . "css/jquery.mobile-b90eab4935.css";
+        $jqmjs = $basePath . "js/jquery.mobile-b90eab4935.js";
     echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
 	<script src="' . $jqjs . '"></script>
 		 <script>$(document).bind("mobileinit", function(){
