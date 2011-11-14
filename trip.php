@@ -24,8 +24,10 @@ if (isset($routeid) && !isset($tripid)) {
     $trip = getTrip($tripid);
     $routeid = $trip["route_id"];
 }
-include_header("Stops on " . $trip['route_short_name'] . ' ' . $trip['route_long_name'], "trip");
-trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $trip['route_long_name'], $routeid);
+
+                $destination = getTripDestination($trip['trip_id']);
+include_header("Stops on " . $trip['route_short_name'] . ' ' . $destination['stop_name'], "trip");
+trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $destination['stop_name'], $routeid);
 echo '<span class="content-secondary">';
 echo '<a href="' . $trip['route_url'] . '">View Original Timetable/Map</a>';
 echo '<h2>Via:</h2> <small>' . viaPointNames($tripid) . '</small>';
@@ -66,7 +68,7 @@ echo "</div>";
 echo '  <ul data-role="listview"  data-inset="true">';
 $stopsGrouped = Array();
 $tripStopTimes = getTripStopTimes($tripid);
-echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' ' . $trip['route_long_name'] . ' (' . ucwords($tripStopTimes[0]['service_id']) . ')</li>';
+echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' ' . $destination['stop_name'] . ' (' . ucwords($tripStopTimes[0]['service_id']) . ')</li>';
 foreach ($tripStopTimes as $key => $tripStopTime) {
     if ($key + 1 > sizeof($tripStopTimes) || stopCompare($tripStopTimes[$key]["stop_name"]) != stopCompare($tripStopTimes[$key + 1]["stop_name"])) {
         echo '<li>';

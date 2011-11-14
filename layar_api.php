@@ -45,7 +45,8 @@ foreach ($contents as $stop) {
         $trips = getStopTripsWithTimes($stop['stop_id'], "", "", "", 3);
         foreach ($trips as $key => $row) {
             if ($key < 3) {
-                $hotspot['line' . strval($key + 2)] = $row['route_short_name'] . ' ' . $row['route_long_name'] . ' @ ' . $row['arrival_time'];
+                $destination = getTripDestination($row['trip_id']);
+                $hotspot['line' . strval($key + 2)] = $row['route_short_name'] . ' ' . $destination['stop_name'] . ' @ ' . $row['arrival_time'];
             }
         }
         if (sizeof($trips) == 0)
