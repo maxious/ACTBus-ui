@@ -41,7 +41,8 @@ foreach ($contents as $stop) {
     if ($trips) {
         foreach ($trips as $key => $row) {
             if ($key < 3) {
-                $description .= $row['route_short_name'] . ' ' . $row['route_long_name'] . ' @ ' . $row['arrival_time'] . "<br>";
+                $destination = getTripDestination($row['trip_id']);
+                $description .= $row['route_short_name'] . ' ' . $destination['stop_name'] . ' @ ' . $row['arrival_time'] . "<br>";
             }
         }
     } else {

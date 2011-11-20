@@ -134,6 +134,23 @@ function getTripEndTime($tripID) {
     return $r['arrival_time'];
 }
 
+function getTripDestination($tripID) {
+    global $conn;
+    $query = "SELECT stops.stop_id, stops.stop_name, stops.stop_desc 
+        from stop_times inner join stops on stop_times.stop_id =  stops.stop_id
+	WHERE trip_id = :tripID order by stop_sequence desc limit 1";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":tripID", $tripID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    $r = $query->fetch(PDO :: FETCH_ASSOC);
+    return $r;
+}
+
 function getActiveTrips($time) {
     global $conn;
     if ($time == "")
