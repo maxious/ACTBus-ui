@@ -1,5 +1,3 @@
-#dependencies http://code.google.com/p/python-twitter/
-
 # info
 # http://stackoverflow.com/questions/4206882/named-entity-recognition-with-preset-list-of-names-for-python-php/4207128#4207128
 # http://alias-i.com/lingpipe/demos/tutorial/ne/read-me.html approximate dist
@@ -14,9 +12,13 @@
 # source: https://gist.github.com/322906/90dea659c04570757cccf0ce1e6d26c9d06f9283
 import nltk
 import twitter
+import tweepy
 import psycopg2
+from iniparse import INIConfig
+
 def insert_service_alert_sitewide(heading, message, url):
-        
+        print "NaN"
+
 def insert_service_alert_for_street(streets, heading, message, url):
     	conn_string = "host='localhost' dbname='energymapper' user='postgres' password='snmc'"
 	# print the connection string we will use to connect
@@ -29,30 +31,22 @@ def insert_service_alert_for_street(streets, heading, message, url):
 		cursor = conn.cursor()
 
 		# execute our Query
-		cursor.execute("select max(value), extract(dow from max(time)) as dow, \
-extract(year from max(time))::text || lpad(extract(month from max(time))::text,2,'0') \
-|| lpad(extract(month from max(time))::text,2,'0') as yearmonthweek, to_char(max(time),'J') \
-from environmentdata_values where \"dataSourceID\"='NSWAEMODemand' \
-group by extract(dow from time), extract(year from time),  extract(week from time) \
-order by  extract(year from time),  extract(week from time), extract(dow from time)")
+		cursor.execute("")
 
 		# retrieve the records from the database
 		records = cursor.fetchall()
 
   	  	for record in records:
 			ys.append(record[0])
-# >>> cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (42, 'bar'))
-#>>> cur.statusmessage
-#'INSERT 0 1'
+                # >>> cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (42, 'bar'))
+                #>>> cur.statusmessage
+                #'INSERT 0 1'
 	except:
 		# Get the most recent exception
 		exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
 		# Exit the script and print an error telling what happened.
 		sys.exit("Database connection failed!\n ->%s" % (exceptionValue))
 		
-def get_tweets(user):
-    tapi = twitter.Api()
-    return tapi.GetUserTimeline(user)
 
 def extract_entity_names(t):
     entity_names = []
@@ -85,3 +79,16 @@ def extract_names(sample):
 
     # Print unique entity names
     print set(entity_names)
+cfg = INIConfig(open('/tmp/aws.ini'))
+
+auth = tweepy.OAuthHandler(cfg.api_keys.twitter_consumer_key, cfg.api_keys.twitter_consumer_secret)
+auth.set_access_token(cfg.api_keys.twitter_access_token, cfg.api_keys.twitter_access_token_secret)
+
+api = tweepy.API(auth)
+
+# If the authentication was successful, you should
+# see the name of the account print out
+print api.me().name
+# https://github.com/tweepy/tweepy/blob/master/tweepy/api.py
+print api.user_timeline(screen_name="ACTPol_Traffic")
+print api.update_status(status="test")
