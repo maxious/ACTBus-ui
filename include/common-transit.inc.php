@@ -26,8 +26,8 @@ function service_period_day ($spid) {
 }
 function service_period($date = "") {
 
-    if (isset($_SESSION['service_period']))
-        return $_SESSION['service_period'];
+    if (isset($_REQUEST['service_period']))
+        return $_REQUEST['service_period'];
     $override = getServiceOverride($date);
     if ($override['service_id']) {
         return service_period_day ($override['service_id']);

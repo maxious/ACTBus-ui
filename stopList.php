@@ -102,7 +102,7 @@ if (isset($bysuburbs)) {
                     // subsequent duplicates
                     $stopsGrouped["stop_ids"][] = $stop['stop_id'];
                     echo '<li>';
-                    echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
+                    echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '&stopcodes=' . implode(",", $stopsGrouped['stop_codes']) . '">';
                     if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                         echo '<span class="ui-li-count">' . distance($stop['stop_lat'], $stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
                     }

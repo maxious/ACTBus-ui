@@ -17,14 +17,6 @@
  */
 // you have to open the session to be able to modify or remove it
 session_start();
-if (isset($_REQUEST['service_period'])) {
-    $_SESSION['service_period'] = filter_var($_REQUEST['service_period'], FILTER_SANITIZE_STRING);
-    sessionUpdated();
-}
-if (isset($_REQUEST['time'])) {
-    $_SESSION['time'] = filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING);
-    sessionUpdated();
-}
 if (isset($_REQUEST['geolocate']) && $_REQUEST['geolocate'] != "Enter co-ordinates or address here") {
     $geocoded = false;
     if (isset($_REQUEST['lat']) && isset($_REQUEST['lon'])) {
@@ -70,7 +62,7 @@ if (isset($_SESSION['lastUpdated']) && $_SESSION['lastUpdated'] + $TIMEOUT_LIMIT
 
 //debug(print_r($_SESSION, true) , "session");
 function current_time() {
-    return ($_SESSION['time'] ? $_SESSION['time'] : date("H:i:s"));
+    return ($_REQUEST['time'] ? $_REQUEST['time'] : date("H:i:s"));
 }
 
 ?>
