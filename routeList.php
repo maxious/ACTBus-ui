@@ -18,6 +18,7 @@
 include ('include/common.inc.php');
 
 function navbar() {
+
     echo '
 		<div data-role="navbar"> 
 			<ul> 
@@ -28,6 +29,42 @@ function navbar() {
 			</ul>
                 </div>
 	';
+}
+
+function displayRoutes($routes) {
+    global $nearby;
+    echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
+    $filteredRoutes = Array();
+    foreach ($routes as $route) {
+        foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
+            $start = $headsign['stop_name'];
+            $serviceday = service_period_day($headsign['service_id']);
+            $key = $route['route_short_name'] . "." . $headsign['direction_id'];
+            if (isset($filteredRoutes[$key])) {
+                $filteredRoutes[$key]['route_ids'][] = $route['route_id'];
+                $filteredRoutes[$key]['route_ids'] = array_unique($filteredRoutes[$key]['route_ids']);
+            } else {
+                $filteredRoutes[$key]['route_short_name'] = $route['route_short_name'];
+                $filteredRoutes[$key]['route_long_name'] = "starting at " . $start;
+                $filteredRoutes[$key]['service_id'] = $serviceday;
+                $filteredRoutes[$key]['trip_headsign'] = $headsign['trip_headsign'].(strstr($headsign['trip_headsign'], "bound") ===false ?"bound":"");
+                $filteredRoutes[$key]['direction_id'] = $headsign['direction_id'];
+                if (isset($nearby)) {
+                    $filteredRoutes[$key]['distance'] = $route['distance'];
+                }
+            }
+        }
+    }
+    foreach ($filteredRoutes as $key => $route) {
+        echo '<li> <a href="trip.php?routeids=' . implode(",", $route['route_ids']) . '&directionid=' . $route['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
+                   
+                <p>" . $route['trip_headsign'].", ".  $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>";
+        if (isset($nearby)) {
+            $time = getRouteAtStop($route['route_id'], $route['stop_id']);
+            echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
+        }
+        echo"       </a></li>\n";
+    }
 }
 
 if (isset($bysuburbs)) {
@@ -46,37 +83,32 @@ if (isset($bysuburbs)) {
         }
     }
     echo '</ul>';
-} else if (isset($nearby) || isset($suburb)) {
-    $routes = Array();
+} else if (isset($suburb)) {
+
     if ($suburb) {
         include_header($suburb . " - " . ucwords(service_period()), "routeList");
         navbar();
-        timePlaceSettings();
+        timeSettings();
         trackEvent("Route Lists", "Routes By Suburb", $suburb);
-        $routes = getRoutesBySuburb($suburb);
+        displayRoutes(getRoutesBySuburb($suburb));
     }
-    if (isset($nearby)) {
-        include_header("Routes Nearby", "routeList", true, true);
-        trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
-        navbar();
-        placeSettings();
-        if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
-            include_footer();
-            die();
-        }
-        $routes = getRoutesNearby($_SESSION['lat'], $_SESSION['lon']);
+} else if (isset($nearby)) {
+    $routes = Array();
+    include_header("Routes Nearby", "routeList", true, true);
+    trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
+    navbar();
+    placeSettings();
+    if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
+        include_footer();
+        die();
     }
-    echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-    if ($routes) {
-        foreach ($routes as $route) {
-            echo '<li><a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>";
-            if (isset($nearby)) {
-                $time = getRouteAtStop($route['route_id'], $route['stop_id']);
-                echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
-            }
-            echo "</a></li>\n";
-        }
+    $routes = getRoutesNearby($_SESSION['lat'], $_SESSION['lon']);
+
+
+    if (sizeof($routes) > 0) {
+        displayRoutes($routes);
     } else {
+        echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
         echo "<li style='text-align: center;'> No routes nearby.</li>";
     }
 } else if (isset($bynumber) || isset($numberSeries)) {
@@ -118,39 +150,14 @@ if (isset($bysuburbs)) {
         }
     }
     else if ($numberSeries) {
-        $routes = getRoutesByNumberSeries($numberSeries);
-        $filteredRoutes = Array();
-        foreach ($routes as $route) {
-            foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
-                $start = $headsign['stop_name'];
-            $serviceday = service_period_day ( $headsign['service_id']);
-            $key = $route['route_short_name'].".".$headsign['direction_id'];
-            if (isset($filteredRoutes[$key])) {
-                $filteredRoutes[$key]['route_ids'][] = $route['route_id'];
-                $filteredRoutes[$key]['route_ids'] = array_unique($filteredRoutes[$key]['route_ids']);
-            } else {
-                $filteredRoutes[$key]['route_short_name'] = $route['route_short_name'];
-                $filteredRoutes[$key]['route_long_name'] = "Starting at ".$start;
-                $filteredRoutes[$key]['service_id'] = $serviceday;
-                $filteredRoutes[$key]['direction_id'] = $headsign['direction_id'];
-            }
-            }
-        }
-        foreach ($filteredRoutes as $key => $route) {
-               echo '<li> <a href="trip.php?routeids=' . implode(",",$route['route_ids']) . '&directionid='.$route['direction_id'].'"><h3>' . $route['route_short_name'] . "</h3>
-                   
-                <p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>
-                    </a></li>\n";
-        }
+        displayRoutes(getRoutesByNumberSeries($numberSeries));
     }
 } else {
     include_header("Routes by Destination", "routeList");
     navbar();
     echo ' <ul data-role="listview"  data-inset="true">';
     if (isset($routeDestination)) {
-        foreach (getRoutesByDestination($routeDestination) as $route) {
-            echo '<li><a href="trip.php?routeid=' . $route["route_id"] . '"><h3>' . $route["route_short_name"] . '</h3><p>' . $route["route_long_name"] . " (" . ucwords($route['service_id']) . ")</p></a></li>\n";
-        }
+        displayRoutes(getRoutesByDestination($routeDestination));
     } else {
         foreach (getRoutesByDestination() as $destination) {
             echo '<li><a href="' . curPageURL() . '/routeList.php?routeDestination=' . urlencode($destination['route_long_name']) . '">' . $destination['route_long_name'] . "... </a></li>\n";

@@ -46,11 +46,11 @@ function getRoutesByShortName($routeShortName) {
 
 function getRouteHeadsigns($routeID) {
     global $conn;
-    $query = "select stops.stop_name, direction_id,max(service_id) as service_id, count(*)
+    $query = "select stops.stop_name, trip_headsign, direction_id,max(service_id) as service_id, count(*)
         from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id join stops on 
 stop_times.stop_id = stops.stop_id where trips.route_id = :routeID 
-and stop_times.stop_sequence = 1 group by stops.stop_name, direction_id having count(*) > 2";
+and stop_times.stop_sequence = 1 group by stops.stop_name, trip_headsign, direction_id having count(*) > 2";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":routeID", $routeID);
@@ -260,25 +260,24 @@ function getRoutesBySuburb($suburb, $service_period = "") {
     $service_ids = service_ids($service_period);
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
+   
     global $conn;
     $query = "SELECT DISTINCT service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times join trips on trips.trip_id = stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 join stops on stops.stop_id = stop_times.stop_id
-WHERE zone_id LIKE ':suburb AND (service_id=:service_periodA OR service_id=:service_periodB)
+WHERE stop_desc LIKE :suburb AND (service_id=:service_periodA OR service_id=:service_periodB)
  ORDER BY route_short_name";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":service_periodA", $sidA);
     $query->bindParam(":service_periodB", $sidB);
-    $query->bindParam(":service_period", $service_period);
-    $suburb = "%" . $suburb . ";%";
+    $suburb = "%Suburb: %" . $suburb . "%";
     $query->bindParam(":suburb", $suburb);
     $query->execute();
-    if (!$query) {
+    
         databaseError($conn->errorInfo());
-        return Array();
-    }
+  
     return $query->fetchAll();
 }
 

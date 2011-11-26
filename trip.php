@@ -83,7 +83,7 @@ foreach (getRoutesByNumber($trip['route_short_name']) as $row) {
     }
 }
 foreach ($filteredRoutes as $key => $row) {
-    echo '<a href="trip.php?routeids=' . implode(",",$row['route_ids']) . '&directionid='.$row['direction_id'].'">' . $row['route_long_name'] . ' (' . ucwords($row['service_id']) . ')</a> ';
+    echo '<a href="trip.php?routeids=' . implode(",",$row['route_ids']) . '&directionid='.$row['direction_id'].'&service_period='.$row['service_id'].'">' . $row['route_long_name'] . ' (' . ucwords($row['service_id']) . ')</a> ';
     $otherDir++;
 }
 
