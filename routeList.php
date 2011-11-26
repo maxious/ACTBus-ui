@@ -119,8 +119,28 @@ if (isset($bysuburbs)) {
     }
     else if ($numberSeries) {
         $routes = getRoutesByNumberSeries($numberSeries);
+        $filteredRoutes = Array();
         foreach ($routes as $route) {
-            echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '"><h3>' . $route['route_short_name'] . "</h3><p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p></a></li>\n";
+            foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
+                $start = $headsign['stop_name'];
+            $serviceday = service_period_day ( $headsign['service_id']);
+            $key = $route['route_short_name'].".".$headsign['direction_id'];
+            if (isset($filteredRoutes[$key])) {
+                $filteredRoutes[$key]['route_ids'][] = $route['route_id'];
+                $filteredRoutes[$key]['route_ids'] = array_unique($filteredRoutes[$key]['route_ids']);
+            } else {
+                $filteredRoutes[$key]['route_short_name'] = $route['route_short_name'];
+                $filteredRoutes[$key]['route_long_name'] = "Starting at ".$start;
+                $filteredRoutes[$key]['service_id'] = $serviceday;
+                $filteredRoutes[$key]['direction_id'] = $headsign['direction_id'];
+            }
+            }
+        }
+        foreach ($filteredRoutes as $key => $route) {
+               echo '<li> <a href="trip.php?routeids=' . implode(",",$route['route_ids']) . '&directionid='.$route['direction_id'].'"><h3>' . $route['route_short_name'] . "</h3>
+                   
+                <p>" . $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>
+                    </a></li>\n";
         }
     }
 } else {

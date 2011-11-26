@@ -20,15 +20,17 @@ $service_periods = Array(
     'saturday',
     'weekday'
 );
-
+function service_period_day ($spid) {
+    $idParts = explode("-",$spid);
+        return strtolower($idParts[2]);
+}
 function service_period($date = "") {
 
     if (isset($_SESSION['service_period']))
         return $_SESSION['service_period'];
     $override = getServiceOverride($date);
     if ($override['service_id']) {
-        $idParts = explode("-",$override['service_id']);
-        return strtolower($idParts[2]);
+        return service_period_day ($override['service_id']);
     }
 
     switch (date('w', ($date != "" ? $date : time()))) {
@@ -50,6 +52,9 @@ function service_ids($service_period) {
             //return 'weekday';
             return Array("2010-BELCMAST-Weekday-15","2010-TUGGMAST-Weekday-14"); 
     }
+}
+function valid_service_ids() {
+    return array_merge(service_ids(""),service_ids('saturday'),service_ids('sunday'));
 }
 
 function midnight_seconds($time = "") {

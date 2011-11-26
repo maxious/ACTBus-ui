@@ -21,8 +21,8 @@ $route = getRoute($routeid);
  echo '<description><![CDATA[ <a href="'.$link.'">'.$route['route_short_name']." ".$route['route_long_name']."</a>]]> </description>";
 echo "<styleUrl>#yellowLineGreenPoly</styleUrl>";
 
-	$trips = getRouteTrips($routeid);
-	echo getTripShape($trips[0]['trip_id']);
+	$trip = getRouteNextTrip($routeid);
+	echo getTripShape($trip['trip_id']);
 
 echo "</Placemark>\n</Document></kml>\n";
 ?>

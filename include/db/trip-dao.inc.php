@@ -133,6 +133,22 @@ function getTripEndTime($tripID) {
     $r = $query->fetch(PDO :: FETCH_ASSOC);
     return $r['arrival_time'];
 }
+function getTripStartingPoint($tripID) {
+    global $conn;
+    $query = "SELECT stops.stop_id, stops.stop_name, stops.stop_desc 
+        from stop_times inner join stops on stop_times.stop_id =  stops.stop_id
+	WHERE trip_id = :tripID and stop_sequence = '1' limit 1";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":tripID", $tripID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    $r = $query->fetch(PDO :: FETCH_ASSOC);
+    return $r;
+}
 
 function getTripDestination($tripID) {
     global $conn;

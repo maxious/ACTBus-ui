@@ -135,7 +135,7 @@ if (sizeof($trips) == 0) {
         echo '<li>';
         
                 $destination = getTripDestination($trip['trip_id']);
-        echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " " . $destination['stop_name'] . "</h3><p>";
+        echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
         $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
         if ($viaPoints != "")
             echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
