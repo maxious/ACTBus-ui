@@ -96,29 +96,7 @@ if (sizeof($stops) > 0) {
     ));
 }
 
-// time settings
-echo '<div id="settings" data-role="collapsible" data-collapsed="true">
-<h3>Change Time (' . (isset($_SESSION['time']) ? $_SESSION['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
-        <form action="' . basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'] . '" method="post">
-        <div class="ui-body"> 
-    		<div data-role="fieldcontain">
-		        <label for="time"> Time: </label>
-		    	<input type="time" name="time" id="time" value="' . (isset($_SESSION['time']) ? $_SESSION['time'] : date("H:i")) . '"/>
-			<a href="#" name="currentTime" id="currentTime" onClick="var d = new Date();' . "$('#time').val(d.getHours() +':'+ (d.getMinutes().toString().length == 1 ? '0'+ d.getMinutes():  d.getMinutes()));" . '">Current Time?</a>
-	        </div>
-		<div data-role="fieldcontain">
-		    <label for="service_period"> Service Period:  </label>
-			<select name="service_period" id="service_period">';
-foreach ($service_periods as $service_period) {
-    echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
-}
-echo '</select>
-			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod">Current Period?</a>
-		</div>
-		
-		<input type="submit" value="Update"/>
-                </div></form>
-            </div>';
+timeSettings();
 
 echo '</span><span class="content-primary">';
 echo '  <ul data-role="listview"  data-inset="true">';
@@ -128,14 +106,34 @@ if (sizeof($allStopsTrips) > 0) {
 } else {
     $trips = getStopTripsWithTimes($stopid);
 }
+echo "<div class='ui-header' style='overflow: visible; height: 2.5em'>";
+// later/earlier button setup
+if (sizeof($trips) == 0) {
+    $time = isset($_REQUEST['time']) ? strtotime($_REQUEST['time']) : time();
+    $earlierTime = $time - (90 * 60);
+    $laterTime = $time + (90 * 60);
+} else {
+    $earlierTime = strtotime($trips[0]['arrival_time']) - (90 * 60);
+    $laterTime = strtotime($trips[sizeof($trips) - 1]['arrival_time']) - 60;
+}
+if (sizeof($stopids) > 0) {
+    $stopidurl = "stopids=" . implode(",", $stopids);
+} else {
+    $stopidurl = "stopid=$stopid";
+}
+if (sizeof($trips) > 10) {
+    echo '<a href="stop.php?' . $stopidurl . '&service_period=' . service_period() . '&time=' . date("H:i", $laterTime) . '" data-icon="arrow-r" class="ui-btn-right">Later Trips</a>';
+}
+echo '<a href="stop.php?' . $stopidurl . '&service_period=' . service_period() . '&time=' . date("H:i", $earlierTime) . '" data-icon="arrow-l" class="ui-btn-left">Earlier Trips</a>';
+echo "</div>";
 if (sizeof($trips) == 0) {
     echo "<li style='text-align: center;'>No trips in the near future.</li>";
 } else {
     foreach ($trips as $trip) {
         echo '<li>';
-        
-                $destination = getTripDestination($trip['trip_id']);
-        echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " " . $destination['stop_name'] . "</h3><p>";
+
+        $destination = getTripDestination($trip['trip_id']);
+        echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
         $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
         if ($viaPoints != "")
             echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';

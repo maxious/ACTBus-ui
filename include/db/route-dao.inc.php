@@ -29,6 +29,7 @@ function getRoute($routeID) {
     }
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
+
 function getRoutesByShortName($routeShortName) {
     global $conn;
     $query = "Select distinct route_id, route_short_name from routes where route_short_name = :routeShortName";
@@ -45,8 +46,11 @@ function getRoutesByShortName($routeShortName) {
 
 function getRouteHeadsigns($routeID) {
     global $conn;
-    $query = "select distinct stops.stop_name, trip_headsign,direction_id from routes join trips on trips.route_id = routes.route_id
-join stop_times on stop_times.trip_id = trips.trip_id join stops on stop_times.stop_id = stops.stop_id where trips.route_id = :routeID and stop_times.stop_sequence = 1";
+    $query = "select stops.stop_name, trip_headsign, direction_id,max(service_id) as service_id, count(*)
+        from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id join stops on 
+stop_times.stop_id = stops.stop_id where trips.route_id = :routeID 
+and stop_times.stop_sequence = 1 group by stops.stop_name, trip_headsign, direction_id having count(*) > 2";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":routeID", $routeID);
@@ -55,9 +59,14 @@ join stop_times on stop_times.trip_id = trips.trip_id join stops on stop_times.s
         databaseError($conn->errorInfo());
         return Array();
     }
-return $query->fetchAll();
+    return $query->fetchAll();
 }
-
+function getRouteDescription($routeID) {
+    $trip = getRouteNextTrip($routeID);
+    $start = getTripStartingPoint($trip['trip_id']); 
+    $end = getTripDestination($trip['trip_id']);
+    return "From ".$start['stop_name']." to ".$end['stop_name'];
+}
 function getRouteByFullName($routeFullName) {
     global $conn;
     $query = "Select * from routes where route_short_name||route_long_name = :routeFullName LIMIT 1";
@@ -85,7 +94,7 @@ function getRoutes() {
     return $query->fetchAll();
 }
 
-function getRoutesByNumber($routeNumber = "") {
+function getRoutesByNumber($routeNumber = "", $directionID = "",$service_period = "") {
     global $conn;
     if ($routeNumber != "") {
         $query = "Select distinct routes.route_id,routes.route_short_name,routes.route_long_name,service_id from routes  join trips on trips.route_id =
@@ -134,15 +143,16 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where to_n
 
 function getRouteNextTrip($routeID) {
     global $conn;
-    $query = "select * from routes join trips on trips.route_id = routes.route_id
-join stop_times on stop_times.trip_id = trips.trip_id where
-arrival_time > :currentTime and routes.route_id = :routeID order by
+   
+    $query = "select routes.route_id,direction_id,trips.trip_id,departure_time from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id where  arrival_time > :currentTime and routes.route_id = :routeID order by
 arrival_time limit 1";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":currentTime", current_time());
     $query->bindParam(":routeID", $routeID);
     $query->execute();
+    databaseError($conn->errorInfo());
     if (!$query) {
         databaseError($conn->errorInfo());
         return Array();
@@ -179,14 +189,28 @@ function getRouteAtStop($routeID, $stop_id) {
     return Array();
 }
 
-function getRouteTrips($routeID) {
+function getRoutesTrips($routeIDs, $directionID = "", $service_period = "") {
     global $conn;
+    if ($service_period == "")
+        $service_period = service_period();
+    $service_ids = service_ids($service_period);
+    $sidA = $service_ids[0];
+    $sidB = $service_ids[1];
+    $directionSQL = "";
+    if ($directionID != "")
+        $directionSQL = " and direction_id = :directionID ";
     $query = "select routes.route_id,trips.trip_id,service_id,arrival_time, stop_id, stop_sequence from routes join trips on trips.route_id = routes.route_id
-join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = :routeID and stop_sequence = '1' order by
+join stop_times on stop_times.trip_id = trips.trip_id where (service_id=:service_periodA OR service_id=:service_periodB)
+AND (routes.route_id = :routeIDA OR routes.route_id = :routeIDB) " . $directionSQL . " and stop_sequence = '1' order by
 arrival_time ";
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":routeID", $routeID);
+    $query->bindParam(":routeIDA", $routeIDs[0]);
+    $query->bindParam(":routeIDB", $routeIDs[1]);
+    $query->bindParam(":service_periodA", $sidA);
+    $query->bindParam(":service_periodB", $sidB);
+    if ($directionSQL != "")
+        $query->bindParam(":directionID", $directionID);
     $query->execute();
     if (!$query) {
         databaseError($conn->errorInfo());
@@ -199,20 +223,27 @@ function getRoutesByDestination($destination = "", $service_period = "") {
     global $conn;
     if ($service_period == "")
         $service_period = service_period();
+    $service_ids = service_ids($service_period);
+    $sidA = $service_ids[0];
+    $sidB = $service_ids[1];
     if ($destination != "") {
         $query = "SELECT DISTINCT trips.route_id,route_short_name,route_long_name, service_id
 FROM stop_times join trips on trips.trip_id =
 stop_times.trip_id join routes on trips.route_id = routes.route_id
-WHERE route_long_name = :destination AND  service_id=:service_period order by route_short_name";
+WHERE route_long_name = :destination AND (service_id=:service_periodA OR service_id=:service_periodB)
+ order by route_short_name";
     } else {
         $query = "SELECT DISTINCT route_long_name
 FROM stop_times join trips on trips.trip_id =
 stop_times.trip_id join routes on trips.route_id = routes.route_id
-WHERE service_id= :service_period order by route_long_name";
+WHERE (service_id=:service_periodA OR service_id=:service_periodB)
+ order by route_long_name";
     }
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":service_period", $service_period);
+
+    $query->bindParam(":service_periodA", $sidA);
+    $query->bindParam(":service_periodB", $sidB);
     if ($destination != "")
         $query->bindParam(":destination", $destination);
     $query->execute();
@@ -226,29 +257,34 @@ WHERE service_id= :service_period order by route_long_name";
 function getRoutesBySuburb($suburb, $service_period = "") {
     if ($service_period == "")
         $service_period = service_period();
+    $service_ids = service_ids($service_period);
+    $sidA = $service_ids[0];
+    $sidB = $service_ids[1];
+   
     global $conn;
     $query = "SELECT DISTINCT service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times join trips on trips.trip_id = stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 join stops on stops.stop_id = stop_times.stop_id
-WHERE zone_id LIKE ':suburb AND service_id=:service_period ORDER BY route_short_name";
+WHERE stop_desc LIKE :suburb AND (service_id=:service_periodA OR service_id=:service_periodB)
+ ORDER BY route_short_name";
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":service_period", $service_period);
-    $suburb = "%" . $suburb . ";%";
+    $query->bindParam(":service_periodA", $sidA);
+    $query->bindParam(":service_periodB", $sidB);
+    $suburb = "%Suburb: %" . $suburb . "%";
     $query->bindParam(":suburb", $suburb);
     $query->execute();
-    if (!$query) {
+    
         databaseError($conn->errorInfo());
-        return Array();
-    }
+  
     return $query->fetchAll();
 }
 
 function getRoutesNearby($lat, $lng, $limit = "", $distance = 500) {
     if ($service_period == "")
         $service_period = service_period();
-        $service_ids = service_ids($service_period);
+    $service_ids = service_ids($service_period);
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
     if ($limit != "")

@@ -57,14 +57,14 @@ if (isset($_REQUEST['stopcode'])) {
 if (isset($_REQUEST['stopids'])) {
     $stopids = explode(",", filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
 }
+if (isset($_REQUEST['routeids'])) {
+    $routeids = explode(",", filter_var($_REQUEST['routeids'], FILTER_SANITIZE_STRING));
+}
 if (isset($_REQUEST['tripid'])) {
     $tripid = filter_var($_REQUEST['tripid'], FILTER_SANITIZE_STRING);
 }
 if (isset($_REQUEST['stopid'])) {
     $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
-}
-if (isset($_REQUEST['routeid'])) {
-    $routeid = filter_var($_REQUEST['routeid'], FILTER_SANITIZE_NUMBER_INT);
 }
 if (isset($_REQUEST['geolocate'])) {
     $geolocate = filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL);

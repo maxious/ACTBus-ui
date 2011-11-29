@@ -176,7 +176,7 @@ function getStopTrips($stopID, $service_period = "", $afterTime = "", $limit = "
         
     global $conn;
     if ($afterTime != "") {
-        $query = " SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name,end_times.arrival_time as end_time
+        $query = " SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,trips.direction_id,route_short_name,route_long_name,end_times.arrival_time as end_time
 FROM stop_times
 join trips on trips.trip_id =
 stop_times.trip_id

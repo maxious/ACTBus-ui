@@ -27,7 +27,9 @@ if (!$conn) {
 }
 
 function databaseError($errMsg) {
-    die($errMsg);
+    if ($errMsg[1] != "") {
+    die(print_r($errMsg,true));
+    }
 }
 
 include ('db/route-dao.inc.php');

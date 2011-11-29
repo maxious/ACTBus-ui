@@ -33,17 +33,31 @@ function getTrip($tripID) {
     }
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
-
-function getTripShape($tripID) {
-    // todo, use shapes table if shape_id specified
+function getTripStops($tripID) {
     global $conn;
-    $query = "SELECT ST_AsKML(ST_MakeLine(geometry(a.position))) as the_route
-FROM (SELECT position,
+    $query = "SELECT stop_id, stop_name, ST_AsKML(position) as positionkml,
 	stop_sequence, trips.trip_id
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
 join stops on stops.stop_id = stop_times.stop_id
-WHERE trips.trip_id = :tripID ORDER BY stop_sequence) as a group by a.trip_id";
+WHERE trips.trip_id = :tripID ORDER BY stop_sequence";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":tripID", $tripID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return $query->fetchColumn(0);
+}
+function getTripShape($tripID) {
+    // todo, use shapes table if shape_id specified
+    global $conn;
+    $query = "SELECT ST_AsKML(ST_MakeLine(geometry(a.shape_pt))) as the_route
+FROM (SELECT shapes.shape_id,shape_pt from shapes
+inner join trips on shapes.shape_id = trips.shape_id
+WHERE trips.trip_id = :tripID ORDER BY shape_pt_sequence) as a group by a.shape_id";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":tripID", $tripID);
@@ -118,6 +132,22 @@ function getTripEndTime($tripID) {
     }
     $r = $query->fetch(PDO :: FETCH_ASSOC);
     return $r['arrival_time'];
+}
+function getTripStartingPoint($tripID) {
+    global $conn;
+    $query = "SELECT stops.stop_id, stops.stop_name, stops.stop_desc 
+        from stop_times inner join stops on stop_times.stop_id =  stops.stop_id
+	WHERE trip_id = :tripID and stop_sequence = '1' limit 1";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":tripID", $tripID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    $r = $query->fetch(PDO :: FETCH_ASSOC);
+    return $r;
 }
 
 function getTripDestination($tripID) {
