@@ -10,10 +10,12 @@
 # http://esa.act.gov.au/feeds/currentincidents.xml
 
 # source: https://gist.github.com/322906/90dea659c04570757cccf0ce1e6d26c9d06f9283
+# to install python -m nltk.downloader punkt
 import nltk
-import twitter
 import tweepy
 import psycopg2
+import pickle
+
 from iniparse import INIConfig
 
 def insert_service_alert_sitewide(heading, message, url):
@@ -79,16 +81,24 @@ def extract_names(sample):
 
     # Print unique entity names
     print set(entity_names)
+
 cfg = INIConfig(open('/tmp/aws.ini'))
 
 auth = tweepy.OAuthHandler(cfg.api_keys.twitter_consumer_key, cfg.api_keys.twitter_consumer_secret)
 auth.set_access_token(cfg.api_keys.twitter_access_token, cfg.api_keys.twitter_access_token_secret)
 
-api = tweepy.API(auth)
-
+#api = tweepy.API(auth)
+api = tweepy.API()
 # If the authentication was successful, you should
 # see the name of the account print out
-print api.me().name
+#print api.me().name
 # https://github.com/tweepy/tweepy/blob/master/tweepy/api.py
-print api.user_timeline(screen_name="ACTPol_Traffic")
-print api.update_status(status="test")
+for status in api.user_timeline(screen_name="ACTPol_Traffic",exclude_replies='true'):
+            print status.text
+            print status.created_at
+            print extract_names(status.text)
+# print api.update_status(status="test")
+
+last_tweet_ids = { "lion": "111", "kitty": "2222" } 
+pickle.dump( last_tweet_ids, open( "save.p", "wb" ) )
+last_tweet_ids = pickle.load( open( "save.p", "rb" ) )
