@@ -45,12 +45,12 @@ function service_period($date = "") {
 function service_ids($service_period) {
     switch ($service_period) {
         case 'sunday':
-            return Array("2010-TUGGSUN-Sunday-20","2010-BELCSUN-Sunday-19");
+            return Array("Sunday","Sunday");
         case 'saturday':
-            return Array("2010-BELCSAT-Saturday-19","2010-TUGGSAT-Saturday-19");
+            return Array("Saturday","Saturday");
         default:
             //return 'weekday';
-            return Array("2010-BELCMAST-Weekday-15","2010-TUGGMAST-Weekday-14"); 
+            return Array("Weekday","Weekday"); 
     }
 }
 function valid_service_ids() {
