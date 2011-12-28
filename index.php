@@ -20,7 +20,7 @@ include_header("bus.lambdacomplex.org", "index", false)
 <div data-role="page">
     <div data-role="content">
         <div id="jqm-homeheader">
-            <h1>busness time</h1><br><small>Canberra Bus Timetables and Trip Planner</small>
+            <h1>busness time</h1><br><small>Canberra Bus Timetables and Trip Planner</small> 
         </div> 
         <a name="maincontent" id="maincontent"></a>
         <a href="tripPlanner.php" data-role="button" data-icon="navigation">Launch Trip Planner...</a>
@@ -38,7 +38,11 @@ include_header("bus.lambdacomplex.org", "index", false)
             <li><a class="nearby" href="routeList.php?nearby=yes">Nearby Routes</a></li>
         </ul>
         <?php
+        print_r(getServiceOverride(time()));
+        echo service_period(time());
+        print_r(service_ids(service_period(time())));
         echo ' <a href="labs/index.php" data-role="button" data-icon="beaker">Busness R&amp;D</a>';
         echo ' <a href="myway/index.php" data-role="button">MyWay Balance and Timeliness Survey Results</a>';
+        
         include_footer(true)
         ?>

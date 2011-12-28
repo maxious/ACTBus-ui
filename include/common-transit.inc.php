@@ -18,43 +18,63 @@
 $service_periods = Array(
     'sunday',
     'saturday',
-    'weekday'
+    'weekday',
+    "Christmas2011","EndOfYearHolidays"
 );
-function service_period_day ($spid) {
-    $idParts = explode("-",$spid);
-        return strtolower($idParts[2]);
-}
+
 function service_period($date = "") {
 
-    if (isset($_REQUEST['service_period']))
+    if (isset($_REQUEST['service_period'])) {
         return $_REQUEST['service_period'];
-    $override = getServiceOverride($date);
-    if ($override['service_id']) {
-        return service_period_day ($override['service_id']);
     }
 
-    switch (date('w', ($date != "" ? $date : time()))) {
-        case 0:
-            return 'sunday';
-        case 6:
-            return 'saturday';
-        default:
-            return 'weekday';
+    $override = getServiceOverride($date);
+    if (isset($override['service_id'])) {
+        return strtolower($override['service_id']);
+    }
+    $date = ($date != "" ? $date : time());
+// christmas special cases
+    $ymd = date('Ymd', $date);
+    $dow = date('w', $date);
+    if ($ymd == "20111225") {
+        return "Christmas2011";
+    } if ($ymd == "20111228" || $ymd == "20111229" || $ymd == "20111230") {
+        return "EndOfYearHolidays";
+    } else if (intval($ymd) < "20120203" && $dow != 0 && $dow != 6) {
+        return "Weekday-SchoolVacation";
+    } else {
+        switch ($dow) {
+            case 0:
+                return 'sunday';
+            case 6:
+                return 'saturday';
+            default:
+                return 'weekday';
+        }
     }
 }
+
 function service_ids($service_period) {
     switch ($service_period) {
         case 'sunday':
-            return Array("Sunday","Sunday");
+            return Array("Sunday", "Sunday");
         case 'saturday':
-            return Array("Saturday","Saturday");
+            return Array("Saturday", "Saturday");
+        case "Christmas2011":
+            return Array("Christmas2011", "Christmas2011");
+        case "EndOfYearHolidays":
+            return Array("Weekday-EndOfYearHolidays", "Weekday-EndOfYearHolidays");
+        case "Weekday-SchoolVacation":
+            return Array("Weekday", "Weekday-SchoolVacation");
         default:
             //return 'weekday';
-            return Array("Weekday","Weekday"); 
+            return Array("Weekday", "Weekday");
     }
 }
+
 function valid_service_ids() {
-    return array_merge(service_ids(""),service_ids('saturday'),service_ids('sunday'));
+    return array_merge(service_ids(""), service_ids('saturday'), service_ids('sunday'),
+            Array("Christmas2011","Weekday-EndOfYearHolidays","Weekday-SchoolVacation"));
 }
 
 function midnight_seconds($time = "") {

@@ -27,7 +27,7 @@ if (isset($routeids) && !isset($tripid)) {
     $tripid = $trip['trip_id'];
 } else {
     $trip = getTrip($tripid);
-    $similarRoutes = getRoutesByNumber($trip['route_short_name'], $trip['direction_id'], service_period_day($trip["service_id"]));
+    $similarRoutes = getRoutesByNumber($trip['route_short_name'], $trip['direction_id'], strtolower($trip["service_id"]));
     $routeids = Array();
     foreach ($similarRoutes as $similarRoute) {
         $routeids[] = $similarRoute['route_id'];
@@ -35,7 +35,7 @@ if (isset($routeids) && !isset($tripid)) {
     $routeids = array_unique($routeids);
 }
 $directionid = $trip['direction_id'];
-$service_period = service_period_day($trip["service_id"]);
+$service_period = strtolower($trip["service_id"]);
 $destination = getTripDestination($trip['trip_id']);
 include_header("Stops on " . $trip['route_short_name'] . ' ' . $destination['stop_name'], "trip");
 trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $destination['stop_name'], $routeid);
@@ -64,11 +64,11 @@ $filteredRoutes = Array();
 foreach (getRoutesByNumber($trip['route_short_name']) as $row) {
 
     foreach (getRouteHeadsigns($row['route_id']) as $headsign) {
-        if ( $headsign['direction_id'] != $directionid || service_period_day($headsign['service_id']) != $service_period) {
-           echo "{$headsign['direction_id']} != $directionid || ".service_period_day($headsign['service_id'])." != $service_period <br>";
+        if ( $headsign['direction_id'] != $directionid || strtolower($headsign['service_id']) != $service_period) {
+           echo "{$headsign['direction_id']} != $directionid || ".strtolower($headsign['service_id'])." != $service_period <br>";
             $start = $headsign['stop_name'];
 
-            $serviceday = service_period_day($headsign['service_id']);
+            $serviceday = strtolower($headsign['service_id']);
             $key = $row['route_short_name'] . "." . $headsign['direction_id'];
             if (isset($filteredRoutes[$key])) {
                 $filteredRoutes[$key]['route_ids'][] = $row['route_id'];
@@ -102,7 +102,7 @@ echo "</div>";
 echo '  <ul data-role="listview"  data-inset="true">';
 $stopsGrouped = Array();
 $tripStopTimes = getTripStopTimes($tripid);
-echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' towards ' . $destination['stop_name'] . ' (' . ucwords(service_period_day($tripStopTimes[0]['service_id'])) . ')</li>';
+echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' towards ' . $destination['stop_name'] . ' (' . ucwords(strtolower($tripStopTimes[0]['service_id'])) . ')</li>';
 foreach ($tripStopTimes as $key => $tripStopTime) {
     if ($key + 1 > sizeof($tripStopTimes) || stopCompare($tripStopTimes[$key]["stop_name"]) != stopCompare($tripStopTimes[$key + 1]["stop_name"])) {
         echo '<li>';

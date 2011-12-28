@@ -182,7 +182,99 @@ if ($_REQUEST['time']) {
         curl_close($ch);
     }
 } else {
+    $overrides = getServiceOverride();
+      if (isset($overrides['service_id'])) {
+       echo "Sorry, due to the modified timetable, this trip planner won't work correctly today. Instead, use the Google Maps one below:";
+       echo '
+<script language="javascript">
+	// make some ezamples
+  var startExample = "Gungahlin, ACT";
+  var endExample = "Bunda St, Canberra";
+  var zip = "2600";
+  var urlToGoTo = "http://www.google.com/maps?ie=UTF8&f=d&" ;
+  
+  function buildURL(){
+	  document.getElementById(\'linkOut\').href = urlToGoTo + "&saddr=" + document.getElementById(\'saddr\').value + "&daddr=" + document.getElementById(\'daddr\').value + "&dirflg=r"; 
+	 }
+	 
+</script>
+
+<form action="https://www.action.act.gov.au/googletransit/redir_to_google.asp" method="post" name="GoogleTransit" target="_blank" id="GoogleTransit">
+  <table width="226" cellspacing="1" border="1">
+    <tr>
+      <td colspan="2" valign="middle"><a href="http://google.com/transit"><img src="/maps_logo_small_blue.png"width="150" height="55" border="0" alt="Link to Google Transit Trip Planner" align="middle"></a>&nbsp;<br />
+	<B>Transit Trip Planner</B></td>
+    </tr>
+    <tr>
+      <td colspan="2" nowrap><strong>Start</strong> (e.g. 
+          <script language="javascript">document.write(startExample)</script>)<br />
+        <input type="text" size="27" name="saddr" id="saddr" maxlength="2048" title="Enter the Origin Address" value="" onFocus="this.value=\'\';" onBlur="if(this.value==\'\')this.value=startExample">
+        <br /><br />         <strong>End</strong> (e.g. 
+        <script language="javascript">document.write(endExample)</script>)
+        <BR>
+        <input type="text" size="27" name="daddr" id="daddr" maxlength="2048" title="Enter the Destination Address"  onfocus="this.value=\'\';" onBlur="if(this.value==\'\')this.value=endExample">
+        <br>
+        <table>
+          <tr>
+            <td><strong>Date</strong></td>
+            <td><strong>Time</strong></td>
+          </tr>
+          <tr>
+            <td nowrap=""><input type="text" title="Enter the Date in DD/MM/YY format" maxlength="10" value="" name="date" size="10" id="fdate"></td>
+            <td nowrap="nowrap"><input type="text" title="Enter the Time in HH:MM AM or PM format" maxlength="8" value="" name="time" size="5" id="ftime"></td>
+          </tr>
+      </table>
+Plan by:
+          <select name="ttype">
+            <option value="dep">Departure Time</option>
+            <option value="arr">Arrival Time</option>
+          </select>
+        <center>
+          <input name="Submit" type="submit" value="Get directions">
+      </center></td>
+    </tr>
+  </table>
+</form>
+           
+<script language="javascript">
+
+// calculate the current time 
+ 
+	var currentTime = new Date() ;
+	var hours = currentTime.getHours() ;
+	var minutes = currentTime.getMinutes() ;
+	
+	var currentDay = currentTime.getDate() ;
+	var currentMonth = currentTime.getMonth() + 1 ;
+//	var currentYear = currentTime.getYear() ;  07/10/2011 by Vlad
+    var currentYear = currentTime.getFullYear() ;
+
+// account for leading zero  
+	if (minutes < 10)
+		minutes = "0" + minutes
+// 07/10/2011 by Vlad		
+	if (hours < 10)
+		hours = "0" + hours
+	if (currentDay < 10)
+		currentDay = "0" + currentDay	
+	if (currentMonth < 10)
+		currentMonth = "0" + currentMonth			
+  
+	var displayTime = hours + ":" + minutes ;
+
+// populate the current time
+	document.getElementById(\'ftime\').value = displayTime ;
+
+// populate the address examplates
+	document.getElementById(\'saddr\').value = startExample ;
+	document.getElementById(\'daddr\').value = endExample ;
+	document.getElementById(\'fdate\').value = currentDay + \'/\' + currentMonth + \'/\' + currentYear ;
+
+</script>
+';
+      } else {
     tripPlanForm();
+      }
 }
 include_footer();
 ?>
