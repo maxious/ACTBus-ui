@@ -94,30 +94,6 @@ function getRoutes() {
     return $query->fetchAll();
 }
 
-function getRoutesByNumber($routeNumber = "", $directionID = "",$service_period = "") {
-    global $conn;
-    if ($routeNumber != "") {
-        $query = "Select distinct routes.route_id,routes.route_short_name,routes.route_long_name,service_id from routes  join trips on trips.route_id =
-routes.route_id join stop_times on stop_times.trip_id = trips.trip_id
-where route_short_name = :routeNumber OR route_short_name LIKE :routeNumber2 order by route_short_name;";
-    } else {
-        $query = "SELECT DISTINCT route_short_name from routes order by route_short_name";
-    }
-    debug($query, "database");
-    $query = $conn->prepare($query);
-    if ($routeNumber != "") {
-        $query->bindParam(":routeNumber", $routeNumber);
-        $routeNumber2 = "% " . $routeNumber;
-        $query->bindParam(":routeNumber2", $routeNumber2);
-    }
-    $query->execute();
-    if (!$query) {
-        databaseError($conn->errorInfo());
-        return Array();
-    }
-    return $query->fetchAll();
-}
-
 function getRoutesByNumberSeries($routeNumberSeries = "") {
     global $conn;
     if (strlen($routeNumberSeries) == 1) {
@@ -141,16 +117,19 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where to_n
     return $query->fetchAll();
 }
 
-function getRouteNextTrip($routeID) {
+function getRouteNextTrip($routeID, $directionID) {
     global $conn;
    
     $query = "select routes.route_id,direction_id,trips.trip_id,departure_time from routes join trips on trips.route_id = routes.route_id
-join stop_times on stop_times.trip_id = trips.trip_id where  arrival_time > :currentTime and routes.route_id = :routeID order by
+join stop_times on stop_times.trip_id = trips.trip_id where  arrival_time between :currentTime and :futureTime 
+and routes.route_id = :routeID and trips.direction_id = :directionID order by
 arrival_time limit 1";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":currentTime", current_time());
+        $query->bindParam(":futureTime", current_time(strtotime(current_time() ." +2h")));
     $query->bindParam(":routeID", $routeID);
+    $query->bindParam(":directionID", $directionID);
     $query->execute();
     databaseError($conn->errorInfo());
     if (!$query) {
@@ -158,15 +137,21 @@ arrival_time limit 1";
         return Array();
     }
     $r = $query->fetch(PDO :: FETCH_ASSOC);
+    return $r;
+}
 
-    // past last trip of the day special case
-    if (sizeof($r) < 16) {
-        $query = "select * from routes join trips on trips.route_id = routes.route_id
-join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = :routeID order by
+function getRouteFirstTrip($routeID,$directionID) {
+       global $conn;
+       
+       $query = "select * from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = :routeID 
+and trips.direction_id = :directionID order by
 arrival_time DESC limit 1";
         debug($query, "database");
         $query = $conn->prepare($query);
         $query->bindParam(":routeID", $routeID);
+        
+    $query->bindParam(":directionID", $directionID);
         $query->execute();
         if (!$query) {
             databaseError($conn->errorInfo());
@@ -174,12 +159,11 @@ arrival_time DESC limit 1";
         }
 
         $r = $query->fetch(PDO :: FETCH_ASSOC);
-    }
-    return $r;
+        return $r;
 }
 
-function getRouteAtStop($routeID, $stop_id) {
-    $nextTrip = getRouteNextTrip($routeID);
+function getRouteAtStop($routeID, $directionID, $stop_id) {
+    $nextTrip = getRouteNextTrip($routeID, $directionID);
     if ($nextTrip['trip_id']) {
         foreach (getTripStopTimes($nextTrip['trip_id']) as $tripStop) {
             if ($tripStop['stop_id'] == $stop_id)
@@ -189,7 +173,7 @@ function getRouteAtStop($routeID, $stop_id) {
     return Array();
 }
 
-function getRoutesTrips($routeIDs, $directionID = "", $service_period = "") {
+function getRouteTrips($routeID, $directionID = "", $service_period = "") {
     global $conn;
     if ($service_period == "")
         $service_period = service_period();
@@ -201,12 +185,11 @@ function getRoutesTrips($routeIDs, $directionID = "", $service_period = "") {
         $directionSQL = " and direction_id = :directionID ";
     $query = "select routes.route_id,trips.trip_id,service_id,arrival_time, stop_id, stop_sequence from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id where (service_id=:service_periodA OR service_id=:service_periodB)
-AND (routes.route_id = :routeIDA OR routes.route_id = :routeIDB) " . $directionSQL . " and stop_sequence = '1' order by
+AND (routes.route_id = :routeID) " . $directionSQL . " and stop_sequence = '1' order by
 arrival_time ";
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":routeIDA", $routeIDs[0]);
-    $query->bindParam(":routeIDB", $routeIDs[1]);
+    $query->bindParam(":routeID", $routeID);
     $query->bindParam(":service_periodA", $sidA);
     $query->bindParam(":service_periodB", $sidB);
     if ($directionSQL != "")

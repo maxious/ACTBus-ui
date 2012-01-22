@@ -37,34 +37,18 @@ function displayRoutes($routes) {
     $filteredRoutes = Array();
     foreach ($routes as $route) {
         foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
-            $start = $headsign['stop_name'];
-            $serviceday = service_period_day($headsign['service_id']);
-            $key = $route['route_short_name'] . "." . $headsign['direction_id'];
-            if (isset($filteredRoutes[$key])) {
-                $filteredRoutes[$key]['route_ids'][] = $route['route_id'];
-                $filteredRoutes[$key]['route_ids'] = array_unique($filteredRoutes[$key]['route_ids']);
-            } else {
-                $filteredRoutes[$key]['route_short_name'] = $route['route_short_name'];
-                $filteredRoutes[$key]['route_long_name'] = "starting at " . $start;
-                $filteredRoutes[$key]['service_id'] = $serviceday;
-                $filteredRoutes[$key]['trip_headsign'] = $headsign['trip_headsign'].(strstr($headsign['trip_headsign'], "bound") ===false ?"bound":"");
-                $filteredRoutes[$key]['direction_id'] = $headsign['direction_id'];
-                if (isset($nearby)) {
-                    $filteredRoutes[$key]['distance'] = $route['distance'];
-                }
-            }
-        }
-    }
-    foreach ($filteredRoutes as $key => $route) {
-        echo '<li> <a href="trip.php?routeids=' . implode(",", $route['route_ids']) . '&directionid=' . $route['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
+ 
+        //print_r($route);
+        echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
                    
-                <p>" . $route['trip_headsign'].", ".  $route['route_long_name'] . " (" . ucwords($route['service_id']) . ")</p>";
+                <p>" . $headsign['trip_headsign'].(strstr($headsign['trip_headsign'], "bound") ===false ?"bound":"").", starting at " . $headsign['stop_name'] . " (" . ucwords($headsign['service_id']) . ")</p>";
         if (isset($nearby)) {
-            $time = getRouteAtStop($route['route_id'], $route['stop_id']);
+            $time = getRouteAtStop($route['route_id'],  $headsign['direction_id'], $route['stop_id']);
             echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
         }
         echo"       </a></li>\n";
     }
+}
 }
 
 if (isset($bysuburbs)) {

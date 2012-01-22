@@ -37,12 +37,8 @@ include_header("bus.lambdacomplex.org", "index", false)
             <li><a href="routeList.php?bysuburbs=yes">Routes By Suburb</a></li>
             <li><a class="nearby" href="routeList.php?nearby=yes">Nearby Routes</a></li>
         </ul>
+        <a href="labs/index.php" data-role="button" data-icon="beaker">Busness R&amp;D</a>
+        <a href="myway/index.php" data-role="button">MyWay Balance and Timeliness Survey Results</a>
         <?php
-        print_r(getServiceOverride(time()));
-        echo service_period(time());
-        print_r(service_ids(service_period(time())));
-        echo ' <a href="labs/index.php" data-role="button" data-icon="beaker">Busness R&amp;D</a>';
-        echo ' <a href="myway/index.php" data-role="button">MyWay Balance and Timeliness Survey Results</a>';
-        
         include_footer(true)
         ?>
