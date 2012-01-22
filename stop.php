@@ -106,22 +106,29 @@ if (sizeof($allStopsTrips) > 0) {
 } else {
     $trips = getStopTripsWithTimes($stopid);
 }
+
 echo "<div class='ui-header' style='overflow: visible; height: 2.5em'>";
+// if we have too many trips, cut down to size.
+if (sizeof($trips) > 10) {
+    $trips = array_splice($trips, 0,10);
+}
+    
 // later/earlier button setup
 if (sizeof($trips) == 0) {
     $time = isset($_REQUEST['time']) ? strtotime($_REQUEST['time']) : time();
     $earlierTime = $time - (90 * 60);
     $laterTime = $time + (90 * 60);
 } else {
-    $earlierTime = strtotime($trips[0]['arrival_time']) - (90 * 60);
-    $laterTime = strtotime($trips[sizeof($trips) - 1]['arrival_time']) - 60;
+    $tripsKeys = array_keys($trips);
+    $earlierTime = strtotime($trips[$tripsKeys[0]]['arrival_time']) - (90 * 60);
+    $laterTime = strtotime($trips[$tripsKeys[sizeof($trips) - 1]]['arrival_time']) - 60;
 }
 if (sizeof($stopids) > 0) {
     $stopidurl = "stopids=" . implode(",", $stopids);
 } else {
     $stopidurl = "stopid=$stopid";
 }
-if (sizeof($trips) > 10) {
+if (sizeof($trips) >= 10) {
     echo '<a href="stop.php?' . $stopidurl . '&service_period=' . service_period() . '&time=' . date("H:i", $laterTime) . '" data-icon="arrow-r" class="ui-btn-right">Later Trips</a>';
 }
 echo '<a href="stop.php?' . $stopidurl . '&service_period=' . service_period() . '&time=' . date("H:i", $earlierTime) . '" data-icon="arrow-l" class="ui-btn-left">Earlier Trips</a>';
