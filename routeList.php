@@ -32,23 +32,36 @@ function navbar() {
 }
 
 function displayRoutes($routes) {
-    global $nearby;
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-    $filteredRoutes = Array();
     foreach ($routes as $route) {
         foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
- 
-        //print_r($route);
-        echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
+
+            //print_r($route);
+            echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
                    
-                <p>" . $headsign['trip_headsign'].(strstr($headsign['trip_headsign'], "bound") ===false ?"bound":"").", starting at " . $headsign['stop_name'] . " (" . ucwords($headsign['service_id']) . ")</p>";
-        if (isset($nearby)) {
-            $time = getRouteAtStop($route['route_id'],  $headsign['direction_id'], $route['stop_id']);
-            echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
+                <p>" . $headsign['trip_headsign'] . (strstr($headsign['trip_headsign'], "bound") === false ? "bound" : "") . ", starting at " . $headsign['stop_name'] . " (" . ucwords($headsign['service_id']) . ")</p>";
+
+            echo"       </a></li>\n";
         }
-        echo"       </a></li>\n";
     }
 }
+
+function displayNearbyRoutes($routes) {
+    echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
+    foreach ($routes as $route) {
+        $time = getRouteAtStop($route['route_id'], $route['direction_id'], $route['stop_id']);
+ $start = getTripStartingPoint($time['trip_id']); 
+    $end = getTripDestination($time['trip_id']);
+        //print_r($route);
+        echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $route['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
+                   
+                <p>" . $time['trip_headsign'] . (strstr($time['trip_headsign'], "bound") === false ? "bound" : "") . " from ".$start['stop_name']." to ".$end['stop_name'] . " (" . ucwords($time['service_id']) . ")</p>";
+        $stop = getStop($route['stop_id']);
+echo "<p>Board at ".$stop['stop_name']."</p>";
+        echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
+        
+    echo"       </a></li>\n";
+    }
 }
 
 if (isset($bysuburbs)) {
@@ -90,7 +103,7 @@ if (isset($bysuburbs)) {
 
 
     if (sizeof($routes) > 0) {
-        displayRoutes($routes);
+        displayNearbyRoutes($routes);
     } else {
         echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
         echo "<li style='text-align: center;'> No routes nearby.</li>";
@@ -100,7 +113,7 @@ if (isset($bysuburbs)) {
     navbar();
     echo ' <ul data-role="listview"  data-inset="true">';
     if (isset($bynumber)) {
-        $routes = getRoutesByNumber();
+        $routes = getRoutes();
         $routeSeries = Array();
         $seriesRange = Array();
         foreach ($routes as $key => $routeNumber) {

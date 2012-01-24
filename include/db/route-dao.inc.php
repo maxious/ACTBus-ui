@@ -61,8 +61,8 @@ and stop_times.stop_sequence = 1 group by stops.stop_name, trip_headsign, direct
     }
     return $query->fetchAll();
 }
-function getRouteDescription($routeID) {
-    $trip = getRouteNextTrip($routeID);
+function getRouteDescription($routeID, $directionID) {
+    $trip = getRouteNextTrip($routeID, $directionID);
     $start = getTripStartingPoint($trip['trip_id']); 
     $end = getTripDestination($trip['trip_id']);
     return "From ".$start['stop_name']." to ".$end['stop_name'];
@@ -120,14 +120,16 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where to_n
 function getRouteNextTrip($routeID, $directionID) {
     global $conn;
    
-    $query = "select routes.route_id,direction_id,trips.trip_id,departure_time from routes join trips on trips.route_id = routes.route_id
+    $query = "select routes.route_id,direction_id,trips.trip_id,trip_headsign,departure_time from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id where  arrival_time between :currentTime and :futureTime 
 and routes.route_id = :routeID and trips.direction_id = :directionID order by
 arrival_time limit 1";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":currentTime", current_time());
-        $query->bindParam(":futureTime", current_time(strtotime(current_time() ." +2h")));
+    $futureTime = current_time(strtotime(current_time() ." +2h"));
+    if (date("h",strtotime(current_time()) > 22)) $futureTime = "23:59:59";
+        $query->bindParam(":futureTime", $futureTime);
     $query->bindParam(":routeID", $routeID);
     $query->bindParam(":directionID", $directionID);
     $query->execute();
@@ -273,7 +275,7 @@ function getRoutesNearby($lat, $lng, $limit = "", $distance = 500) {
     if ($limit != "")
         $limitSQL = " LIMIT :limit ";
     global $conn;
-    $query = "SELECT service_id,trips.route_id,route_short_name,route_long_name,min(stops.stop_id) as stop_id,
+    $query = "SELECT service_id,trips.route_id,trips.direction_id,route_short_name,route_long_name,min(stops.stop_id) as stop_id,
         min(ST_Distance(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), FALSE)) as distance
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
@@ -281,7 +283,7 @@ join routes on trips.route_id = routes.route_id
 join stops on stops.stop_id = stop_times.stop_id
 WHERE (service_id=:service_periodA OR service_id=:service_periodB)
 AND ST_DWithin(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), :distance, FALSE)
-        group by service_id,trips.route_id,route_short_name,route_long_name
+        group by service_id,trips.route_id,trips.direction_id,route_short_name,route_long_name
         order by distance $limitSQL";
     debug($query, "database");
     $query = $conn->prepare($query);
