@@ -94,9 +94,8 @@ if (isset($bysuburbs)) {
         //var_dump($stops);
         $stopsGrouped = Array();
         foreach ($stops as $key => $stop) {
-            if (stopCompare($stops[$key]["stop_name"]) 
-                    != stopCompare($stops[$key + 1]["stop_name"])
-                    || $key + 1 >= sizeof($stops)) {
+            if ($key + 1 >= sizeof($stops) || 
+                    stopCompare($stops[$key]["stop_name"]) != stopCompare($stops[$key + 1]["stop_name"])) {
                 if (sizeof($stopsGrouped) > 0) {
                     // print and empty grouped stops
                     // subsequent duplicates

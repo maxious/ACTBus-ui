@@ -78,7 +78,7 @@ FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 join stops on stops.stop_id = stop_times.stop_id
-WHERE trips.trip_id = :tripID $range ORDER BY stop_sequence";
+WHERE trips.trip_id = :tripID ORDER BY stop_sequence";
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":tripID", $tripID);

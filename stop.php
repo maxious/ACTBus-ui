@@ -127,7 +127,7 @@ if (sizeof($trips) == 0) {
     $earlierTime = strtotime($trips[$tripsKeys[0]]['arrival_time']) - (90 * 60);
     $laterTime = strtotime($trips[$tripsKeys[sizeof($trips) - 1]]['arrival_time']) - 60;
 }
-if (sizeof($stopids) > 0) {
+if (isset($stopids) && sizeof($stopids) > 0) {
     $stopidurl = "stopids=" . implode(",", $stopids);
 } else {
     $stopidurl = "stopid=$stopid";
