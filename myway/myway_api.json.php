@@ -84,6 +84,9 @@ if (!isset($return['error'])) {
     curl_setopt($ch, CURLOPT_REFERER, "https://www.transport.act.gov.au/ARTS/getbalance.asp");
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    // ssl ignore
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
     //execute post
     $pageHTML = curl_exec($ch);
     if (curl_errno($ch))
