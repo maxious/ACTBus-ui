@@ -212,23 +212,22 @@ function getRoutesByDestination($destination = "", $service_period = "") {
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
     if ($destination != "") {
-        $query = "SELECT DISTINCT trips.route_id,route_short_name,route_long_name, service_id
+       /* $query = "SELECT DISTINCT trips.route_id,route_short_name,route_long_name, service_id
 FROM stop_times join trips on trips.trip_id =
 stop_times.trip_id join routes on trips.route_id = routes.route_id
 WHERE route_long_name = :destination AND (service_id=:service_periodA OR service_id=:service_periodB)
- order by route_short_name";
+ order by route_short_name";*/
+        $query = "select route_id, direction_id, stop_name, b.trip_id, b.stop_sequence from (select route_id, direction_id, max(stop_sequence) as stop_sequence, max(a.trip_id) as trip_id  from stop_times inner join (SELECT route_id, direction_id, max(trip_id) as trip_id
+        from trips group by route_id,direction_id) as a on stop_times.trip_id = a.trip_id group by route_id, direction_id) as b inner join stop_times on b.trip_id = stop_times.trip_id inner join stops on stop_times.stop_id = stops.stop_id where stop_times.stop_sequence = b.stop_sequence and stop_name = :destination order by route_id;";
     } else {
-        $query = "SELECT DISTINCT route_long_name
-FROM stop_times join trips on trips.trip_id =
-stop_times.trip_id join routes on trips.route_id = routes.route_id
-WHERE (service_id=:service_periodA OR service_id=:service_periodB)
- order by route_long_name";
+        $query = "select stop_name from (select route_id, direction_id, max(stop_sequence) as stop_sequence, max(a.trip_id) as trip_id  from stop_times inner join (SELECT route_id, direction_id, max(trip_id) as trip_id
+        from trips group by route_id,direction_id) as a on stop_times.trip_id = a.trip_id group by route_id, direction_id) as b inner join stop_times on b.trip_id = stop_times.trip_id inner join stops on stop_times.stop_id = stops.stop_id where stop_times.stop_sequence = b.stop_sequence group by stop_name order by stop_name;";
     }
     debug($query, "database");
     $query = $conn->prepare($query);
 
-    $query->bindParam(":service_periodA", $sidA);
-    $query->bindParam(":service_periodB", $sidB);
+    //$query->bindParam(":service_periodA", $sidA);
+    //$query->bindParam(":service_periodB", $sidB);
     if ($destination != "")
         $query->bindParam(":destination", $destination);
     $query->execute();

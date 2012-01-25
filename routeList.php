@@ -37,7 +37,7 @@ function displayRoutes($routes) {
         foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
 
             //print_r($route);
-            echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
+            echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route['route_id'] . "</h3>
                    
                 <p>" . $headsign['trip_headsign'] . (strstr($headsign['trip_headsign'], "bound") === false ? "bound" : "") . ", starting at " . $headsign['stop_name'] . " (" . ucwords($headsign['service_id']) . ")</p>";
 
@@ -157,7 +157,7 @@ if (isset($bysuburbs)) {
         displayRoutes(getRoutesByDestination($routeDestination));
     } else {
         foreach (getRoutesByDestination() as $destination) {
-            echo '<li><a href="' . curPageURL() . '/routeList.php?routeDestination=' . urlencode($destination['route_long_name']) . '">' . $destination['route_long_name'] . "... </a></li>\n";
+            echo '<li><a href="' . curPageURL() . '/routeList.php?routeDestination=' . urlencode($destination['stop_name']) . '">' . $destination['stop_name'] . "... </a></li>\n";
         }
     }
 }
