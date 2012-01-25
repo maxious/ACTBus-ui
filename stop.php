@@ -73,7 +73,8 @@ if (isset($stopids)) {
         //}
     }
 }
-include_header($stop['stop_name'], "stop");
+$stopDescParts = explode("<br>",$stop['stop_desc']);
+include_header(trim(str_replace("Street: ","",$stopDescParts[0])), "stop");
 
 /* $serviceAlerts = json_decode(getPage(curPageURL() . "/servicealerts_api.php?filter_class=stop&filter_id=".$stopid) , true);
 
