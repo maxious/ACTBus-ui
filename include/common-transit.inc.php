@@ -33,26 +33,33 @@ function service_period($date = "") {
     }
     $date = ($date != "" ? $date : time());
     $dow = date('w', $date);
-    
-        switch ($dow) {
-            case 0:
-                return 'sunday';
-            case 6:
-                return 'saturday';
-            default:
-                return 'weekday';
-        }
+
+    switch ($dow) {
+        case 0:
+            return 'sunday';
+        case 6:
+            return 'saturday';
+        default:
+            return 'weekday';
+    }
 }
 
-function service_ids($service_period) {
+function service_ids($service_period, $date = "") {
     switch ($service_period) {
         case 'sunday':
             return Array("Sunday", "Sunday");
         case 'saturday':
             return Array("Saturday", "Saturday");
         default:
-            //return 'weekday';
-            return Array("Weekday", "Weekday-SchoolVacation");
+            $date = ($date != "" ? $date : time());
+// school holidays
+            $ymd = date('Ymd', $date);
+            $dow = date('w', $date);
+            if (intval($ymd) < "20120203" && $dow != 0 && $dow != 6) {
+                return Array("Weekday-SchoolVacation", "Weekday-SchoolVacation");
+            } else {
+                return Array("Weekday", "Weekday");
+            }
     }
 }
 
