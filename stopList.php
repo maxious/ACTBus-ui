@@ -36,8 +36,8 @@ if (isset($bysuburbs)) {
     navbar();
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
     if (!isset($firstLetter)) {
-        foreach (range('A', 'Z') as $letter) {
-            echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;bysuburbs=yes\">$letter...</a></li>\n";
+        foreach (range('A', 'Y') as $letter) { // no suburbs start with J, Q, U, V, X or Z
+            if ($letter != "J" && $letter != "Q" && $letter != "U" && $letter != "V" && $letter != "X") echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;bysuburbs=yes\">$letter...</a></li>\n";
         }
     } else {
         foreach ($suburbs as $suburb) {
@@ -86,9 +86,9 @@ if (isset($bysuburbs)) {
         navbar();
     } 
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
-    if (!isset($firstLetter) && !isset($suburb) && !isset($nearby)) {
-        foreach (range('A', 'Z') as $letter) {
-            echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;$listType\">$letter...</a></li>\n";
+    if (!isset($firstLetter) && !isset($suburb) && !isset($nearby)) { // all stops by letter
+        foreach (range('A', 'Y') as $letter) { // no streets start with X or Z
+            if ($letter != "X") echo "<li><a href=\"stopList.php?firstLetter=$letter&amp;$listType\">$letter...</a></li>\n";
         }
     } else {
         //var_dump($stops);
