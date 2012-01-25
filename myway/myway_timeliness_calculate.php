@@ -58,10 +58,18 @@ foreach ($uncalcdObservations as $obsv) {
     $search_time = date("H:i:s", strtotime($obsv['time']) - (60 * 60)); // 30 minutes margin
     $date = date("c", strtotime($obsv['time']));
     $timing_period = service_period(strtotime($date));
+    
+    // little hack for public holidays nolonger active; weekdays and 900+ route numbers don't make sense
+    if ($timing_period == "weekday" && preg_match('/9../',$obsv["route_short_name"]))  {
+        echo "Potential public holiday detected, trying Sunday timetable.<br>";
+        
+        $timing_period = "sunday";
+    }
+    
     if (isset($obsv["stop_id"]) && $obsv["stop_id"] != "" && $obsv["stop_id"] != "*") {
     $potentialStops = Array(getStop($obsv["stop_id"]));
     } else {
-        echo "Potential stops are a bus station<br>";
+        echo "No stop_id recorded for this stop_name, potential stops are a bus station<br>";
         $potentialStops = getStops("",  trim(str_replace(Array("Arrival","Arrivals","Arrive Platform 3 Set down only.","Arrive","Set Down Only"), "", $obsv["myway_stop"])));
     }
     //:get myway_stops records
