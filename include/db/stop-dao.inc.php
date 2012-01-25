@@ -46,7 +46,7 @@ function getStops($firstLetter = "", $startsWith = "") {
         }
     }
     $query .= " order by stop_name;";
-    debug($query,"database");
+    debug($query, "database");
     $query = $conn->prepare($query);
     if ($firstLetter != "")
         $query->bindParam(":firstLetter", $firstLetter);
@@ -167,16 +167,16 @@ function getStopTrips($stopID, $service_period = "", $afterTime = "", $limit = "
     if ($service_period == "") {
         $service_period = service_period();
     }
-        $service_ids = service_ids($service_period);
+    $service_ids = service_ids($service_period);
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
     $limitSQL = "";
     if ($limit != "")
         $limitSQL .= " LIMIT :limit ";
-        
+
     global $conn;
     if ($afterTime != "") {
-        $query = " SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,trips.direction_id,route_short_name,route_long_name,end_times.arrival_time as end_time
+        $query = " SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,trips.direction_id,trips.trip_headsign,route_short_name,route_long_name,end_times.arrival_time as end_time
 FROM stop_times
 join trips on trips.trip_id =
 stop_times.trip_id
@@ -184,7 +184,7 @@ join routes on trips.route_id = routes.route_id , (SELECT trip_id,max(arrival_ti
 	WHERE stop_times.arrival_time IS NOT NULL group by trip_id) as end_times 
 WHERE stop_times.stop_id = :stopID
 AND stop_times.trip_id = end_times.trip_id
-AND (service_id=:service_periodA OR service_id=:service_periodB) ".($route_short_name != "" ? " AND route_short_name = :route_short_name ":"")." 
+AND (service_id=:service_periodA OR service_id=:service_periodB) " . ($route_short_name != "" ? " AND route_short_name = :route_short_name " : "") . " 
 AND end_times.arrival_time > :afterTime
 ORDER BY end_time $limitSQL";
     } else {
@@ -194,7 +194,7 @@ join trips on trips.trip_id =
 stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 WHERE stop_times.stop_id = :stopID
-AND (service_id=:service_periodA OR service_id=:service_periodB) ".($route_short_name != "" ? " AND route_short_name = :route_short_name ":"")." 
+AND (service_id=:service_periodA OR service_id=:service_periodB) " . ($route_short_name != "" ? " AND route_short_name = :route_short_name " : "") . " 
 ORDER BY arrival_time $limitSQL";
     }
     debug($query, "database");

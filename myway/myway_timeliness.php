@@ -41,8 +41,18 @@ $i = 0;
 $labels = Array();
 $lastRoute = "";
 foreach ($query->fetchAll() as $delta) {
+      /*$routeIDParts = explode(" ",$delta['route_name']);
+    $routeNumber = $routeIDParts[0];
+    $routeDirection = $routeIDParts[1];
+    if (preg_match('/31./',$routeName)) {
+        $routeName = "312-319"." ".$routeDirection;
+    } else {
+        $routeName = $delta['route_name'];
+    }*/
+    
     $routeName = $delta['route_name'];
-    if (preg_match('/z/',$routeName)) {
+    
+    if (preg_match('/31./',$routeName)) {
         $routeName = "312-319";
     } else {
         $routeName = preg_replace('/\D/', '', $routeName);

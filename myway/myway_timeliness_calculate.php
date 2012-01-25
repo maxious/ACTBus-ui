@@ -110,7 +110,7 @@ foreach ($uncalcdObservations as $obsv) {
                                 "timeDiff" => $timeDiff,
                                 "stop_id" => $potentialStop['stop_id'],
                                 "stop_sequence" => $trip['stop_sequence'],
-                                "route_name" => "{$trip['route_short_name']} {$trip['route_long_name']} {$trip['direction']}",
+                                "route_name" => "{$trip['route_short_name']} {$trip['trip_headsign']}",
                                 "route_id" => $trip['route_id']
                             );
                             echo "Found trip {$trip['trip_id']} at stop {$potentialStop['stop_id']} (#{$potentialStop['stop_name']}, sequence #{$trip['stop_sequence']})<br>";
