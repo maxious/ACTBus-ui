@@ -95,7 +95,7 @@ foreach ($uncalcdObservations as $obsv) {
     }
     $timeDeltas = Array();
     foreach ($potentialRoutes as $potentialRoute) {
-        echo "Matched route: {$potentialRoute['route_id']} {$potentialRoute['route_short_name']}{$potentialRoute['route_long_name']} {$timing_period}<br>";
+        echo "Matched route: {$potentialRoute['route_id']} {$potentialRoute['route_short_name']} {$timing_period}<br>";
         foreach ($potentialStops as $potentialStop) {
             $stopRoutes = getStopRoutes($potentialStop['stop_id'], $timing_period);
             $foundRoute = Array();

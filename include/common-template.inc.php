@@ -54,7 +54,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <link rel="dns-prefetch" href="//code.jquery.com">
 <link rel="dns-prefetch" href="//ajax.googleapis.com">
 	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
-    $jqmVersion = "1.0";
+    $jqmVersion = "1.0.1";
     if (isDebugServer()) {
         $jqmcss = $basePath . "css/jquery.mobile-$jqmVersion.css";
         $jqjs = $basePath . "js/jquery-1.6.4.min.js";

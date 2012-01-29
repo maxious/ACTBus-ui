@@ -62,7 +62,7 @@ if (isset($_SESSION['lastUpdated']) && $_SESSION['lastUpdated'] + $TIMEOUT_LIMIT
 
 //debug(print_r($_SESSION, true) , "session");
 function current_time($time = "") {
-    if ($_REQUEST['time']) return $_REQUEST['time'];
+    if (isset($_REQUEST['time'])) return $_REQUEST['time'];
     else if ($time != "") date("H:i:s",$time);
     else return date("H:i:s");
 }
