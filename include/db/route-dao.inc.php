@@ -266,12 +266,13 @@ WHERE stop_desc LIKE :suburb AND (service_id=:service_periodA OR service_id=:ser
 }
 
 function getRoutesNearby($lat, $lng, $limit = "", $distance = 500) {
-    if ($service_period == "")
+   // if ($service_period == "")
         $service_period = service_period();
     $service_ids = service_ids($service_period);
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
-    if ($limit != "")
+ $limitSQL = "";
+    if ($limit != "") 	
         $limitSQL = " LIMIT :limit ";
     global $conn;
     $query = "SELECT service_id,trips.route_id,trips.direction_id,route_short_name,route_long_name,min(stops.stop_id) as stop_id,

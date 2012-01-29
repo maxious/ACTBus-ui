@@ -92,7 +92,7 @@ if (isset($bysuburbs)) {
 } else if (isset($nearby)) {
     $routes = Array();
     include_header("Routes Nearby", "routeList", true, true);
-    trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
+    if (isset($_SESSION['lat'])) trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
     navbar();
     placeSettings();
     if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
