@@ -36,7 +36,7 @@ trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $d
 echo '<span class="content-secondary">';
 echo '<a href="' . $trip['route_url'] . '">View Original Timetable/Map</a> ';
 echo '<a href="geo/trip.kml.php?tripid='.$tripid.'">View Trip in Google Earth</a> ';
-echo '<a href="geo/route.kml.php?routeid='.$tripid.'">View Route in Google Earth</a>';
+echo '<a href="geo/route.kml.php?routeid='.$routeid.'">View Route in Google Earth</a>';
 echo '<h2>Via:</h2> <small>' . viaPointNames($tripid) . '</small>';
 echo '<h2>Other Trips:</h2> ';
 $routeTrips = getRouteTrips($routeid, $trip['direction_id'], $service_period);

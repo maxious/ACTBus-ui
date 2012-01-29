@@ -72,4 +72,3 @@ if (isset($_REQUEST['stopid'])) {
 if (isset($_REQUEST['geolocate'])) {
     $geolocate = filter_var($_REQUEST['geolocate'], FILTER_SANITIZE_URL);
 }
-?>

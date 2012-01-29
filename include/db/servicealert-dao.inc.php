@@ -173,5 +173,3 @@ function addInformedAlert($serviceAlertID, $class, $id, $action) {
     }
     return null;
 }
-
-?>

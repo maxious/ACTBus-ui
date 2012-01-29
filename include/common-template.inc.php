@@ -304,4 +304,3 @@ function viaPointNames($tripid, $stop_sequence = "") {
         return "";
     }
 }
-?>

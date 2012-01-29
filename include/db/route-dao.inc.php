@@ -299,5 +299,3 @@ AND ST_DWithin(position, ST_GeographyFromText('SRID=4326;POINT($lng $lat)'), :di
     }
     return $query->fetchAll();
 }
-
-?>

@@ -67,4 +67,3 @@ function current_time($time = "") {
     else return date("H:i:s");
 }
 
-?>

@@ -246,5 +246,3 @@ function getStopTripsWithTimes($stopID, $time = "", $service_period = "", $time_
     }
     return $timedTrips;
 }
-
-?>

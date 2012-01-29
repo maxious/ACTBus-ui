@@ -1,6 +1,6 @@
 <?php
 include ('../include/common.inc.php');
-$debugOkay = Array();
+$debugOkay = Array(); // disable debugging output even on dev server
 
 /*
 *DISCLAIMER

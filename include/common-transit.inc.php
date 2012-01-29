@@ -301,4 +301,3 @@ if ($GTFSREnabled) {
     }
 
 }
-?>

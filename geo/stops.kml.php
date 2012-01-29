@@ -1,6 +1,8 @@
 <?php
 header('Content-type: application/vnd.google-earth.kml+xml');
 include ('../include/common.inc.php');
+header('Content-Disposition: attachment; filename="stops.kml"');
+$debugOkay = Array(); // disable debugging output even on dev server
 //http://wiki.openstreetmap.org/wiki/OpenLayers_Dynamic_KML
 // Creates the KML/XML Document.
 $dom = new DOMDocument('1.0', 'UTF-8');
@@ -13,7 +15,7 @@ $docNode = $parNode->appendChild($dnode);
 if ($suburb != "") $result_stops = getStopsBySuburb($suburb);
 else $result_stops = getStops();
 foreach ($result_stops as $stop) {
-	$description = baseURL() . 'stop.php?stopid=' . $stop['stop_id'] . " <br>";
+	$description = '<a href="'.curPageURL() . '/../stop.php?stopid=' . $stop['stop_id'] . '">View stop page</a><br>';
 	// Creates a Placemark and append it to the Document.
 	$node = $dom->createElement('Placemark');
 	$placeNode = $docNode->appendChild($node);

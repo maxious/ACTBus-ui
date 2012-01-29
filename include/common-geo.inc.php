@@ -167,5 +167,3 @@ function reverseGeocode($lat, $lng) {
     $contents = json_decode(getPage($url));
     return $contents->features[0]->properties->name;
 }
-
-?>

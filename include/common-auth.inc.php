@@ -30,4 +30,3 @@ function auth()
         login();
          } 
     } 
-?>

@@ -33,8 +33,8 @@ $bbox = $_GET['bbox']; // get the bbox param from google earth
 list($bbox_south, $bbox_west, $bbox_north, $bbox_east) = explode(",", $bbox); // west, south, east, north
 
 include ('../include/common.inc.php');
-$debugOkay = Array();
-$contents = getNearbyStops((($bbox_west + $bbox_east) / 2), ($bbox_south + $bbox_north) / 2, 50, 3000);
+$debugOkay = Array(); // disable debugging output even on dev server
+//$contents = getNearbyStops((($bbox_west + $bbox_east) / 2), ($bbox_south + $bbox_north) / 2, 50, 3000);
 foreach ($contents as $stop) {
     $description = 'http://bus.lambdacomplex.org/' . 'stop.php?stopid=' . $stop['stop_id'] . " <br>";
     $trips = getStopTripsWithTimes($stop['stop_id'], "", "", "", 3);

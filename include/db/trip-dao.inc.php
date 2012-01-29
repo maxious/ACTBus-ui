@@ -35,7 +35,7 @@ function getTrip($tripID) {
 }
 function getTripStops($tripID) {
     global $conn;
-    $query = "SELECT stop_id, stop_name, ST_AsKML(position) as positionkml,
+    $query = "SELECT stops.stop_id, stop_name, ST_AsKML(position) as positionkml,
 	stop_sequence, trips.trip_id
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
@@ -49,7 +49,7 @@ WHERE trips.trip_id = :tripID ORDER BY stop_sequence";
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchColumn(0);
+    return $query->fetchAll();
 }
 function getTripShape($tripID) {
     // todo, use shapes table if shape_id specified
@@ -203,6 +203,3 @@ WHERE stop_times.trip_id = :tripID
     }
     return $query->fetchAll();
 }
-
-
-?>

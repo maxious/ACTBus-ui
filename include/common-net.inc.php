@@ -35,11 +35,6 @@ function getPage($url) {
     debug(print_r($page, true), "json");
     return $page;
 }
-function baseURL() {
-     $protocol = $_SERVER['HTTPS'] ? "https" : "http";
-  return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-}
 function curPageURL() {
     $isHTTPS = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on");
     $port = (isset($_SERVER["SERVER_PORT"]) && ((!$isHTTPS && $_SERVER["SERVER_PORT"] != "80") || ($isHTTPS && $_SERVER["SERVER_PORT"] != "443")));
@@ -48,4 +43,3 @@ function curPageURL() {
     return $url;
 }
 
-?>

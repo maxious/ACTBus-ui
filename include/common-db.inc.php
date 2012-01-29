@@ -36,4 +36,3 @@ include ('db/route-dao.inc.php');
 include ('db/trip-dao.inc.php');
 include ('db/stop-dao.inc.php');
 include ('db/servicealert-dao.inc.php');
-?>
