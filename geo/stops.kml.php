@@ -1,11 +1,11 @@
 <?php
-include ('../include/common.inc.php');
 header('Content-type: application/vnd.google-earth.kml+xml');
+include ('../include/common.inc.php');
 //http://wiki.openstreetmap.org/wiki/OpenLayers_Dynamic_KML
 // Creates the KML/XML Document.
 $dom = new DOMDocument('1.0', 'UTF-8');
 // Creates the root KML element and appends it to the root document.
-$node = $dom->createElementNS('http://earth.google.com/kml/2.1', 'kml');
+$node = $dom->createElementNS('http://www.opengis.net/kml/2.2', 'kml');
 $parNode = $dom->appendChild($node);
 // Creates a KML Document element and append it to the KML element.
 $dnode = $dom->createElement('Document');
@@ -13,7 +13,7 @@ $docNode = $parNode->appendChild($dnode);
 if ($suburb != "") $result_stops = getStopsBySuburb($suburb);
 else $result_stops = getStops();
 foreach ($result_stops as $stop) {
-	$description = 'http://bus.lambdacomplex.org/' . 'stop.php?stopid=' . $stop['stop_id'] . " <br>";
+	$description = baseURL() . 'stop.php?stopid=' . $stop['stop_id'] . " <br>";
 	// Creates a Placemark and append it to the Document.
 	$node = $dom->createElement('Placemark');
 	$placeNode = $docNode->appendChild($node);

@@ -14,16 +14,16 @@ echo '
         <color>7f00ffff</color>
       </PolyStyle>
 	</Style>';
-$route = getRoute($routeid);
+$trip = getTrip($tripid);
 echo "\n<Placemark>\n";
-
-$link = curPageURL() . "/../trip.php?routeid=" . htmlspecialchars($route["route_id"]);
-echo "<name>" . $route['route_short_name'] . "</name>";
+$link = curPageURL() . "/../trip.php?tripid=" . htmlspecialchars($$tripid);
+echo "<name>" . $tripid . "</name>";
 echo '<atom:link href="' . $link . '"/>';
-echo '<description><![CDATA[ <a href="' . $link . '">' . $route['route_short_name'] . " " . $route['route_long_name'] . "</a>]]> </description>";
+echo '<description><![CDATA[ <a href="' . $link . '">' . $tripid . "</a>]]> </description>";
 echo "<styleUrl>#yellowLineGreenPoly</styleUrl>";
-$trip = getRouteNextTrip($routeid);
-echo getTripShape($trip['trip_id']);
+
+
+echo getTripShape($tripid);
 
 echo "</Placemark>\n</Document></kml>\n";
 ?>
