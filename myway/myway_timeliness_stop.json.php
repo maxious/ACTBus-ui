@@ -42,6 +42,8 @@ if (count($points) == 0) {
     echo "[]";
 }
 else
-    echo "[" . implode(",", $points) . "]";
+    echo "[" . implode(",", $points) . "],";
 ?>
+
+"points": { "show" : true }
 }

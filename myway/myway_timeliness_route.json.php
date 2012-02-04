@@ -36,6 +36,7 @@ if (!$query) {
 foreach ($query->fetchAll() as $delta) {
     $points[] = "[{$delta['stop_sequence']}, {$delta['timing_delta']}]";
 };
-echo "[" . implode(",", $points) . "]";
+echo "[" . implode(",", $points) . '],';
 ?>
+"points": { "show" : true }
 }

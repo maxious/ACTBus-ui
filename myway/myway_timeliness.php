@@ -17,10 +17,10 @@
 include ('../include/common.inc.php');
 include_header("MyWay Deltas", "mywayDelta");
 ?>
-
-    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../js/flot/excanvas.min.js"></script><![endif]--> 
-
-<script language="javascript" type="text/javascript" src="../js/flot/jquery.flot.js"></script> 
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="../js/FlashCanvas/bin/flashcanvas.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../js/flotr2/flotr2.min.js"></script>
 <center><div id="placeholder" style="width:900px;height:550px"></div></center>
 <script type="text/javascript"> 
     $(function () {
@@ -67,9 +67,9 @@ foreach ($query->fetchAll() as $delta) {
 };
 ?>
 
-        var placeholder = $("#placeholder");
+        var placeholder = document.getElementById("placeholder");
 
-        var plot = $.plot(placeholder, [
+        var plot = Flotr.draw(placeholder, [
 <?php
 foreach ($labels as $key => $label) {
     echo "        {
@@ -83,64 +83,32 @@ foreach ($labels as $key => $label) {
         {
             xaxis: {
                 mode: "time",
-                min: midnight + (1000*60*60*8),
+                 min: midnight + (1000*60*60*5.6),
                 max: midnight + (1000*60*60*23.5)
+
             },
             yaxis: {
-                tickFormatter: yformatter
+                tickFormatter: yformatter,
+                min: -60*8,
+                max: 60*8
             },
-            grid: { hoverable: true, clickable: true, labelMargin: 32   }
+            mouse: { track: true, relative: true, trackFormatter: showTooltip}
         });
-        var o;
-        o = plot.pointOffset({ x: midnight+ (9*60*60*1000), y: -1.2});
-        placeholder.append('<div style="position:absolute;left:' + (o.left + 4) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">9am</div>');
-        o = plot.pointOffset({ x: midnight+ (16*60*60*1000), y: -1.2});
-        placeholder.append('<div style="position:absolute;left:' + (o.left + 4) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">4pm</div>');
-
+       
     });
     function yformatter(v) {
         if (Math.floor(v/60) < -9) return "";
         return Math.abs(Math.floor(v/60)) + " min " + (v == 0 ? "" : (v >0 ? "early":"late"))
     }
-    function showTooltip(x, y, contents) {
-        $('<div id="tooltip">' + contents + '</div>').css( {
-            position: 'absolute',
-            display: 'none',
-            top: y + 5,
-            left: x + 5,
-            border: '1px solid #fdd',
-            padding: '2px',
-            'background-color': '#fee',
-            opacity: 0.80
-        }).appendTo("body").fadeIn(200);
-    }
- 
-    var previousPoint = null;
-    $("#placeholder").bind("plothover", function (event, pos, item) {
-        $("#x").text(pos.x.toFixed(2));
-        $("#y").text(pos.y.toFixed(2));
- 
-        if (item) {
-            if (previousPoint != item.dataIndex) {
-                previousPoint = item.dataIndex;
-                    
-                $("#tooltip").remove();
-                var x = item.datapoint[0].toFixed(2),
-                y = item.datapoint[1].toFixed(2);
+    function showTooltip(point) {
+
                     
                 var d = new Date();
-                d.setTime(x);
+                d.setTime(point.x);
                 var time = d.getUTCHours() +':'+ (d.getUTCMinutes().toString().length == 1 ? '0'+ d.getMinutes():  d.getUTCMinutes())
 
                     
-                showTooltip(item.pageX, item.pageY,
-                item.series.label + " at "+ time +" = " + Math.abs(new Number(y/60).toFixed(2))+" minutes "+(y >0 ? "early":"late"));
-            }
-        }
-        else {
-            $("#tooltip").remove();
-            previousPoint = null;            
-        }
-    });
+                return  point.series.label + " at "+ time +" = " + Math.abs(new Number(point.y/60).toFixed(2))+" minutes "+(point.y >0 ? "early":"late");
+    }
 
 </script> 

@@ -17,10 +17,10 @@
 include ('../include/common.inc.php');
 include_header("MyWay Deltas", "mywayDelta");
 ?>
-
-    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../js/flot/excanvas.min.js"></script><![endif]--> 
-
-<script language="javascript" type="text/javascript" src="../js/flot/jquery.flot.js"></script> 
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="../js/FlashCanvas/bin/flashcanvas.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../js/flotr2/flotr2.min.js"></script>
 <center><div id="placeholder" style="width:900px;height:550px"></div></center>
 <script type="text/javascript"> 
     $(function () {
@@ -41,9 +41,10 @@ foreach ($query->fetchAll() as $delta) {
 };
 ?>
 
-        var placeholder = $("#placeholder");
 
-        var plot = $.plot(placeholder, [
+        var placeholder = document.getElementById("placeholder");
+
+        var plot = Flotr.draw(placeholder, [
             {
                 data: d1,
                 bars: { show: true }
@@ -51,7 +52,6 @@ foreach ($query->fetchAll() as $delta) {
         ],
         {
 
-            grid: { hoverable: true, clickable: true, labelMargin: 17  },
         });
 
     });
