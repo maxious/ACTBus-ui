@@ -108,12 +108,12 @@ if (sizeof($allStopsTrips) > 0) {
     sktimesort($allStopsTrips, "arrival_time", true);
     $trips = $allStopsTrips;
 } else {
-    $trips = getStopTripsWithTimes($stopid);
+    $trips = getStopTripsWithTimes($stopid,"","","",(isset($filterIncludeRoutes) || isset($filterHasStop)?"75":""));
 }
 
 echo "<div class='ui-header' style='overflow: visible; height: 2.5em'>";
 // if we have too many trips, cut down to size.
-if (sizeof($trips) > 10) {
+if (!isset($filterIncludeRoutes) && !isset($filterHasStop) && sizeof($trips) > 10) {
     $trips = array_splice($trips, 0,10);
 }
     
@@ -141,6 +141,11 @@ if (sizeof($trips) == 0) {
     echo "<li style='text-align: center;'>No trips in the near future.</li>";
 } else {
     foreach ($trips as $trip) {
+        if (
+                isset($filterHasStop) && (getTripHasStop($trip['trip_id'],$filterHasStop) == 1) 
+                || (isset($filterIncludeRoutes) && in_array($trip["route_short_name"], $filterIncludeRoutes))
+                || (!isset($filterIncludeRoutes) && !isset($filterHasStop))
+                        ) {
         echo '<li>';
 
         $destination = getTripDestination($trip['trip_id']);
@@ -164,6 +169,7 @@ if (sizeof($trips) == 0) {
         echo '</a></li>';
         flush();
         @ob_flush();
+        }
     }
 }
 echo '</ul>';

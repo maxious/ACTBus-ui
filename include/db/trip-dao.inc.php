@@ -51,6 +51,25 @@ WHERE trips.trip_id = :tripID ORDER BY stop_sequence";
     }
     return $query->fetchAll();
 }
+
+function getTripHasStop($tripID, $stopID) {
+        global $conn;
+    $query = "SELECT stop_id
+FROM stop_times
+join trips on trips.trip_id = stop_times.trip_id
+WHERE trips.trip_id = :tripID and stop_times.stop_id = :stopID";
+    debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->bindParam(":tripID", $tripID);
+    $query->bindParam(":stopID", $stopID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return ($query->fetchColumn() > 0);
+}
+
 function getTripShape($tripID) {
     // todo, use shapes table if shape_id specified
     global $conn;

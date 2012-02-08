@@ -57,6 +57,12 @@ if (isset($_REQUEST['stopcode'])) {
 if (isset($_REQUEST['stopids'])) {
     $stopids = explode(",", filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
 }
+if (isset($_REQUEST['filterIncludeRoutes'])) {
+    $filterIncludeRoutes = explode(",", filter_var($_REQUEST['filterIncludeRoutes'], FILTER_SANITIZE_STRING));
+}
+if (isset($_REQUEST['filterHasStop'])) {
+    $filterHasStop = filter_var($_REQUEST['filterHasStop'], FILTER_SANITIZE_STRING);
+}
 if (isset($_REQUEST['tripid'])) {
     $tripid = filter_var($_REQUEST['tripid'], FILTER_SANITIZE_STRING);
 }
