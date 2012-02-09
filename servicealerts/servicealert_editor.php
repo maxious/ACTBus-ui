@@ -30,7 +30,7 @@ if (isset($_REQUEST['saveedit'])) {
     if ($_REQUEST['saveedit'] != "")
         updateServiceAlert($_REQUEST['saveedit'], $_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['header'], $_REQUEST['description'], $_REQUEST['url']);
     else
-        addServiceAlert($_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['description'], $_REQUEST['url']);
+        addServiceAlert($_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['header'], $_REQUEST['description'], $_REQUEST['url']);
     echo "Saved " . $_REQUEST['saveedit'];
     die();
 }

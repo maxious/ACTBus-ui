@@ -42,7 +42,7 @@ function googleAnalyticsGetImageUrl() {
 }
 
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false) {
-    global $basePath, $GTFSREnabled;
+    global $basePath, $GTFSREnabled, $stopid, $routeid;
     echo '
 <!DOCTYPE html> 
 <html lang="en">
@@ -59,14 +59,13 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
         $jqmcss = $basePath . "css/jquery.mobile-$jqmVersion.css";
         $jqjs = $basePath . "js/jquery-1.6.4.min.js";
         $jqmjs = $basePath . "js/jquery.mobile-$jqmVersion.js";
-        
+
         $jqmcss = $basePath . "css/jquery.mobile-b90eab4935.css";
         $jqmjs = $basePath . "js/jquery.mobile-b90eab4935.js";
     } else {
         $jqmcss = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.css";
         $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js";
         $jqmjs = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.js";
-
     }
     echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
 	<script src="' . $jqjs . '"></script>
@@ -108,7 +107,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 }';
     echo '</style>';
     echo '<link rel="stylesheet"  href="' . $basePath . 'css/local.css.php" />';
-    if (isIOSDevice()){
+    if (isIOSDevice()) {
         echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
  <link rel="apple-touch-startup-image" href="startup.png" />
@@ -174,19 +173,38 @@ $(document).ready(function() {
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
         if ($GTFSREnabled) {
-        $overrides = getServiceOverride();
-        if (isset($overrides['service_id'])) {
-            if ($overrides['service_id'] == "noservice") {
-                echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
+            $overrides = getServiceOverride();
+            if (isset($overrides['service_id'])) {
+                if ($overrides['service_id'] == "noservice") {
+                    echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
 href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-            } else {
-                echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+                } else {
+                    echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+                }
             }
-        }
-            $serviceAlerts = getServiceAlertsAsArray("agency", "0");
+            $serviceAlerts = Array();
+            $globalAlerts = getServiceAlertsAsArray("agency", "0");
+            if ($globalAlerts != nullarray) {
+                $serviceAlerts = array_merge($serviceAlerts, $globalAlerts);
+            }
+            if (isset($stopid)) {
+                $stopAlerts = getServiceAlertsAsArray("stop", $stopid);
+                if ($stopAlerts != nullarray) {
+                    $serviceAlerts = array_merge($serviceAlerts, $stopAlerts);
+                }
+            }
+            if (isset($routeid)) {
+                $routeAlerts = getServiceAlertsAsArray("route", $routeid);
+                if ($routeAlerts != nullarray) {
+                    $serviceAlerts = array_merge($serviceAlerts, $routeAlerts);
+                }
+            }
             if (isset($serviceAlerts['entity']) && sizeof($serviceAlerts['entity']) > 0) {
                 foreach ($serviceAlerts['entity'] as $entity) {
-                    echo "<div id='servicewarning'>" . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['start'])) . " to " . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end'])) . "{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
+                    echo "<div id='servicewarning'><b>{$entity['alert']['header_text']['translation'][0]['text']}</b>&nbsp;<small>"
+                    . date("F jS Y, g:i a", $entity['alert']['active_period'][0]['start']) . " to "
+                    . date("F jS Y, g:i a", $entity['alert']['active_period'][0]['end']) . "</small>
+                            <br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
                             <br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
                 }
             }
@@ -212,9 +230,10 @@ s.parentNode.insertBefore(ga, s);
     }
     echo "\n</div></div></body></html>";
 }
+
 function timeSettings() {
     global $service_periods;
-echo '<div id="settings" data-role="collapsible" data-collapsed="true">
+    echo '<div id="settings" data-role="collapsible" data-collapsed="true">
 <h3>Change Time (' . (isset($_REQUEST['time']) ? $_REQUEST['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . '" method="GET">
                <input type="hidden" name="suburb" id="suburb" value="' . (isset($_REQUEST['suburb']) ? $_REQUEST['suburb'] : "") . '"/>
@@ -230,10 +249,10 @@ echo '<div id="settings" data-role="collapsible" data-collapsed="true">
 		<div data-role="fieldcontain">
 		    <label for="service_period"> Service Period:  </label>
 			<select name="service_period" id="service_period">';
-foreach ($service_periods as $service_period) {
-    echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
-}
-echo '</select>
+    foreach ($service_periods as $service_period) {
+        echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
+    }
+    echo '</select>
 			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod">Current Period?</a>
 		</div>
 		
@@ -241,8 +260,9 @@ echo '</select>
                 </div></form>
             </div>';
 }
+
 function placeSettings() {
-    
+
     $geoerror = false;
     $geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
 
@@ -275,14 +295,15 @@ function trackEvent($category, $action, $label = "", $value = - 1) {
 
 //stop list collapsing
 function stopCompare($stopName) {
-    return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)),0,9);
+    return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)), 0, 9);
 }
-function stopGroupTitle($stopName,$stopdesc) {
-    if (preg_match("/Dr |Cct |Cir |Av |St |Cr |Parade |Way |Bank /",$stopName)) {
-        $descParts =  explode("<br>",$stopdesc);
-         return trim(str_replace("Street: ","",$descParts[0]));
+
+function stopGroupTitle($stopName, $stopdesc) {
+    if (preg_match("/Dr |Cct |Cir |Av |St |Cr |Parade |Way |Bank /", $stopName)) {
+        $descParts = explode("<br>", $stopdesc);
+        return trim(str_replace("Street: ", "", $descParts[0]));
     } else {
-        return trim(preg_replace("/\(Platform.*/", "",$stopName));
+        return trim(preg_replace("/\(Platform.*/", "", $stopName));
     }
 }
 

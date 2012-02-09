@@ -97,7 +97,7 @@ function getRoutes() {
 function getRoutesByNumberSeries($routeNumberSeries = "") {
     global $conn;
     if (strlen($routeNumberSeries) == 1) {
-        return getRoutesByNumber($routeNumberSeries);
+        return getRoute($routeNumberSeries);
     }
     $seriesMin = substr($routeNumberSeries, 0, -1) . "0";
     $seriesMax = substr($routeNumberSeries, 0, -1) . "9";

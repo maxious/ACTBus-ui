@@ -31,7 +31,7 @@ if (isset($routeid) && !isset($tripid)) {
 $directionid = $trip['direction_id'];
 $service_period = strtolower($trip["service_id"]);
 $destination = getTripDestination($trip['trip_id']);
-include_header("Stops on " . $trip['route_short_name'] . ' ' . $destination['stop_name'], "trip");
+include_header("Route " . $trip['route_id'] . ' to ' . $destination['stop_name'], "trip");
 trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $destination['stop_name'], $routeid);
 echo '<span class="content-secondary">';
 echo '<a href="' . $trip['route_url'] . '">View Original Timetable/Map</a> ';
