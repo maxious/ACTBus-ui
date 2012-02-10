@@ -27,10 +27,11 @@ include_header("Service Alert Editor", "serviceAlertEditor");
  */
 if (isset($_REQUEST['saveedit'])) {
 
-    if ($_REQUEST['saveedit'] != "")
-        updateServiceAlert($_REQUEST['saveedit'], $_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['header'], $_REQUEST['description'], $_REQUEST['url']);
-    else
-        addServiceAlert($_REQUEST['startdate'], $_REQUEST['enddate'], $_REQUEST['header'], $_REQUEST['description'], $_REQUEST['url']);
+    if ($_REQUEST['saveedit'] != "") {
+        updateServiceAlert($_REQUEST['saveedit'], $_REQUEST);
+    } else {
+        addServiceAlert($_REQUEST);
+    }
     echo "Saved " . $_REQUEST['saveedit'];
     die();
 }
@@ -61,26 +62,27 @@ if ($_REQUEST['stopsearch']) {
 if ($_REQUEST['streetsearch']) {
 
     echo "Informing stops of street<br>\n";
-    foreach (getStopByName() as $stop) {
-        addInformedAlert($_REQUEST['stopsearch'], "stop", $_REQUEST['stopid'], "inform");
-        echo "Added stop inform for" . $_REQUEST['stopsearch'] . ", stop" . $_REQUEST['stopid'] . "<br>\n";
+    foreach (getStopsByName($_REQUEST['street']) as $stop) {
+        addInformedAlert($_REQUEST['streetsearch'], "stop", $stop['stop_id'], "inform");
+        echo "Added stop inform for" . $_REQUEST['streetsearch'] . ", stop" . $stop['stop_id'] . " ". $stop['stop_name']."<br>\n";
 
         foreach ($service_periods as $sp) {
             echo "Informing $sp routes<br>\n";
-            foreach (getStopRoutes($_REQUEST['stopid'], $sp) as $route) {
-                addInformedAlert($_REQUEST['stopsearch'], "route", $route['route_id'], "inform");
-                echo "Added route inform for stop" . $_REQUEST['stopsearch'] . ", route" . $route['route_id'] . "<br>\n";
+            foreach (getStopRoutes($stop['stop_id'], $sp) as $route) {
+                addInformedAlert($_REQUEST['streetsearch'], "route", $route['route_id'], "inform");
+                echo "Added route inform for stop" . $_REQUEST['streetsearch'] . ", route" . $route['route_id'] . "<br>\n";
             }
         }
-        die();
     }
+    
+        die();
 }
 ?>
 Active and Future Alerts:
 <table>
     <?php
     foreach (getFutureAlerts() as $alert) {
-        echo "<tr><td>{$alert['start']}</td><td>{$alert['end']}</td><td>" . substr($alert['description'], 0, 999) . '</td><td><a href="?edit=' . $alert['id'] . '">edit</a></td></tr>';
+        echo "<tr><td>" . date("c", $alert['start']) . "</td><td>" . date("c", $alert['end']) . "</td><td>" . substr($alert['description'], 0, 999) . '</td><td><a href="?edit=' . $alert['id'] . '">edit</a></td></tr>';
     }
     ?>
 </table>
@@ -94,7 +96,7 @@ $alert = getServiceAlert($_REQUEST['edit']);
         <label for="startdate"> Start Date</label>
         <input type="text" name="startdate" id="startdate" value="<?php
       if ($alert['start'])
-          echo $alert['start'];
+          echo date("c", $alert['start']);
       else
           echo date("c", strtotime("0:00"));
 ?>"  />
@@ -102,10 +104,10 @@ $alert = getServiceAlert($_REQUEST['edit']);
     <div data-role="fieldcontain">
         <label for="enddate"> End Date </label>
         <input type="text" name="enddate" id="enddate" value="<?php
-      if ($alert['end'])
-          echo $alert['end'];
-      else
-          echo date("c", strtotime("23:59"));
+               if ($alert['end'])
+                   echo date("c", $alert['end']);
+               else
+                   echo date("c", strtotime("23:59"));
 ?>"  />
     </div>
     <div data-role="fieldcontain">
@@ -115,12 +117,31 @@ $alert = getServiceAlert($_REQUEST['edit']);
     <div data-role="fieldcontain">
         <label for="description">Description</label>
         <textarea name="description">
-<?php echo $alert['description']; ?></textarea>
+            <?php echo $alert['description']; ?></textarea>
     </div>
     <div data-role="fieldcontain">
         <label for="url">URL</label>
         <input type="text" name="url" id="url" value="<?php echo $alert['url']; ?>"  />
     </div>
+    <div data-role="fieldcontain">
+        <label for="cause"> Cause:  </label>
+        <select name="cause" id="cause">
+            
+            <?php
+            foreach ($serviceAlertCause as $key => $value) {
+                echo "<option value=\"$key\"" . ($key === $alert['cause'] ? " SELECTED" : "") . '>' . $value . '</option>';
+            }
+            ?>
+        </select></div>
+    <div data-role="fieldcontain">
+        <label for="effect"> Effect:  </label>
+        <select name="effect" id="effect">
+            <?php
+            foreach ($serviceAlertEffect as $key => $value) {
+                echo "<option value=\"$key\"" . ($key === $alert['effect'] ? " SELECTED" : "") . '>' . $value . '</option>';
+            }
+            ?>
+        </select></div>
     <input type="hidden" name="saveedit" value="<?php echo $_REQUEST['edit']; ?>"/>
     <input type="submit" value="Save"/>
 </div></form>
