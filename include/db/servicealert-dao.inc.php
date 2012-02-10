@@ -119,6 +119,7 @@ function getFutureAlerts() {
 function getInformedAlerts($id, $filter_class, $filter_id) {
 
     global $conn;
+    //echo "$id, $filter_class, $filter_id\n";
     $query = "SELECT * from servicealerts_informed where servicealert_id = :servicealert_id";
 
     if ($filter_class != "") {

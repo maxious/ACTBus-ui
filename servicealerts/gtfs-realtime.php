@@ -16,10 +16,30 @@
   limitations under the License.
  */
 include ('include/common.inc.php');
-
-if (basename(__FILE__) == "servicealerts_api.php") {
+function accept_header($header = false) {
+    // http://jrgns.net/parse_http_accept_header
+    $toret = null;
+    $header = $header ? $header : (array_key_exists('HTTP_ACCEPT', $_SERVER) ? $_SERVER['HTTP_ACCEPT']: false);
+    if ($header) {
+        $types = explode(',', $header);
+        $types = array_map('trim', $types);
+        foreach ($types as $one_type) {
+            $one_type = explode(';', $one_type);
+            $type = array_shift($one_type);
+            if ($type) {
+                list($precedence, $tokens) = self::accept_header_options($one_type);
+                list($main_type, $sub_type) = array_map('trim', explode('/', $type));
+                $toret[] = array('main_type' => $main_type, 'sub_type' => $sub_type, 'precedence' => (float)$precedence, 'tokens' => $tokens);
+            }
+        }
+        usort($toret, array('Parser', 'compare_media_ranges'));
+    }
+    return $toret;
+}
+$json_types =  Array("application/json","application/x-javascript","text/javascript","text/x-javascript","text/x-json");
+if ($_REQUEST['json']) {
     $return = getServiceAlertsAsJSON($_REQUEST['filter_class'], $_REQUEST['filter_id']);
-    header('Content-Type: text/javascript; charset=utf8');
+    header('Content-Type: application/json; charset=utf8');
 // header('Access-Control-Allow-Origin: http://bus.lambdacomplex.org/');
     header('Access-Control-Max-Age: 3628800');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');

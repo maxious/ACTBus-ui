@@ -152,12 +152,14 @@ if ($GTFSREnabled) {
         $current_alerts = getCurrentAlerts();
         $informed_count = 0;
         if (sizeof($current_alerts) > 0) {
+
             $fm = new transit_realtime\FeedMessage();
             $fh = new transit_realtime\FeedHeader();
             $fh->setGtfsRealtimeVersion(1);
             $fh->setTimestamp(time());
             $fm->setHeader($fh);
             foreach ($current_alerts as $current_alert) {
+                $affectsFilteredEntities = false;
                 $fe = new transit_realtime\FeedEntity();
                 $fe->setId($current_alert['id']);
                 $fe->setIsDeleted(false);
@@ -168,6 +170,8 @@ if ($GTFSREnabled) {
                 $alert->addActivePeriod($tr);
                 $informedEntities = getInformedAlerts($current_alert['id'], $filter_class, $filter_id);
                 if (sizeof($informedEntities) > 0) {
+
+                    $affectsFilteredEntities = true;
                     $informed_count++;
                     $informed = Array();
                     $es = new transit_realtime\EntitySelector();
@@ -218,7 +222,9 @@ if ($GTFSREnabled) {
                     $alert->setDescriptionText($tsDescriptionText);
                 }
                 $fe->setAlert($alert);
-                $fm->addEntity($fe);
+                if ($affectsFilteredEntities) {
+                    $fm->addEntity($fe);
+                }
             }
             if ($informed_count > 0) {
                 return $fm;
@@ -230,7 +236,7 @@ if ($GTFSREnabled) {
     }
 
     function getServiceAlertsAsArray($filter_class = "", $filter_id = "") {
-        
+
         $alerts = getServiceAlerts($filter_class, $filter_id);
         if ($alerts != null) {
             $codec = new DrSlump\Protobuf\Codec\PhpArray();

@@ -185,17 +185,20 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
             $serviceAlerts = Array();
             $globalAlerts = getServiceAlertsAsArray("agency", "0");
             if ($globalAlerts != nullarray) {
+                // echo "getting alerts due to network wide";
                 $serviceAlerts = array_merge($serviceAlerts, $globalAlerts);
             }
             if (isset($stopid)) {
                 $stopAlerts = getServiceAlertsAsArray("stop", $stopid);
                 if ($stopAlerts != nullarray) {
+                    // echo "getting alerts due to stop $stopid";
                     $serviceAlerts = array_merge($serviceAlerts, $stopAlerts);
                 }
             }
             if (isset($routeid)) {
                 $routeAlerts = getServiceAlertsAsArray("route", $routeid);
                 if ($routeAlerts != nullarray) {
+                    //    echo "getting alerts due to route $routeid";
                     $serviceAlerts = array_merge($serviceAlerts, $routeAlerts);
                 }
             }
