@@ -116,8 +116,7 @@ $alert = getServiceAlert($_REQUEST['edit']);
     </div>
     <div data-role="fieldcontain">
         <label for="description">Description</label>
-        <textarea name="description">
-            <?php echo $alert['description']; ?></textarea>
+        <textarea name="description"><?php echo $alert['description']; ?></textarea>
     </div>
     <div data-role="fieldcontain">
         <label for="url">URL</label>

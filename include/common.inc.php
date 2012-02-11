@@ -51,8 +51,9 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
         || strstr($_SERVER['PHP_SELF'], "lib/")
         || strstr($_SERVER['PHP_SELF'], "geo/")
         || strstr($_SERVER['PHP_SELF'], "include/")
-        || strstr($_SERVER['PHP_SELF'], "servicealerts/"))
+        || strstr($_SERVER['PHP_SELF'], "rtpis/")) {
     $basePath = "../";
+}
 
 function isDebugServer() {
     

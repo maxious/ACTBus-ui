@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
  */
-include ('include/common.inc.php');
+include ('../include/common.inc.php');
 function accept_header($header = false) {
     // http://jrgns.net/parse_http_accept_header
     $toret = null;
@@ -36,9 +36,23 @@ function accept_header($header = false) {
     }
     return $toret;
 }
+function usage() {
+echo "Usage notes: Must specify format json/protobuf and gtfs-realtime feedtype alerts/updates. If callback is specified, will provide jsonp. Can filter with parmaters filter_class route/stop and filter_id with the id specified in GTFS.";
+die();
+}
+
+$filter_class = (isset($_REQUEST['filter_class']) ? $_REQUEST['filter_class'] : "");
+$filter_id = (isset($_REQUEST['filter_id']) ? $_REQUEST['filter_id']:"");
+
 $json_types =  Array("application/json","application/x-javascript","text/javascript","text/x-javascript","text/x-json");
 if ($_REQUEST['json']) {
-    $return = getServiceAlertsAsJSON($_REQUEST['filter_class'], $_REQUEST['filter_id']);
+if ($_REQUEST['alerts']) {
+    $return = getServiceAlertsAsJSON($filter_class,$filter_id);
+} else if ($_REQUEST['updates']) {
+    $return = getTripUpdatesAsJSON($filter_class,$filter_id);
+} else {
+	usage();
+}
     header('Content-Type: application/json; charset=utf8');
 // header('Access-Control-Allow-Origin: http://bus.lambdacomplex.org/');
     header('Access-Control-Max-Age: 3628800');
@@ -47,7 +61,24 @@ if ($_REQUEST['json']) {
         $json = '(' . $return . ');'; //must wrap in parens and end with semicolon
         //print_r($_GET['callback'] . $json); //callback is prepended for json-p
     }
-    else
+    else {
         echo $return;
+	}
+} else if ($_REQUEST['protobuf']) {
+if ($_REQUEST['alerts']) {
+    $return = getServiceAlertsAsBinary($filter_class,$filter_id);
+} else if ($_REQUEST['updates']) {
+    $return = getTripUpdatesAsBinary($filter_class,$filter_id);
+} else {
+	usage();
+}
+    header('Content-Type: application/x-protobuf');
+header('Content-Disposition: attachment; filename="'.(isset($_REQUEST['updates'])?"updates.":"alerts.").date("c").'.protobuf"');
+// header('Access-Control-Allow-Origin: http://bus.lambdacomplex.org/');
+    header('Access-Control-Max-Age: 3628800');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+        echo $return;
+} else {
+usage();
 }
 ?>

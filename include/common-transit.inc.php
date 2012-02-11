@@ -172,7 +172,8 @@ if ($GTFSREnabled) {
                 if (sizeof($informedEntities) > 0) {
 
                     $affectsFilteredEntities = true;
-                    $informed_count++;
+                    foreach ($informedEntities as $informedEntity) {
+	$informed_count++;
                     $informed = Array();
                     $es = new transit_realtime\EntitySelector();
                     if ($informedEntity['informed_class'] == "agency") {
@@ -190,6 +191,7 @@ if ($GTFSREnabled) {
                         $es->setTrip($td);
                     }
                     $alert->addInformedEntity($es);
+}
                 }
                 if ($current_alert['cause'] != "") {
                     $alert->setCause(constant("transit_realtime\Alert\Cause::" . $current_alert['cause']));
@@ -216,7 +218,7 @@ if ($GTFSREnabled) {
                 if ($current_alert['description'] != "") {
                     $tsDescriptionText = new transit_realtime\TranslatedString();
                     $tDescriptionText = new transit_realtime\TranslatedString\Translation();
-                    $tDescriptionText->setText($current_alert['description']);
+                    $tDescriptionText->setText(trim($current_alert['description']));
                     $tDescriptionText->setLanguage("en");
                     $tsDescriptionText->addTranslation($tDescriptionText);
                     $alert->setDescriptionText($tsDescriptionText);
