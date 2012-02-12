@@ -50,17 +50,17 @@ function displayNearbyRoutes($routes) {
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
     foreach ($routes as $route) {
         $time = getRouteAtStop($route['route_id'], $route['direction_id'], $route['stop_id']);
- $start = getTripStartingPoint($time['trip_id']); 
-    $end = getTripDestination($time['trip_id']);
+        $start = getTripStartingPoint($time['trip_id']);
+        $end = getTripDestination($time['trip_id']);
         //print_r($route);
         echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $route['direction_id'] . '"><h3>' . $route['route_short_name'] . "</h3>
                    
-                <p>" . $time['trip_headsign'] . (strstr($time['trip_headsign'], "bound") === false ? "bound" : "") . " from ".$start['stop_name']." to ".$end['stop_name'] . " (" . ucwords($time['service_id']) . ")</p>";
+                <p>" . $time['trip_headsign'] . (strstr($time['trip_headsign'], "bound") === false ? "bound" : "") . " from " . $start['stop_name'] . " to " . $end['stop_name'] . " (" . ucwords($time['service_id']) . ")</p>";
         $stop = getStop($route['stop_id']);
-echo "<p>Board at ".$stop['stop_name']."</p>";
+        echo "<p>Board at " . $stop['stop_name'] . "</p>";
         echo '<span class="ui-li-count">' . ($time['arrival_time'] ? $time['arrival_time'] : "No more trips today") . "<br>" . floor($route['distance']) . 'm away</span>';
-        
-    echo"       </a></li>\n";
+
+        echo"       </a></li>\n";
     }
 }
 
@@ -92,7 +92,8 @@ if (isset($bysuburbs)) {
 } else if (isset($nearby)) {
     $routes = Array();
     include_header("Routes Nearby", "routeList", true, true);
-    if (isset($_SESSION['lat'])) trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
+    if (isset($_SESSION['lat']))
+        trackEvent("Route Lists", "Routes Nearby", $_SESSION['lat'] . "," . $_SESSION['lon']);
     navbar();
     placeSettings();
     if (!isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "") {
@@ -132,7 +133,7 @@ if (isset($bysuburbs)) {
                     $seriesRange[$seriesNum]['max'] = $routeNumber;
                     $seriesRange[$seriesNum]['min'] = $routeNumber;
                 }
-                $routeSeries[$seriesNum][$seriesNum . "-" . $row[1] . "-" . $row[0]] = $row;
+                $routeSeries[$seriesNum][] = null;
             }
         }
         ksort($routeSeries);
@@ -157,7 +158,8 @@ if (isset($bysuburbs)) {
         displayRoutes(getRoutesByDestination($routeDestination));
     } else {
         foreach (getRoutesByDestination() as $destination) {
-            echo '<li><a href="' . curPageURL() . '/routeList.php?routeDestination=' . urlencode($destination['stop_name']) . '">' . $destination['stop_name'] . "... </a></li>\n";
+            echo '<li><a href="' . curPageURL() . '/routeList.php?routeDestination='
+            . urlencode($destination['stop_name']) . '">' . $destination['stop_name'] . "... </a></li>\n";
         }
     }
 }

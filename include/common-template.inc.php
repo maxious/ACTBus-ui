@@ -184,20 +184,20 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
             }
             $serviceAlerts = Array();
             $globalAlerts = getServiceAlertsAsArray("agency", "0");
-            if ($globalAlerts != nullarray) {
+            if ($globalAlerts != null) {
                 // echo "getting alerts due to network wide";
                 $serviceAlerts = array_merge($serviceAlerts, $globalAlerts);
             }
             if (isset($stopid)) {
                 $stopAlerts = getServiceAlertsAsArray("stop", $stopid);
-                if ($stopAlerts != nullarray) {
+                if ($stopAlerts != null) {
                     // echo "getting alerts due to stop $stopid";
                     $serviceAlerts = array_merge($serviceAlerts, $stopAlerts);
                 }
             }
             if (isset($routeid)) {
                 $routeAlerts = getServiceAlertsAsArray("route", $routeid);
-                if ($routeAlerts != nullarray) {
+                if ($routeAlerts != null) {
                     //    echo "getting alerts due to route $routeid";
                     $serviceAlerts = array_merge($serviceAlerts, $routeAlerts);
                 }
@@ -229,7 +229,7 @@ function include_footer() {
 s.parentNode.insertBefore(ga, s);
   })();</script>";
         $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
-        echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
+        echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" alt=""/></noscript>';
     }
     echo "\n</div></div></body></html>";
 }

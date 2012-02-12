@@ -32,7 +32,7 @@ $directionid = $trip['direction_id'];
 $service_period = strtolower($trip["service_id"]);
 $destination = getTripDestination($trip['trip_id']);
 include_header("Route " . $trip['route_id'] . ' to ' . $destination['stop_name'], "trip");
-trackEvent("Route/Trip View", "View Route", $trip['route_short_name'] . ' ' . $destination['stop_name'], $routeid);
+trackEvent("Route/Trip View", "View Route", $trip['route_id'] . ' ' . $destination['stop_name'], $routeid);
 echo '<span class="content-secondary">';
 echo '<a href="' . $trip['route_url'] . '">View Original Timetable/Map</a> ';
 echo '<a href="geo/trip.kml.php?tripid='.$tripid.'">View Trip in Google Earth</a> ';
@@ -71,10 +71,12 @@ echo '</span><span class="content-primary">';
 flush();
 @ob_flush();
 echo "<div class='ui-header' style='overflow: visible; height: 1.5em'>";
-if ($nextTrip)
+if (isset($nextTrip)) {
     echo '<a href="trip.php?tripid=' . $nextTrip . "&amp;routeid=" . $routeid . '" data-icon="arrow-r" class="ui-btn-right">Next Trip</a>';
-if ($prevTrip)
+}
+if (isset($prevTrip)) {
     echo '<a href="trip.php?tripid=' . $prevTrip . "&amp;routeid=" . $routeid . '" data-icon="arrow-l" class="ui-btn-left">Previous Trip</a>';
+}
 echo "</div>";
 echo '  <ul data-role="listview"  data-inset="true">';
 $stopsGrouped = Array();
@@ -119,7 +121,6 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
         if ($key - 1 <= 0 || stopCompare($tripStopTimes[$key]['stop_name']) != stopCompare($tripStopTimes[$key - 1]['stop_name'])) {
             // first duplicate
             $stopsGrouped = Array(
-                "name" => trim(preg_replace("/\(Platform.*/", "", $stop['stop_name'])),
                 "startTime" => $tripStopTime['arrival_time'],
                 "stop_ids" => Array(
                     $tripStopTime['stop_id']

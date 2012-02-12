@@ -245,7 +245,7 @@ if ($GTFSREnabled) {
 
             return $codec->encode($alerts);
         } else {
-            return nullarray;
+            return null;
         }
     }
 
