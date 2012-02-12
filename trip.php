@@ -33,7 +33,7 @@ $service_period = strtolower($trip["service_id"]);
 $destination = getTripDestination($trip['trip_id']);
 include_header("Route " . $trip['route_id'] . ' to ' . $destination['stop_name'], "trip");
 trackEvent("Route/Trip View", "View Route", $trip['route_id'] . ' ' . $destination['stop_name'], $routeid);
-echo '<span class="content-secondary">';
+echo '<div class="content-secondary">';
 echo '<a href="' . $trip['route_url'] . '">View Original Timetable/Map</a> ';
 echo '<a href="geo/trip.kml.php?tripid='.$tripid.'">View Trip in Google Earth</a> ';
 echo '<a href="geo/route.kml.php?routeid='.$routeid.'">View Route in Google Earth</a>';
@@ -59,7 +59,7 @@ $otherDir = 0;
     foreach (getRouteHeadsigns($routeid) as $headsign) {
         if ($headsign['direction_id'] != $directionid || strtolower($headsign['service_id']) != $service_period) {
 
-            echo '<a href="trip.php?routeid=' . $routeid . '&directionid=' . $headsign['direction_id'] . '&service_period=' . $headsign['service_id'] . '"> Starting at ' . $headsign['stop_name'] . ' (' . $headsign['service_id'] . ')</a> ';
+            echo '<a href="trip.php?routeid=' . $routeid . '&amp;directionid=' . $headsign['direction_id'] . '&amp;service_period=' . $headsign['service_id'] . '"> Starting at ' . $headsign['stop_name'] . ' (' . $headsign['service_id'] . ')</a> ';
             $otherDir++;
         }
     }
@@ -67,7 +67,7 @@ $otherDir = 0;
 if ($otherDir == 0) {
     echo "None";
 }
-echo '</span><span class="content-primary">';
+echo '</div><div class="content-primary">';
 flush();
 @ob_flush();
 echo "<div class='ui-header' style='overflow: visible; height: 1.5em'>";
@@ -83,7 +83,7 @@ $stopsGrouped = Array();
 $tripStopTimes = getTripStopTimes($tripid);
 echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' towards ' . $destination['stop_name'] . ' (' . ucwords(strtolower($tripStopTimes[0]['service_id'])) . ')</li>';
 foreach ($tripStopTimes as $key => $tripStopTime) {
-    if ($key + 1 > sizeof($tripStopTimes) || stopCompare($tripStopTimes[$key]["stop_name"]) != stopCompare($tripStopTimes[$key + 1]["stop_name"])) {
+    if ($key + 1 >= sizeof($tripStopTimes) || stopCompare($tripStopTimes[$key]["stop_name"]) != stopCompare($tripStopTimes[$key + 1]["stop_name"])) {
         echo '<li>';
 
         if (sizeof($stopsGrouped) > 0) {
@@ -134,6 +134,6 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
     }
 }
 echo '</ul>';
-echo '</span>';
+echo '</div>';
 include_footer();
 ?>

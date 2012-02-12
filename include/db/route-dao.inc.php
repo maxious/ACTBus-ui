@@ -125,7 +125,7 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where to_n
 function getRouteNextTrip($routeID, $directionID) {
     global $conn;
    
-    $query = "select routes.route_id,direction_id,trips.trip_id,trip_headsign,departure_time,service_id from routes join trips on trips.route_id = routes.route_id
+    $query = "select routes.route_id,routes.route_url,direction_id,trips.trip_id,trip_headsign,departure_time,service_id from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id where  arrival_time between :currentTime and :futureTime 
 and routes.route_id = :routeID and trips.direction_id = :directionID order by
 arrival_time limit 1";

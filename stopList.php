@@ -60,7 +60,7 @@ if (isset($bysuburbs)) {
             die();
         }
         $stops = getNearbyStops($_SESSION['lat'], $_SESSION['lon'], 15);
-        echo '<span class="content-secondary">';
+        echo '<div class="content-secondary">';
         $stopPositions[] = Array(
             $_SESSION['lat'],
             $_SESSION['lon']
@@ -73,7 +73,7 @@ if (isset($bysuburbs)) {
         }
         echo staticmap($stopPositions, true, true);
         placeSettings();
-        echo '</span><span class="content-primary">';
+        echo '</div><div class="content-primary">';
     } else if (isset($suburb)) {
         $stops = getStopsBySuburb($suburb);
         include_header("Stops in " . ucwords($suburb), "stopList");
@@ -144,8 +144,9 @@ if (isset($bysuburbs)) {
         }
     }
     echo '</ul>';
-    if (isset($nearby))
-        echo '</span>';
+    if (isset($nearby)) {
+        echo '</div>';
+}
 }
 include_footer();
 ?>

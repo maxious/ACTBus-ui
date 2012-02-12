@@ -176,10 +176,10 @@ $(document).ready(function() {
             $overrides = getServiceOverride();
             if (isset($overrides['service_id'])) {
                 if ($overrides['service_id'] == "noservice") {
-                    echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
+                    echo '<div class="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
 href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
                 } else {
-                    echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+                    echo '<div class="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
                 }
             }
             $serviceAlerts = Array();
@@ -204,7 +204,7 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
             }
             if (isset($serviceAlerts['entity']) && sizeof($serviceAlerts['entity']) > 0) {
                 foreach ($serviceAlerts['entity'] as $entity) {
-                    echo "<div id='servicewarning'><b>{$entity['alert']['header_text']['translation'][0]['text']}</b>&nbsp;<small>"
+                    echo "<div class='servicewarning'><b>{$entity['alert']['header_text']['translation'][0]['text']}</b>&nbsp;<small>"
                     . date("F jS Y, g:i a", $entity['alert']['active_period'][0]['start']) . " to "
                     . date("F jS Y, g:i a", $entity['alert']['active_period'][0]['end']) . "</small>
                             <br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
