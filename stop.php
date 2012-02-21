@@ -16,8 +16,9 @@
   limitations under the License.
  */
 include ('include/common.inc.php');
-if ($stopid)
+if (isset($stopid)) {
     $stop = getStop($stopid);
+}
 /* if ($stopcode != "" && $stop[5] != $stopcode) {
   $url = $APIurl . "/json/stopcodesearch?q=" . $stopcode;
   $stopsearch = json_decode(getPage($url));
@@ -85,7 +86,7 @@ if (sizeof($stops) > 0) {
   echo '<div id="servicewarning">'.$serviceAlert['alert']['description']['translation'].'</div>';
   } */
 
-echo '<span class="content-secondary">';
+echo '<div class="content-secondary">';
 echo $stopLinks;
 if (sizeof($stops) > 0) {
     trackEvent("View Stops", "View Combined Stops", $stop["stop_name"], $stop["stop_id"]);
@@ -102,7 +103,7 @@ if (sizeof($stops) > 0) {
 
 timeSettings();
 
-echo '</span><span class="content-primary">';
+echo '</div><div class="content-primary">';
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
     sktimesort($allStopsTrips, "arrival_time", true);
@@ -173,6 +174,6 @@ if (sizeof($trips) == 0) {
     }
 }
 echo '</ul>';
-echo '</span>';
+echo '</div>';
 include_footer();
 ?>

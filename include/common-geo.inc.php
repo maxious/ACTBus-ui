@@ -58,8 +58,8 @@ function staticmap($mapPoints, $collapsible = true, $twotone = false, $path = fa
     $output = "";
     if ($collapsible)
         $output.= '<div class="map" data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
-   if (isIOSDevice()) $output.= '<img class="hiresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=2&amp;sensor=true" width=' . $width . ' height=' . $height . '>';
- else $output.= '<img class="lowresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=1&amp;format=jpg&amp;sensor=true" width=' . $width . ' height=' . $height . '>';
+   if (isIOSDevice()) $output.= '<img class="hiresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=2&amp;sensor=true" width=' . $width . ' height=' . $height . ' alt="map of stop location">';
+ else $output.= '<img class="lowresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=1&amp;format=jpg&amp;sensor=true" width=' . $width . ' height=' . $height . ' alt="map of stop location">';
    
     if ($collapsible)
         $output.= '</div>';

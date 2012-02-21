@@ -35,18 +35,18 @@ if (isset($_REQUEST['saveedit'])) {
     echo "Saved " . $_REQUEST['saveedit'];
     die();
 }
-if ($_REQUEST['delete']) {
+if (isset($_REQUEST['delete'])) {
     $deleteParts = explode(";", $_REQUEST['delete']);
     deleteInformedAlert($deleteParts[0], $deleteParts[1], $deleteParts[2]);
     echo "Deleted network inform for {$deleteParts[0]} ({$deleteParts[1]},{$deleteParts[2]})<br>\n";
     die();
 }
-if ($_REQUEST['networkinform']) {
+if (isset($_REQUEST['networkinform'])) {
     addInformedAlert($_REQUEST['networkinform'], "agency", "0", "inform");
     echo "Added network inform for" . $_REQUEST['networkinform'];
     die();
 }
-if ($_REQUEST['stopsearch']) {
+if (isset($_REQUEST['stopsearch'])) {
     addInformedAlert($_REQUEST['stopsearch'], "stop", $_REQUEST['stopid'], "remove");
     echo "Added stop remove for" . $_REQUEST['stopsearch'] . ", stop" . $_REQUEST['stopid'] . "<br>\n";
 
@@ -59,7 +59,7 @@ if ($_REQUEST['stopsearch']) {
     }
     die();
 }
-if ($_REQUEST['streetsearch']) {
+if (isset($_REQUEST['streetsearch'])) {
 
     echo "Informing stops of street<br>\n";
     foreach (getStopsByName($_REQUEST['street']) as $stop) {
@@ -87,7 +87,7 @@ Active and Future Alerts:
     ?>
 </table>
 <?php
-$alert = getServiceAlert($_REQUEST['edit']);
+$alert = getServiceAlert((isset($_REQUEST['edit'])?$_REQUEST['edit']:""));
 ?>
 <form action="<?php echo basename(__FILE__);
 ?>" method="get">
@@ -95,19 +95,21 @@ $alert = getServiceAlert($_REQUEST['edit']);
     <div data-role="fieldcontain">
         <label for="startdate"> Start Date</label>
         <input type="text" name="startdate" id="startdate" value="<?php
-      if ($alert['start'])
+      if ($alert['start']) {
           echo date("c", $alert['start']);
-      else
+      } else {
           echo date("c", strtotime("0:00"));
+}
 ?>"  />
     </div>
     <div data-role="fieldcontain">
         <label for="enddate"> End Date </label>
         <input type="text" name="enddate" id="enddate" value="<?php
-               if ($alert['end'])
+               if ($alert['end']) {
                    echo date("c", $alert['end']);
-               else
+               } else {
                    echo date("c", strtotime("23:59"));
+}
 ?>"  />
     </div>
     <div data-role="fieldcontain">
@@ -141,12 +143,12 @@ $alert = getServiceAlert($_REQUEST['edit']);
             }
             ?>
         </select></div>
-    <input type="hidden" name="saveedit" value="<?php echo $_REQUEST['edit']; ?>"/>
+    <input type="hidden" name="saveedit" value="<?php if (isset($_REQUEST['edit']))echo $_REQUEST['edit']; ?>"/>
     <input type="submit" value="Save"/>
 </div></form>
 
 <?php
-if ($_REQUEST['edit']) {
+if (isset($_REQUEST['edit'])) {
     echo "Informed Entities for ID {$_REQUEST['edit']}:";
     echo '<table>';
     foreach (getInformedAlerts($_REQUEST['edit'], "", "") as $informed) {

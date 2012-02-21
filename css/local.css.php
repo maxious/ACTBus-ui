@@ -55,7 +55,7 @@ echo '
     visibility: hidden;
     display: none;
     }
-    #servicewarning {
+    .servicewarning {
     padding: 1em;
     margin-bottom: 0.5em;
     text-size: 0.2em;
