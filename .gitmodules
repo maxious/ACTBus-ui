@@ -1,0 +1,3 @@
+[submodule "lib/amon-php"]
+	path = lib/amon-php
+	url = https://github.com/martinrusev/amon-php.git
