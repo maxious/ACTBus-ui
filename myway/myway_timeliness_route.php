@@ -22,7 +22,7 @@ include_header("MyWay Deltas", "mywayDelta");
 
 <script language="javascript" type="text/javascript" src="../js/flot/jquery.flot.js"></script> 
 <form method="get" action="">
-    <select id="routeid" name="routeid">
+    <select id="routename" name="routename">
         <?php
         $query = "select distinct route_name from myway_timingdeltas order by route_name";
         $query = $conn->prepare($query);
@@ -59,12 +59,12 @@ include_header("MyWay Deltas", "mywayDelta");
             // fetch one series, adding to what we got
             var alreadyFetched = {};
     
-            $("#routeid").change(function () {
+            $("#routename").change(function () {
                 var select = $(this);
         
                 // find the URL in the link right next to us 
                 //    var dataurl = button.siblings('a').attr('href');
-                var dataurl = "myway_timeliness_route.json.php?routeid=" + select.val();
+                var dataurl = "myway_timeliness_route.json.php?routename=" + select.val();
                 // then fetch the data with jQuery
                 function onDataReceived(series) {
                     // extract the first coordinate pair so you can see that

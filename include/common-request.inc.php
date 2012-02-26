@@ -51,6 +51,9 @@ if (isset($_REQUEST['numberSeries'])) {
 if (isset($_REQUEST['routeDestination'])) {
     $routeDestination = urldecode(filter_var($_REQUEST['routeDestination'], FILTER_SANITIZE_ENCODED));
 }
+if (isset($_REQUEST['routename'])) {
+    $routename = urldecode(filter_var($_REQUEST['routename'], FILTER_SANITIZE_ENCODED));
+}
 if (isset($_REQUEST['stopcode'])) {
     $stopcode = filter_var($_REQUEST['stopcode'], FILTER_SANITIZE_STRING);
 }
