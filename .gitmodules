@@ -1,3 +1,6 @@
 [submodule "lib/amon-php"]
 	path = lib/amon-php
 	url = https://github.com/martinrusev/amon-php.git
+[submodule "js/yepnope"]
+	path = js/yepnope
+	url = https://github.com/SlexAxton/yepnope.js.git
