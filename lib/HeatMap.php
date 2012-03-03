@@ -235,9 +235,9 @@
 			for($x=$x0; $x<=$x1; ++$x){//Loop through x value
 				if(0==(($x-$x0) % $step)){
 					if($steep){
-						self::_drawCircularGradient(&$im, $y, $x, $spot_radius, $dimming);
+						self::_drawCircularGradient($im, $y, $x, $spot_radius, $dimming);
 					}else{ 
-						self::_drawCircularGradient(&$im, $x, $y, $spot_radius, $dimming);
+						self::_drawCircularGradient($im, $x, $y, $spot_radius, $dimming);
 					}
 				}
 				$error -= $deltay;

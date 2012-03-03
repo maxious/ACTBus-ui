@@ -55,7 +55,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <link rel="dns-prefetch" href="//ajax.googleapis.com">';
     $jqmVersion = "1.0.1";
     echo '
-	<script src="js/yepnope/yepnope.1.5.3-min.js"></script>
+	<script src="'.$basePath.'js/yepnope/yepnope.1.5.3-min.js"></script>
 		 <script>
                  yepnope([{
   load: "//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js",

@@ -15,8 +15,8 @@ $debugOkay = Array(); // disable debugging output even on dev server
 	set_time_limit(120);//2mn
 	ini_set('memory_limit', '256M');
 error_reporting(E_ALL ^ E_DEPRECATED);
-	require_once ($labsPath . 'lib/GoogleMapUtility.php');
-	require_once ($labsPath . 'lib/HeatMap.php');
+	require_once ($basePath . 'lib/GoogleMapUtility.php');
+	require_once ($basePath . 'lib/HeatMap.php');
 
 	//Root folder to store generated tiles
 	define('TILE_DIR', 'tiles/');
