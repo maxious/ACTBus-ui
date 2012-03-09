@@ -75,9 +75,6 @@ include_header("MyWay Deltas", "mywayDelta");
                 var dataurl = "myway_timeliness_stop.json.php?stopid=" + select.val();
                 // then fetch the data with jQuery
                 function onDataReceived(series) {
-                    // extract the first coordinate pair so you can see that
-                    // data is now an ordinary Javascript object
-                    var firstcoordinate = '(' + series.data[0][0] + ', ' + series.data[0][1] + ')';
  
       
                     // let's add it to our current data
