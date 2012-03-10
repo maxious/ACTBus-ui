@@ -20,8 +20,8 @@ include_header("About", "about")
 <p>
     Busness Time - An ACT bus timetable webapp<br />
     Based on the maxious-canberra-transit-feed (<a 
-        href="http://s3-ap-southeast-1.amazonaws.com/busresources/cbrfeed.zip">download</a>, 
-    last updated <?php echo date("F d Y.", @filemtime('cbrfeed.zip')); ?>)<br />
+        href="http://busresources.lambdacomplex.org/cbrfeed.zip">download</a>, 
+    last updated <?php echo date("F d Y.", @filemtime('../busresources/cbrfeed.zip')); ?>)<br />
     Source code for the <a 
         href="https://github.com/maxious/ACTBus-data">transit 
         feed</a> and <a href="https://github.com/maxious/ACTBus-ui">this 
@@ -36,7 +36,7 @@ include_header("About", "about")
     Native clients also available for iPhone(<a href="http://itunes.apple.com/au/app/cbrtimetable/id444287349?mt=8">cbrTimetable by Sandor Kolotenko</a>
     , <a href="http://itunes.apple.com/au/app/act-buses/id376634797?mt=8">ACT Buses by David Sullivan</a>, <a href="http://itunes.apple.com/app/bus-trips-act/id489146525?mt=8">Bus Trips ACT by Molson Chengalath</a>) 
     , Android (<a href="https://market.android.com/details?id=com.action">MyBus 2.0 by Imagine Team</a>, <A href="https://market.android.com/details?id=GetMe2CanberraFree.source">GetMe2 Canberra by
-Colin Thompson </a>) 
+Colin Thompson </a>, <a href="https://market.android.com/details?id=au.com.transittimes.android">TransitTimes+ by Zervaas Enterprises</a>) 
     and Windows Phone 7 (<a href="http://www.windowsphone.com/en-AU/apps/d840375e-429c-4aa4-a358-80eec6ea9e66">TransHub Canberra by Soul Solutions</a>) Other web clients include <a href="http://canberra.itranzit.com/option.html">iTranzit</a>.
     <br />
     GTFS-realtime API:

@@ -59,7 +59,12 @@ and stop_times.stop_sequence = 1 group by stops.stop_name, trip_headsign, direct
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    $results = $query->fetchAll();
+    if (is_array($results)) {
+        return $results;
+    } else {
+        return Array($results);
+    }
 }
 function getRouteDescription($routeID, $directionID) {
     $trip = getRouteNextTrip($routeID, $directionID);
@@ -97,7 +102,7 @@ function getRoutes() {
 function getRoutesByNumberSeries($routeNumberSeries = "") {
     global $conn;
     if (strlen($routeNumberSeries) == 1) {
-        return getRoutesByNumber($routeNumberSeries);
+        return getRoute($routeNumberSeries);
     }
     $seriesMin = substr($routeNumberSeries, 0, -1) . "0";
     $seriesMax = substr($routeNumberSeries, 0, -1) . "9";
@@ -120,7 +125,7 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where to_n
 function getRouteNextTrip($routeID, $directionID) {
     global $conn;
    
-    $query = "select routes.route_id,direction_id,trips.trip_id,trip_headsign,departure_time from routes join trips on trips.route_id = routes.route_id
+    $query = "select routes.route_id,routes.route_url,direction_id,trips.trip_id,trip_headsign,departure_time,service_id from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id where  arrival_time between :currentTime and :futureTime 
 and routes.route_id = :routeID and trips.direction_id = :directionID order by
 arrival_time limit 1";

@@ -51,11 +51,20 @@ if (isset($_REQUEST['numberSeries'])) {
 if (isset($_REQUEST['routeDestination'])) {
     $routeDestination = urldecode(filter_var($_REQUEST['routeDestination'], FILTER_SANITIZE_ENCODED));
 }
+if (isset($_REQUEST['routename'])) {
+    $routename = urldecode(filter_var($_REQUEST['routename'], FILTER_SANITIZE_ENCODED));
+}
 if (isset($_REQUEST['stopcode'])) {
     $stopcode = filter_var($_REQUEST['stopcode'], FILTER_SANITIZE_STRING);
 }
 if (isset($_REQUEST['stopids'])) {
     $stopids = explode(",", filter_var($_REQUEST['stopids'], FILTER_SANITIZE_STRING));
+}
+if (isset($_REQUEST['filterIncludeRoutes'])) {
+    $filterIncludeRoutes = explode(",", filter_var($_REQUEST['filterIncludeRoutes'], FILTER_SANITIZE_STRING));
+}
+if (isset($_REQUEST['filterHasStop'])) {
+    $filterHasStop = filter_var($_REQUEST['filterHasStop'], FILTER_SANITIZE_STRING);
 }
 if (isset($_REQUEST['tripid'])) {
     $tripid = filter_var($_REQUEST['tripid'], FILTER_SANITIZE_STRING);

@@ -51,13 +51,20 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
         || strstr($_SERVER['PHP_SELF'], "lib/")
         || strstr($_SERVER['PHP_SELF'], "geo/")
         || strstr($_SERVER['PHP_SELF'], "include/")
-        || strstr($_SERVER['PHP_SELF'], "servicealerts/"))
+        || strstr($_SERVER['PHP_SELF'], "rtpis/")) {
     $basePath = "../";
+}
 
 function isDebugServer() {
     
     return php_sapi_name() == "cli" || strstr(php_uname('n'),"actbus") || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "azusa" || $_SERVER['SERVER_NAME'] == "vanille"
             || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" ||  $_SERVER['SERVER_NAME'] == "192.168.1.8" || $_SERVER['SERVER_NAME'] == "192.168.178.24");
+}
+
+if (isset($_SERVER['SERVER_NAME'])  && $_SERVER['SERVER_NAME'] == "maxious.xen.prgmr.com") {
+// Set the exception handler
+require $basePath."/lib/amon-php/amon.php";
+Amon::setup_exception_handler();
 }
 
 include_once ("common-geo.inc.php");

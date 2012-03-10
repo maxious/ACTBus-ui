@@ -67,7 +67,6 @@ include_header("MyWay Deltas", "mywayDelta");
                 var dataurl = "myway_timeliness_stop.json.php?stopid=" + select.val();
                 // then fetch the data with jQuery
                 function onDataReceived(series) {
-           
                     // let's add it to our current data
                     if (!alreadyFetched[series.label]) {
                         alreadyFetched[series.label] = true;

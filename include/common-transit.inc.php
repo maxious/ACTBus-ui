@@ -149,69 +149,104 @@ if ($GTFSREnabled) {
           street inform: route inform, trip inform, stop inform
           route patch: trip remove
          */
-        $fm = new transit_realtime\FeedMessage();
-        $fh = new transit_realtime\FeedHeader();
-        $fh->setGtfsRealtimeVersion(1);
-        $fh->setTimestamp(time());
-        $fm->setHeader($fh);
-        foreach (getCurrentAlerts() as $alert) {
-            $fe = new transit_realtime\FeedEntity();
-            $fe->setId($alert['id']);
-            $fe->setIsDeleted(false);
-            $alert = new transit_realtime\Alert();
-            $tr = new transit_realtime\TimeRange();
-            $tr->setStart($alert['start']);
-            $tr->setEnd($alert['end']);
-            $alert->addActivePeriod($tr);
-            $informedEntities = getInformedAlerts($alert['id'], $_REQUEST['filter_class'], $_REQUEST['filter_id']);
-            if (sizeof($informedEntities) > 0) {
-                $informed = Array();
-                $es = new transit_realtime\EntitySelector();
-                if ($informedEntity['informed_class'] == "agency") {
-                    $es->setAgencyId($informedEntity['informed_id']);
+        $current_alerts = getCurrentAlerts();
+        $informed_count = 0;
+        if (sizeof($current_alerts) > 0) {
+
+            $fm = new transit_realtime\FeedMessage();
+            $fh = new transit_realtime\FeedHeader();
+            $fh->setGtfsRealtimeVersion(1);
+            $fh->setTimestamp(time());
+            $fm->setHeader($fh);
+            foreach ($current_alerts as $current_alert) {
+                $affectsFilteredEntities = false;
+                $fe = new transit_realtime\FeedEntity();
+                $fe->setId($current_alert['id']);
+                $fe->setIsDeleted(false);
+                $alert = new transit_realtime\Alert();
+                $tr = new transit_realtime\TimeRange();
+                $tr->setStart($current_alert['start']);
+                $tr->setEnd($current_alert['end']);
+                $alert->addActivePeriod($tr);
+                $informedEntities = getInformedAlerts($current_alert['id'], $filter_class, $filter_id);
+                if (sizeof($informedEntities) > 0) {
+
+                    $affectsFilteredEntities = true;
+                    foreach ($informedEntities as $informedEntity) {
+	$informed_count++;
+                    $informed = Array();
+                    $es = new transit_realtime\EntitySelector();
+                    if ($informedEntity['informed_class'] == "agency") {
+                        $es->setAgencyId($informedEntity['informed_id']);
+                    }
+                    if ($informedEntity['informed_class'] == "stop") {
+                        $es->setStopId($informedEntity['informed_id']);
+                    }
+                    if ($informedEntity['informed_class'] == "route") {
+                        $es->setRouteId($informedEntity['informed_id']);
+                    }
+                    if ($informedEntity['informed_class'] == "trip") {
+                        $td = new transit_realtime\TripDescriptor();
+                        $td->setTripId($informedEntity['informed_id']);
+                        $es->setTrip($td);
+                    }
+                    $alert->addInformedEntity($es);
+}
                 }
-                if ($informedEntity['informed_class'] == "stop") {
-                    $es->setStopId($informedEntity['informed_id']);
+                if ($current_alert['cause'] != "") {
+                    $alert->setCause(constant("transit_realtime\Alert\Cause::" . $current_alert['cause']));
                 }
-                if ($informedEntity['informed_class'] == "route") {
-                    $es->setRouteId($informedEntity['informed_id']);
+                if ($current_alert['effect'] != "") {
+                    $alert->setEffect(constant("transit_realtime\Alert\Effect::" . $current_alert['effect']));
                 }
-                if ($informedEntity['informed_class'] == "trip") {
-                    $td = new transit_realtime\TripDescriptor();
-                    $td->setTripId($informedEntity['informed_id']);
-                    $es->setTrip($td);
+                if ($current_alert['url'] != "") {
+                    $tsUrl = new transit_realtime\TranslatedString();
+                    $tUrl = new transit_realtime\TranslatedString\Translation();
+                    $tUrl->setText($current_alert['url']);
+                    $tUrl->setLanguage("en");
+                    $tsUrl->addTranslation($tUrl);
+                    $alert->setUrl($tsUrl);
                 }
-                $alert->addInformedEntity($es);
+                if ($current_alert['header'] != "") {
+                    $tsHeaderText = new transit_realtime\TranslatedString();
+                    $tHeaderText = new transit_realtime\TranslatedString\Translation();
+                    $tHeaderText->setText($current_alert['header']);
+                    $tHeaderText->setLanguage("en");
+                    $tsHeaderText->addTranslation($tHeaderText);
+                    $alert->setHeaderText($tsHeaderText);
+                }
+                if ($current_alert['description'] != "") {
+                    $tsDescriptionText = new transit_realtime\TranslatedString();
+                    $tDescriptionText = new transit_realtime\TranslatedString\Translation();
+                    $tDescriptionText->setText(trim($current_alert['description']));
+                    $tDescriptionText->setLanguage("en");
+                    $tsDescriptionText->addTranslation($tDescriptionText);
+                    $alert->setDescriptionText($tsDescriptionText);
+                }
+                $fe->setAlert($alert);
+                if ($affectsFilteredEntities) {
+                    $fm->addEntity($fe);
+                }
             }
-            $alert->setCause(constant("transit_realtime\Alert\Cause::" . $alert['cause']));
-            $alert->setEffect(constant("transit_realtime\Alert\Effect::" . $alert['effect']));
-            $tsUrl = new transit_realtime\TranslatedString();
-            $tUrl = new transit_realtime\TranslatedString\Translation();
-            $tUrl->setText($alert['url']);
-            $tUrl->setLanguage("en");
-            $tsUrl->addTranslation($tUrl);
-            $alert->setUrl($tsUrl);
-            $tsHeaderText = new transit_realtime\TranslatedString();
-            $tHeaderText = new transit_realtime\TranslatedString\Translation();
-            $tHeaderText->setText($alert['header']);
-            $tHeaderText->setLanguage("en");
-            $tsHeaderText->addTranslation($tHeaderText);
-            $alert->setHeaderText($tsHeaderText);
-            $tsDescriptionText = new transit_realtime\TranslatedString();
-            $tDescriptionText = new transit_realtime\TranslatedString\Translation();
-            $tDescriptionText->setText($alert['description']);
-            $tDescriptionText->setLanguage("en");
-            $tsDescriptionText->addTranslation($tDescriptionText);
-            $alert->setDescriptionText($tsDescriptionText);
-            $fe->setAlert($alert);
-            $fm->addEntity($fe);
-        }
-        return $fm;
+            if ($informed_count > 0) {
+                return $fm;
+            } else {
+                return null;
+            }
+        } else
+            return null;
     }
 
     function getServiceAlertsAsArray($filter_class = "", $filter_id = "") {
-        $codec = new DrSlump\Protobuf\Codec\PhpArray();
-        return $codec->encode(getServiceAlerts($filter_class, $filter_id));
+
+        $alerts = getServiceAlerts($filter_class, $filter_id);
+        if ($alerts != null) {
+            $codec = new DrSlump\Protobuf\Codec\PhpArray();
+
+            return $codec->encode($alerts);
+        } else {
+            return null;
+        }
     }
 
     function getServiceAlertsAsBinary($filter_class = "", $filter_id = "") {

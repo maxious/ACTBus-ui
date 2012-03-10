@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 [submodule "js/flotr2"]
 	path = js/flotr2
 	url = https://github.com/HumbleSoftware/Flotr2.git
 [submodule "js/FlashCanvas"]
 	path = js/FlashCanvas
 	url = https://github.com/timcameronryan/FlashCanvas
+=======
+[submodule "lib/amon-php"]
+	path = lib/amon-php
+	url = https://github.com/martinrusev/amon-php.git
+[submodule "js/yepnope"]
+	path = js/yepnope
+	url = https://github.com/SlexAxton/yepnope.js.git
+>>>>>>> 9714b3c938ad66f914c8d22144b8883e40f2ef09

@@ -21,7 +21,8 @@ function getServiceOverride($date = "") {
     $query = "Select * from calendar_dates where date = :date and exception_type = '1' LIMIT 1";
     // debug($query,"database");
     $query = $conn->prepare($query); // Create a prepared statement
-    $query->bindParam(":date", date("Ymd", ($date != "" ? $date : time())));
+    $date = date("Ymd", ($date != "" ? $date : time()));
+    $query->bindParam(":date", $date);
     $query->execute();
     if (!$query) {
         databaseError($conn->errorInfo());
@@ -44,17 +45,19 @@ function getServiceAlert($alertID) {
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
 
-function updateServiceAlert($alertID, $start, $end, $header, $description, $url) {
+function updateServiceAlert($alertID, $alert) {
     global $conn;
-    $query = 'update servicealerts_alerts set start=:start, "end"=:end, header=:header, description=:description, url=:url where id = :servicealert_id';
+    $query = 'update servicealerts_alerts set start=:start, "end"=:end, header=:header, description=:description, url=:url, cause=:cause, effect=:effect where id = :servicealert_id';
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":servicealert_id", $alertID);
-    $query->bindParam(":start", $start);
-    $query->bindParam(":end", $end);
-    $query->bindParam(":header", $header);
-    $query->bindParam(":description", $description);
-    $query->bindParam(":url", $url);
+    $query->bindValue(":servicealert_id", $alertID);
+    $query->bindValue(":start", $alert['startdate']);
+    $query->bindValue(":end", $alert['enddate']);
+    $query->bindValue(":header", $alert['header']);
+    $query->bindValue(":description", $alert['description']);
+    $query->bindValue(":url", $alert['url']);
+    $query->bindValue(":cause", $alert['cause']);
+    $query->bindValue(":effect", $alert['effect']);
     $query->execute();
 
     print_r($conn->errorInfo());
@@ -65,16 +68,19 @@ function updateServiceAlert($alertID, $start, $end, $header, $description, $url)
     return $query->fetch(PDO :: FETCH_ASSOC);
 }
 
-function addServiceAlert($start, $end, $header, $description, $url) {
+function addServiceAlert($alert) {
     global $conn;
-    $query = 'INSERT INTO servicealerts_alerts (start, "end", header, description, url) VALUES (:start, :end, :header, :description, :url) ';
+    $query = 'INSERT INTO servicealerts_alerts (start, "end", header, description, url,cause,effect) VALUES (:start, :end, :header, :description, :url,:cause,:effect) ';
     debug($query, "database");
     $query = $conn->prepare($query);
-    $query->bindParam(":start", $start);
-    $query->bindParam(":end", $end);
-    $query->bindParam(":header", $header);
-    $query->bindParam(":description", $description);
-    $query->bindParam(":url", $url);
+    //print_r($alert);
+    $query->bindValue(":start", $alert['startdate']);
+    $query->bindValue(":end", $alert['enddate']);
+    $query->bindValue(":header", $alert['header']);
+    $query->bindValue(":description", $alert['description']);
+    $query->bindValue(":url", $alert['url']);
+    $query->bindValue(":cause", $alert['cause']);
+    $query->bindValue(":effect", $alert['effect']);
     $query->execute();
 
     print_r($conn->errorInfo());
@@ -114,6 +120,7 @@ function getFutureAlerts() {
 function getInformedAlerts($id, $filter_class, $filter_id) {
 
     global $conn;
+    //echo "$id, $filter_class, $filter_id\n";
     $query = "SELECT * from servicealerts_informed where servicealert_id = :servicealert_id";
 
     if ($filter_class != "") {
@@ -158,12 +165,14 @@ function deleteInformedAlert($serviceAlertID, $class, $id) {
 
 function addInformedAlert($serviceAlertID, $class, $id, $action) {
     global $conn;
-    $query = 'INSERT INTO servicealerts_informed (servicealert_id , informed_class , informed_id) VALUES(:servicealert_id ,:informed_class, :informed_id)';
+    $query = 'INSERT INTO servicealerts_informed (servicealert_id , informed_class , informed_id, informed_action) 
+        VALUES(:servicealert_id ,:informed_class, :informed_id, :informed_action)';
     debug($query, "database");
     $query = $conn->prepare($query);
     $query->bindParam(":servicealert_id", $serviceAlertID);
     $query->bindParam(":informed_class", $class);
     $query->bindParam(":informed_id", $id);
+    $query->bindParam(":informed_action", $action);
     $query->execute();
 
     print_r($conn->errorInfo());

@@ -16,8 +16,9 @@
   limitations under the License.
  */
 include ('include/common.inc.php');
-if ($stopid)
+if (isset($stopid)) {
     $stop = getStop($stopid);
+}
 /* if ($stopcode != "" && $stop[5] != $stopcode) {
   $url = $APIurl . "/json/stopcodesearch?q=" . $stopcode;
   $stopsearch = json_decode(getPage($url));
@@ -74,10 +75,10 @@ if (isset($stopids)) {
     }
 }
 if (sizeof($stops) > 0) {
-$stopDescParts = explode("<br>",$stop['stop_desc']);
-include_header(trim(str_replace("Street: ","",$stopDescParts[0])), "stop");
+    $stopDescParts = explode("<br>", $stop['stop_desc']);
+    include_header(trim(str_replace("Street: ", "", $stopDescParts[0])), "stop");
 } else {
-    include_header($stop['stop_name']);
+    include_header($stop['stop_name'], "stop");
 }
 /* $serviceAlerts = json_decode(getPage(curPageURL() . "/servicealerts_api.php?filter_class=stop&filter_id=".$stopid) , true);
 
@@ -85,7 +86,7 @@ include_header(trim(str_replace("Street: ","",$stopDescParts[0])), "stop");
   echo '<div id="servicewarning">'.$serviceAlert['alert']['description']['translation'].'</div>';
   } */
 
-echo '<span class="content-secondary">';
+echo '<div class="content-secondary">';
 echo $stopLinks;
 if (sizeof($stops) > 0) {
     trackEvent("View Stops", "View Combined Stops", $stop["stop_name"], $stop["stop_id"]);
@@ -102,21 +103,21 @@ if (sizeof($stops) > 0) {
 
 timeSettings();
 
-echo '</span><span class="content-primary">';
+echo '</div><div class="content-primary">';
 echo '  <ul data-role="listview"  data-inset="true">';
 if (sizeof($allStopsTrips) > 0) {
     sktimesort($allStopsTrips, "arrival_time", true);
     $trips = $allStopsTrips;
 } else {
-    $trips = getStopTripsWithTimes($stopid);
+    $trips = getStopTripsWithTimes($stopid, "", "", "", (isset($filterIncludeRoutes) || isset($filterHasStop) ? "75" : ""));
 }
 
 echo "<div class='ui-header' style='overflow: visible; height: 2.5em'>";
 // if we have too many trips, cut down to size.
-if (sizeof($trips) > 10) {
-    $trips = array_splice($trips, 0,10);
+if (!isset($filterIncludeRoutes) && !isset($filterHasStop) && sizeof($trips) > 10) {
+    $trips = array_splice($trips, 0, 10);
 }
-    
+
 // later/earlier button setup
 if (sizeof($trips) == 0) {
     $time = isset($_REQUEST['time']) ? strtotime($_REQUEST['time']) : time();
@@ -141,32 +142,38 @@ if (sizeof($trips) == 0) {
     echo "<li style='text-align: center;'>No trips in the near future.</li>";
 } else {
     foreach ($trips as $trip) {
-        echo '<li>';
+        if (
+                isset($filterHasStop) && (getTripHasStop($trip['trip_id'], $filterHasStop) == 1)
+                || (isset($filterIncludeRoutes) && in_array($trip["route_short_name"], $filterIncludeRoutes))
+                || (!isset($filterIncludeRoutes) && !isset($filterHasStop))
+        ) {
+            echo '<li>';
 
-        $destination = getTripDestination($trip['trip_id']);
-        echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>'. $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
-        $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
-        if ($viaPoints != "")
-            echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
-        if (sizeof($tripStopNumbers) > 0) {
-            echo '<br><small>Boarding At: ';
-            if (sizeof($tripStopNumbers[$trip['trip_id']]) == sizeof($stopids)) {
-                echo "All Stops";
-            } else {
-                foreach ($tripStopNumbers[$trip['trip_id']] as $key) {
-                    echo $stopNames[$key] . ', ';
+            $destination = getTripDestination($trip['trip_id']);
+            echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
+            $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
+            if ($viaPoints != "")
+                echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
+            if (sizeof($tripStopNumbers) > 0) {
+                echo '<br><small>Boarding At: ';
+                if (sizeof($tripStopNumbers[$trip['trip_id']]) == sizeof($stopids)) {
+                    echo "All Stops";
+                } else {
+                    foreach ($tripStopNumbers[$trip['trip_id']] as $key) {
+                        echo $stopNames[$key] . ', ';
+                    }
                 }
+                echo '</small>';
             }
-            echo '</small>';
+            echo '</p>';
+            echo '<p class="ui-li-aside"><strong>' . $trip['arrival_time'] . '</strong></p>';
+            echo '</a></li>';
+            flush();
+            @ob_flush();
         }
-        echo '</p>';
-        echo '<p class="ui-li-aside"><strong>' . $trip['arrival_time'] . '</strong></p>';
-        echo '</a></li>';
-        flush();
-        @ob_flush();
     }
 }
 echo '</ul>';
-echo '</span>';
+echo '</div>';
 include_footer();
 ?>

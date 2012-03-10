@@ -42,7 +42,7 @@ function googleAnalyticsGetImageUrl() {
 }
 
 function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = false, $datepicker = false) {
-    global $basePath, $GTFSREnabled;
+    global $basePath, $GTFSREnabled, $stopid, $routeid;
     echo '
 <!DOCTYPE html> 
 <html lang="en">
@@ -52,36 +52,24 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <title>' . $pageTitle . ' - Canberra Bus Timetable</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 <link rel="dns-prefetch" href="//code.jquery.com">
-<link rel="dns-prefetch" href="//ajax.googleapis.com">
-	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
+<link rel="dns-prefetch" href="//ajax.googleapis.com">';
     $jqmVersion = "1.0.1";
-    if (isDebugServer()) {
-        $jqmcss = $basePath . "css/jquery.mobile-$jqmVersion.css";
-        $jqjs = $basePath . "js/jquery-1.6.4.min.js";
-        $jqmjs = $basePath . "js/jquery.mobile-$jqmVersion.js";
-        
-        $jqmcss = $basePath . "css/jquery.mobile-b90eab4935.css";
-        $jqmjs = $basePath . "js/jquery.mobile-b90eab4935.js";
-    } else {
-        $jqmcss = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.css";
-        $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js";
-        $jqmjs = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.js";
-
-    }
-    echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
-	<script src="' . $jqjs . '"></script>
-		 <script>$(document).bind("mobileinit", function(){
+    echo '
+	<script src="'.$basePath.'js/yepnope/yepnope.1.5.3-min.js"></script>
+		 <script>
+                 yepnope([{
+  load: "//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js",
+  complete: function () {
+    
+     $(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
-});
-</script> 
-	<script src="' . $jqmjs . '"></script>
-
-<script src="' . $basePath . 'js/jquery.ui.core.min.js"></script>
-<script src="' . $basePath . 'js/jquery.ui.position.min.js"></script>
-<script src="' . $basePath . 'js/jquery.ui.widget.min.js"></script>
-  <script src="' . $basePath . 'js/jquery.ui.autocomplete.min.js"></script>
-  <script>
-	$(function() {
+}); }
+  
+}, {
+  load: ["//code.jquery.com/mobile/' . $jqmVersion . '/jquery.mobile-' . $jqmVersion . '.min.css","//code.jquery.com/mobile/' . $jqmVersion . '/jquery.mobile-' . $jqmVersion . '.min.js"] 
+  }, {
+  load: ["' . $basePath . 'css/jquery-ui-1.8.12.custom.css","' . $basePath . 'js/jquery.ui.core.min.js","' . $basePath . 'js/jquery.ui.position.min.js","' . $basePath . 'js/jquery.ui.widget.min.js","' . $basePath . 'js/jquery.ui.autocomplete.min.js"],
+  complete: function() {
 		$( "#geolocate" ).autocomplete({
 			source: "lib/autocomplete.php",
 			minLength: 2
@@ -94,8 +82,13 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 			source: "lib/autocomplete.php",
 			minLength: 2
 		});
-	});
-	</script>';
+	}
+  
+  
+}]);
+                
+</script> 
+	';
     echo '<style type="text/css">';
     if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android'))
         echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
@@ -108,7 +101,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 }';
     echo '</style>';
     echo '<link rel="stylesheet"  href="' . $basePath . 'css/local.css.php" />';
-    if (isIOSDevice()){
+    if (isIOSDevice()) {
         echo '<meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
  <link rel="apple-touch-startup-image" href="startup.png" />
@@ -174,19 +167,41 @@ $(document).ready(function() {
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
         if ($GTFSREnabled) {
-        $overrides = getServiceOverride();
-        if (isset($overrides['service_id'])) {
-            if ($overrides['service_id'] == "noservice") {
-                echo '<div id="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
+            $overrides = getServiceOverride();
+            if (isset($overrides['service_id'])) {
+                if ($overrides['service_id'] == "noservice") {
+                    echo '<div class="servicewarning">Buses are <strong>not running today</strong> due to industrial action/public holiday. See <a 
 href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
-            } else {
-                echo '<div id="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+                } else {
+                    echo '<div class="servicewarning">Buses are running on an altered timetable today due to industrial action/public holiday. See <a href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details.</div>';
+                }
             }
-        }
-            $serviceAlerts = getServiceAlertsAsArray("agency", "0");
+            $serviceAlerts = Array();
+            $globalAlerts = getServiceAlertsAsArray("agency", "0");
+            if ($globalAlerts != null) {
+                // echo "getting alerts due to network wide";
+                $serviceAlerts = array_merge($serviceAlerts, $globalAlerts);
+            }
+            if (isset($stopid)) {
+                $stopAlerts = getServiceAlertsAsArray("stop", $stopid);
+                if ($stopAlerts != null) {
+                    // echo "getting alerts due to stop $stopid";
+                    $serviceAlerts = array_merge($serviceAlerts, $stopAlerts);
+                }
+            }
+            if (isset($routeid)) {
+                $routeAlerts = getServiceAlertsAsArray("route", $routeid);
+                if ($routeAlerts != null) {
+                    //    echo "getting alerts due to route $routeid";
+                    $serviceAlerts = array_merge($serviceAlerts, $routeAlerts);
+                }
+            }
             if (isset($serviceAlerts['entity']) && sizeof($serviceAlerts['entity']) > 0) {
                 foreach ($serviceAlerts['entity'] as $entity) {
-                    echo "<div id='servicewarning'>" . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['start'])) . " to " . date("F j, g:i a", strtotime($entity['alert']['active_period'][0]['end'])) . "{$entity['alert']['header_text']['translation'][0]['text']}<br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
+                    echo "<div class='servicewarning'><b>{$entity['alert']['header_text']['translation'][0]['text']}</b>&nbsp;<small>"
+                    . date("F jS Y, g:i a", $entity['alert']['active_period'][0]['start']) . " to "
+                    . date("F jS Y, g:i a", $entity['alert']['active_period'][0]['end']) . "</small>
+                            <br>Warning: {$entity['alert']['description_text']['translation'][0]['text']} 
                             <br><a href='{$entity['alert']['url']['translation'][0]['text']}'>Source</a>  </div>";
                 }
             }
@@ -208,13 +223,14 @@ function include_footer() {
 s.parentNode.insertBefore(ga, s);
   })();</script>";
         $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
-        echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" /></noscript>';
+        echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" alt=""/></noscript>';
     }
     echo "\n</div></div></body></html>";
 }
+
 function timeSettings() {
     global $service_periods;
-echo '<div id="settings" data-role="collapsible" data-collapsed="true">
+    echo '<div id="settings" data-role="collapsible" data-collapsed="true">
 <h3>Change Time (' . (isset($_REQUEST['time']) ? $_REQUEST['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . '" method="GET">
                <input type="hidden" name="suburb" id="suburb" value="' . (isset($_REQUEST['suburb']) ? $_REQUEST['suburb'] : "") . '"/>
@@ -230,10 +246,10 @@ echo '<div id="settings" data-role="collapsible" data-collapsed="true">
 		<div data-role="fieldcontain">
 		    <label for="service_period"> Service Period:  </label>
 			<select name="service_period" id="service_period">';
-foreach ($service_periods as $service_period) {
-    echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
-}
-echo '</select>
+    foreach ($service_periods as $service_period) {
+        echo "<option value=\"$service_period\"" . (service_period() === $service_period ? " SELECTED" : "") . '>' . ucwords($service_period) . '</option>';
+    }
+    echo '</select>
 			<a href="#" style="display:none" name="currentPeriod" id="currentPeriod">Current Period?</a>
 		</div>
 		
@@ -241,8 +257,9 @@ echo '</select>
                 </div></form>
             </div>';
 }
+
 function placeSettings() {
-    
+
     $geoerror = false;
     $geoerror = !isset($_SESSION['lat']) || !isset($_SESSION['lat']) || $_SESSION['lat'] == "" || $_SESSION['lon'] == "";
 
@@ -275,14 +292,15 @@ function trackEvent($category, $action, $label = "", $value = - 1) {
 
 //stop list collapsing
 function stopCompare($stopName) {
-    return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)),0,9);
+    return substr(trim(preg_replace("/\(Platform.*/", "", $stopName)), 0, 9);
 }
-function stopGroupTitle($stopName,$stopdesc) {
-    if (preg_match("/Dr |Cct |Cir |Av |St |Cr |Parade |Way |Bank /",$stopName)) {
-        $descParts =  explode("<br>",$stopdesc);
-         return trim(str_replace("Street: ","",$descParts[0]));
+
+function stopGroupTitle($stopName, $stopdesc) {
+    if (preg_match("/Dr |Cct |Cir |Av |St |Cr |Parade |Way |Bank /", $stopName)) {
+        $descParts = explode("<br>", $stopdesc);
+        return trim(str_replace("Street: ", "", $descParts[0]));
     } else {
-        return trim(preg_replace("/\(Platform.*/", "",$stopName));
+        return trim(preg_replace("/\(Platform.*/", "", $stopName));
     }
 }
 

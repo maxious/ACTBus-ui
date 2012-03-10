@@ -89,7 +89,7 @@ function getStopsByName($name) {
     $query = "Select * from stops where stop_name LIKE :name;";
     debug($query, "database");
     $query = $conn->prepare($query);
-    $name = "%" . $name . ";%";
+    $name = $name . "%";
     $query->bindParam(":name", $name);
     $query->execute();
     if (!$query) {
