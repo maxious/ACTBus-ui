@@ -82,7 +82,7 @@ Active and Future Alerts:
 <table>
     <?php
     foreach (getFutureAlerts() as $alert) {
-        echo "<tr><td>" . date("c", $alert['start']) . "</td><td>" . date("c", $alert['end']) . "</td><td>" . substr($alert['description'], 0, 999) . '</td><td><a href="?edit=' . $alert['id'] . '">edit</a></td></tr>';
+        echo "<tr><td>" . date("c", $alert['start']) . "<br>to<br>" . date("c", $alert['end']) . "</td><td><b>" .$alert['header']."</b><br>". $alert['description'] . '</td><td><a href="?edit=' . $alert['id'] . '">edit</a></td></tr>';
     }
     ?>
 </table>
