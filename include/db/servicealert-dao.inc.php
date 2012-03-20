@@ -106,7 +106,19 @@ function getCurrentAlerts() {
 
 function getFutureAlerts() {
     global $conn;
-    $query = "SELECT id,extract('epoch' from start) as start, extract('epoch' from \"end\") as \"end\",cause,effect,header,description,url from servicealerts_alerts where NOW() > start or NOW() < \"end\"";
+    $query = "SELECT id,extract('epoch' from start) as start, extract('epoch' from \"end\") as \"end\",cause,effect,header,description,url from servicealerts_alerts where  NOW() < \"end\"";
+    // debug($query, "database");
+    $query = $conn->prepare($query);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return $query->fetchAll();
+}
+function getAllAlerts() {
+    global $conn;
+    $query = "SELECT id,extract('epoch' from start) as start, extract('epoch' from \"end\") as \"end\",cause,effect,header,description,url from servicealerts_alerts";
     // debug($query, "database");
     $query = $conn->prepare($query);
     $query->execute();
