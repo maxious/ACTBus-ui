@@ -10,3 +10,9 @@
 [submodule "js/yepnope"]
 	path = js/yepnope
 	url = https://github.com/SlexAxton/yepnope.js.git
+[submodule "javascripts/tesseract"]
+	path = javascripts/tesseract
+	url = https://github.com/square/tesseract.git
+[submodule "javascripts/d3"]
+	path = javascripts/d3
+	url = https://github.com/mbostock/d3.git
