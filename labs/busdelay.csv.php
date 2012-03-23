@@ -25,7 +25,7 @@ if ($fp && $query) {
         foreach ($headers as $i => $fieldName) {
             switch ($fieldName) {
                 case "date":
-                    $row[] = date("dm",strtotime($r['date'])).date("Hi",strtotime($r['time']));
+                    $row[] = date("r",strtotime($r['date']." ".$r['time']));
                     break;
                 case "delay":
                     $row[] = $r['timing_delta'];

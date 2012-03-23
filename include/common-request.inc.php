@@ -30,6 +30,9 @@ if (isset($_REQUEST['allstops'])) {
 if (isset($_REQUEST['nearby'])) {
     $nearby = true;
 }
+if (isset($_REQUEST['labs'])) {
+    $labs = true;
+}
 if (isset($_REQUEST['suburb'])) {
     $suburb = $_REQUEST['suburb'];
 }

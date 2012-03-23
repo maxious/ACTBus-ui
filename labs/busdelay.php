@@ -166,9 +166,10 @@ d3.csv("busdelay.csv.php", function(flights) {
   dates = date.group(),
   hour = flight.dimension(function(d) { return d.date.getHours() + d.date.getMinutes() / 60; }),
   hours = hour.group(Math.floor),
-  delay = flight.dimension(function(d) { return Math.max(-60, Math.min(149, d.delay)); }),
+  //delay = flight.dimension(function(d) { return Math.max(-60, Math.min(149, d.delay)); }),
+  delay = flight.dimension(function(d) { return d.delay; }),
   delays = delay.group(function(d) { return Math.floor(d / 10) * 10; }),
-  distance = flight.dimension(function(d) { return Math.min(90, d.distance); }),
+  distance = flight.dimension(function(d) { return Math.min(60, d.distance); }),
   distances = distance.group(function(d) { return Math.floor(d / 50) * 50; });
 
   var charts = [
@@ -184,14 +185,14 @@ d3.csv("busdelay.csv.php", function(flights) {
         .dimension(delay)
         .group(delays)
       .x(d3.scale.linear()
-        .domain([-60, 150])
+        .domain([-650, 650])
         .rangeRound([0, 10 * 21])),
 
     barChart()
         .dimension(distance)
         .group(distances)
       .x(d3.scale.linear()
-        .domain([0, 90])
+        .domain([0, 60])
         .rangeRound([0, 10 * 40])),
 
     barChart()
@@ -199,9 +200,9 @@ d3.csv("busdelay.csv.php", function(flights) {
         .group(dates)
         .round(d3.time.day.round)
       .x(d3.time.scale()
-        .domain([new Date(2001, 0, 1), new Date(2001, 3, 1)])
+        .domain([new Date(2011, 4, 1), new Date(2012, 1, 4)])
         .rangeRound([0, 10 * 90]))
-        .filter([new Date(2001, 1, 1), new Date(2001, 2, 1)])
+        .filter([new Date(2011, 4, 4), new Date(2012, 4, 4)])
 
   ];
 
@@ -236,11 +237,7 @@ d3.csv("busdelay.csv.php", function(flights) {
 
   // Like d3.time.format, but faster.
   function parseDate(d) {
-    return new Date(2001,
-        d.substring(0, 2) - 1,
-        d.substring(2, 4),
-        d.substring(4, 6),
-        d.substring(6, 8));
+    return new Date(d);
   }
 
   window.filter = function(filters) {
