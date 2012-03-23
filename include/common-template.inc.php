@@ -52,24 +52,35 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <title>' . $pageTitle . ' - Canberra Bus Timetable</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
 <link rel="dns-prefetch" href="//code.jquery.com">
-<link rel="dns-prefetch" href="//ajax.googleapis.com">';
+<link rel="dns-prefetch" href="//ajax.googleapis.com">
+	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
     $jqmVersion = "1.0.1";
-    echo '
-	<script src="'.$basePath.'js/yepnope/yepnope.1.5.3-min.js"></script>
-		 <script>
-                 yepnope([{
-  load: "//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js",
-  complete: function () {
-    
-     $(document).bind("mobileinit", function(){
+    if (isDebugServer()) {
+        $jqmcss = $basePath . "css/jquery.mobile-$jqmVersion.css";
+        $jqjs = $basePath . "js/jquery-1.6.4.min.js";
+        $jqmjs = $basePath . "js/jquery.mobile-$jqmVersion.js";
+
+        $jqmcss = $basePath . "css/jquery.mobile-b90eab4935.css";
+        $jqmjs = $basePath . "js/jquery.mobile-b90eab4935.js";
+    } else {
+        $jqmcss = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.css";
+        $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js";
+        $jqmjs = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.js";
+    }
+    echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
+	<script src="' . $jqjs . '"></script>
+		 <script>$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
-}); }
-  
-}, {
-  load: ["//code.jquery.com/mobile/' . $jqmVersion . '/jquery.mobile-' . $jqmVersion . '.min.css","//code.jquery.com/mobile/' . $jqmVersion . '/jquery.mobile-' . $jqmVersion . '.min.js"] 
-  }, {
-  load: ["' . $basePath . 'css/jquery-ui-1.8.12.custom.css","' . $basePath . 'js/jquery.ui.core.min.js","' . $basePath . 'js/jquery.ui.position.min.js","' . $basePath . 'js/jquery.ui.widget.min.js","' . $basePath . 'js/jquery.ui.autocomplete.min.js"],
-  complete: function() {
+});
+</script> 
+	<script src="' . $jqmjs . '"></script>
+
+<script src="' . $basePath . 'js/jquery.ui.core.min.js"></script>
+<script src="' . $basePath . 'js/jquery.ui.position.min.js"></script>
+<script src="' . $basePath . 'js/jquery.ui.widget.min.js"></script>
+  <script src="' . $basePath . 'js/jquery.ui.autocomplete.min.js"></script>
+  <script>
+	$(function() {
 		$( "#geolocate" ).autocomplete({
 			source: "lib/autocomplete.php",
 			minLength: 2
@@ -82,13 +93,8 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 			source: "lib/autocomplete.php",
 			minLength: 2
 		});
-	}
-  
-  
-}]);
-                
-</script> 
-	';
+	});
+	</script>';
     echo '<style type="text/css">';
     if (strstr($_SERVER['HTTP_USER_AGENT'], 'Android'))
         echo '.ui-shadow,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-b,.ui-btn-up-b,.ui-btn-hover-b,
