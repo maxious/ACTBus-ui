@@ -141,7 +141,7 @@ echo "</div>";
 if (sizeof($trips) == 0) {
     echo "<li style='text-align: center;'>No trips in the near future.</li>";
 } else {
-            if ($labs) {
+            if (isset($labs)) {
 // ETA calculation
                 
                 $tripETA = Array();
@@ -176,7 +176,7 @@ if (sizeof($trips) == 0) {
             $destination = getTripDestination($trip['trip_id']);
             echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3>' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
             $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
-if ($labs) {
+if (isset($labs)) {
                 echo '<br><span class="eta">ETA: ' . $tripETA[$trip['trip_id']] . '</span>';
             }
             if ($viaPoints != "")

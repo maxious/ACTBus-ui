@@ -89,8 +89,8 @@ foreach ($labels as $key => $label) {
             },
             yaxis: {
                 tickFormatter: yformatter,
-                min: -60*8,
-                max: 60*8
+                min: -60*10,
+                max: 60*10
             },
             mouse: { track: true, relative: true, trackFormatter: showTooltip}
         });

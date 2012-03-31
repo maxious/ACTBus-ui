@@ -81,7 +81,7 @@ if (isset($bysuburbs)) {
         trackEvent("Stop Lists", "Stops By Suburb", $suburb);
     } else {
         $listType = 'allstops=yes';
-        $stops = getStops($firstLetter);
+        $stops = getStops((isset($firstLetter)? $firstLetter : ""));
         include_header("Stops by Name", "stopList");
         navbar();
     } 
