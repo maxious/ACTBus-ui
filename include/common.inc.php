@@ -3,14 +3,14 @@
 /*
  *    Copyright 2010,2011 Alexander Sadleir 
 
-  Licensed under the Apache License, Version 2.0 (the "License");
+  Licensed under the Apache License, Version 2.0 (the 'License');
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
+  distributed under the License is distributed on an 'AS IS' BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
@@ -18,34 +18,35 @@
 
 date_default_timezone_set('Australia/ACT');
 $debugOkay = Array(
-    "session",
-    "json",
-    "phperror",
-    "awsotp",
-    //"squallotp",
-    //"vanilleotp",
-    "database",
-    "other"
+    'session',
+    'json',
+    'phperror',
+    'awsotp',
+    //'squallotp',
+    //'vanilleotp',
+    'database',
+    'other'
 );
 $GTFSREnabled = true;
-$cloudmadeAPIkey = "daa03470bb8740298d4b10e3f03d63e6";
-$googleMapsAPIkey = "ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q";
+$cloudmadeAPIkey = 'daa03470bb8740298d4b10e3f03d63e6';
+$googleMapsAPIkey = 'ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q';
 $otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
-if (isDebug("awsotp") || php_uname('n') == "maxious.xen.prgmr.com" || strstr(php_uname('n'),"actbus")) {
+if (isDebug('awsotp') || php_uname('n') == 'maxious.xen.prgmr.com' || strstr(php_uname('n'),'actbus')) {
     $otpAPIurl = 'http://bus-main.lambdacomplex.org:8080/opentripplanner-api-webapp/';
 }
-if (isDebug("dotcloudotp") || php_uname('n') == "actbus-www") {
+if (isDebug('dotcloudotp') || php_uname('n') == 'actbus-www') {
     $otpAPIurl = 'http://otp.actbus.dotcloud.com/opentripplanner-api-webapp/';
 }
-if (isDebug("squallotp")) {
+if (isDebug('squallotp')) {
     $otpAPIurl = 'http://10.0.1.108:5080/opentripplanner-api-webapp/';
 }
-if (isDebug("vanilleotp")) {
+if (isDebug('vanilleotp')) {
     $otpAPIurl = 'http://10.0.1.135:8080/opentripplanner-api-webapp/';
 }
-if (isDebug("phperror"))
+if (isDebug('phperror'))
     error_reporting(E_ALL ^ E_NOTICE);
-$basePath = "";
+
+define('ROOT' , pathinfo(__FILE__, PATHINFO_DIRNAME));
 if (strstr($_SERVER['PHP_SELF'], "labs/")
         || strstr($_SERVER['PHP_SELF'], "myway/")
         || strstr($_SERVER['PHP_SELF'], "lib/")
@@ -57,27 +58,27 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
 
 function isDebugServer() {
     
-    return php_sapi_name() == "cli" || strstr(php_uname('n'),"actbus") || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == "azusa" || $_SERVER['SERVER_NAME'] == "vanille"
-            || $_SERVER['SERVER_NAME'] == "localhost" || $_SERVER['SERVER_NAME'] == "127.0.0.1" ||  $_SERVER['SERVER_NAME'] == "192.168.1.8" || $_SERVER['SERVER_NAME'] == "192.168.178.24");
+    return php_sapi_name() == 'cli' || strstr(php_uname('n'),'actbus') || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == 'azusa' || $_SERVER['SERVER_NAME'] == 'vanille'
+            || $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1' ||  $_SERVER['SERVER_NAME'] == '192.168.1.8' || $_SERVER['SERVER_NAME'] == '192.168.178.24');
 }
 
-if (isset($_SERVER['SERVER_NAME'])  && $_SERVER['SERVER_NAME'] == "maxious.xen.prgmr.com") {
+if (isset($_SERVER['SERVER_NAME'])  && $_SERVER['SERVER_NAME'] == 'maxious.xen.prgmr.com') {
 // Set the exception handler
-require $basePath."/lib/amon-php/amon.php";
+require ROOT.'../lib/amon-php/amon.php';
 Amon::setup_exception_handler();
 }
 
-include_once ("common-geo.inc.php");
-include_once ("common-net.inc.php");
-include_once ("common-transit.inc.php");
-if (!strstr($_SERVER['PHP_SELF'], "feedback")) {
-	include_once ("common-db.inc.php");
+include_once ('common-geo.inc.php');
+include_once ('common-net.inc.php');
+include_once ('common-transit.inc.php');
+if (!strstr($_SERVER['PHP_SELF'], 'feedback')) {
+	include_once ('common-db.inc.php');
 }
 
-include_once ("common-request.inc.php");
-include_once ("common-session.inc.php");
-include_once ("common-auth.inc.php");
-include_once ("common-template.inc.php");
+include_once ('common-request.inc.php');
+include_once ('common-session.inc.php');
+include_once ('common-auth.inc.php');
+include_once ('common-template.inc.php');
 
 function isAnalyticsOn() {
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -85,14 +86,14 @@ function isAnalyticsOn() {
             !preg_match('/baidu/i', $user_agent);
 }
 
-function isDebug($debugReason = "other") {
+function isDebug($debugReason = 'other') {
     global $debugOkay;
     return in_array($debugReason, $debugOkay, false) && isDebugServer();
 }
 
-function debug($msg, $debugReason = "other") {
+function debug($msg, $debugReason = 'other') {
     if (isDebug($debugReason))
-        echo "\n<!-- " . date(DATE_RFC822) . "\n $msg -->\n";
+        echo PHP_EOL.'<!-- ' . date(DATE_RFC822) . PHP_EOL.' $msg -->'.PHP_EOL;
 }
 function isIOSDevice() {
    return strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad');
@@ -145,7 +146,7 @@ function endsWith($haystack, $needle, $case = true) {
     return (strcasecmp(substr($haystack, strlen($haystack) - strlen($needle)), $needle) === 0);
 }
 
-function sksort(&$array, $subkey = "id", $sort_ascending = false) {
+function sksort(&$array, $subkey = 'id', $sort_ascending = false) {
     if (count($array))
         $temp_array[key($array)] = array_shift($array);
     foreach ($array as $key => $val) {
@@ -171,7 +172,7 @@ function sksort(&$array, $subkey = "id", $sort_ascending = false) {
         $array = $temp_array;
 }
 
-function sktimesort(&$array, $subkey = "id", $sort_ascending = false) {
+function sktimesort(&$array, $subkey = 'id', $sort_ascending = false) {
     if (count($array))
         $temp_array[key($array)] = array_shift($array);
     foreach ($array as $key => $val) {

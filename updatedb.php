@@ -40,7 +40,7 @@ if (php_sapi_name() == "cli") {
             while ($zip_entry = zip_read($zip)) {
                 $fp = fopen($tmpdir . zip_entry_name($zip_entry), "w");
                 if (zip_entry_open($zip, $zip_entry, "r")) {
-                    echo "Extracting " . zip_entry_name($zip_entry) . "\n";
+                    echo "Extracting " . zip_entry_name($zip_entry) . PHP_EOL;
                     $buf = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
                     fwrite($fp, "$buf");
                     zip_entry_close($zip_entry);
@@ -55,7 +55,7 @@ if (php_sapi_name() == "cli") {
         $headers = Array();
         if (!strpos($file, ".txt") === false) {
             $fieldseparator = ",";
-            $lineseparator = "\n";
+            $lineseparator = PHP_EOL;
             $tablename = str_replace(".txt", "", $file);
             echo "Opening $file \n";
             $line = 0;
@@ -128,7 +128,7 @@ if (substr($values[2],0,2) == '24') $values[2] = "23:59:59";
                 }
                 $line++;
                 if ($line % 10000 == 0)
-                    echo "$line records... " . date('c') . "\n";
+                    echo "$line records... " . date('c') . PHP_EOL;
             }
             fclose($handle);
             $stmt->closeCursor();

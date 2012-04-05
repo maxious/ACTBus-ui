@@ -19,33 +19,33 @@ include ('include/common.inc.php');
 $last_updated = date('Y-m-d', @filemtime('cbrfeed.zip'));
 header("Content-Type: text/xml");
 echo "<?xml version='1.0' encoding='UTF-8'?>";
-echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:geo="http://www.google.com/geo/schemas/sitemap/1.0">' . "\n";
-echo " <url><loc>" . curPageURL() . "index.php</loc><priority>1.0</priority></url>\n";
+echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:geo="http://www.google.com/geo/schemas/sitemap/1.0">' .PHP_EOL;
+echo " <url><loc>" . curPageURL() . "index.php</loc><priority>1.0</priority></url>".PHP_EOL;
 foreach (scandir("./") as $file) {
     if (strpos($file, ".php") !== false && $file != "index.php" && $file != "sitemap.xml.php")
-        echo " <url><loc>" . curPageURL() . "$file</loc><priority>0.3</priority></url>\n";
+        echo " <url><loc>" . curPageURL() . "$file</loc><priority>0.3</priority></url>".PHP_EOL;
 }
 foreach (scandir("./labs") as $file) {
     if (strpos($file, ".php") !== false)
-        echo " <url><loc>" . curPageURL() . "/labs/$file</loc><priority>0.3</priority></url>\n";
+        echo " <url><loc>" . curPageURL() . "/labs/$file</loc><priority>0.3</priority></url>".PHP_EOL;
 }
 foreach (scandir("./myway") as $file) {
     if (strpos($file, ".php") !== false)
-        echo " <url><loc>" . curPageURL() . "/myway/$file</loc><priority>0.3</priority></url>\n";
+        echo " <url><loc>" . curPageURL() . "/myway/$file</loc><priority>0.3</priority></url>".PHP_EOL;
 }
 foreach (getStops() as $stop) {
     echo " <url><loc>" . curPageURL() . "stop.php?stopid=" . htmlspecialchars($stop["stop_id"]) . "</loc>";
     echo "<lastmod>" . $last_updated . "</lastmod>";
     echo "<changefreq>monthly</changefreq>";
     echo "<priority>0.9</priority>";
-    echo "</url>\n";
+    echo "</url>".PHP_EOL;
 }
 foreach (getRoutes() as $route) {
     echo " <url><loc>" . curPageURL() . "trip.php?routeid=" . htmlspecialchars($route["route_id"]) . "</loc>";
     echo "<lastmod>" . $last_updated . "</lastmod>";
     echo "<changefreq>monthly</changefreq>";
     echo "<priority>0.9</priority>";
-    echo "</url>\n";
+    echo "</url>".PHP_EOL;
 }
 
 // geosite map
@@ -55,7 +55,7 @@ foreach (getRoutes() as $route) {
     echo "<geo:geo>
        <geo:format>kml</geo:format>
    </geo:geo>";
-    echo "</url>\n";
+    echo "</url>".PHP_EOL;
 }
 
 echo '</urlset>';
