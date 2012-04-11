@@ -72,7 +72,6 @@ WHERE trips.trip_id = :tripID and stop_times.stop_id = :stopID';
 }
 
 function getTripShape($tripID) {
-    // todo, use shapes table if shape_id specified
     global $conn;
     $query = 'SELECT ST_AsKML(ST_MakeLine(geometry(a.shape_pt))) as the_route
 FROM (SELECT shapes.shape_id,shape_pt from shapes
@@ -188,16 +187,34 @@ function getTripDestination($tripID) {
     return $r;
 }
 
-function getActiveTrips($time) {
+function getActiveTrips($time='') {
     global $conn;
-    if ($time == '')
+    if ($time == '') {
         $time = current_time();
+    }
     $query = 'Select distinct stop_times.trip_id, start_times.arrival_time as start_time, end_times.arrival_time as end_time from stop_times, (SELECT trip_id,arrival_time from stop_times WHERE stop_times.arrival_time IS NOT NULL
 AND stop_sequence = \'1\') as start_times, (SELECT trip_id,max(arrival_time) as arrival_time from stop_times WHERE stop_times.arrival_time IS NOT NULL group by trip_id) as end_times
 WHERE start_times.trip_id = end_times.trip_id AND stop_times.trip_id = end_times.trip_id AND :time > start_times.arrival_time  AND :time < end_times.arrival_time';
     debug($query, 'database');
     $query = $conn->prepare($query);
     $query->bindParam(':time', $time);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return $query->fetchAll();
+}
+function getTripLastStop($tripid, $time='') {
+    global $conn;
+    if ($time == '') {
+        $time = current_time();
+    }
+    $query = 'Select trip_id,stops.stop_id,stop_sequence,stop_code,stop_name,stop_lat,stop_lon,arrival_time,(arrival_time - :time::time) as time_diff  from stop_times inner join stops on stop_times.stop_id = stops.stop_id WHERE trip_id = :tripid  and arrival_time >= :time::time order by stop_sequence limit 2';
+    debug($query, 'database');
+    $query = $conn->prepare($query);
+    $query->bindParam(':time', $time);
+    $query->bindParam(':tripid', $tripid);
     $query->execute();
     if (!$query) {
         databaseError($conn->errorInfo());
