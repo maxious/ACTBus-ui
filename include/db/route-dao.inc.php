@@ -292,7 +292,7 @@ join stops on stops.stop_id = stop_times.stop_id
 WHERE (service_id=:service_periodA OR service_id=:service_periodB)
 AND ST_DWithin(position, ST_GeographyFromText(\'SRID=4326;POINT($lng $lat)\'), :distance, FALSE)
         group by service_id,trips.route_id,trips.direction_id,route_short_name,route_long_name
-        order by distance $limitSQL';
+        order by distance '.$limitSQL;
     debug($query, 'database');
     $query = $conn->prepare($query);
     $query->bindParam(':service_periodA', $sidA);

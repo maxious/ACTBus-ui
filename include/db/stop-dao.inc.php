@@ -69,9 +69,9 @@ function getNearbyStops($lat, $lng, $limit = '', $distance = 1000) {
     if ($limit != '')
         $limitSQL = ' LIMIT :limit ';
     global $conn;
-    $query = 'Select *, ST_Distance(position, ST_GeographyFromText(\'SRID=4326;POINT($lng $lat)\'), FALSE) as distance
-        from stops WHERE ST_DWithin(position, ST_GeographyFromText(\'SRID=4326;POINT($lng $lat)\'), :distance, FALSE)
-        order by distance $limitSQL;';
+    $query = 'Select *, ST_Distance(position, ST_GeographyFromText(\'SRID=4326;POINT('.$lng.' '.$lat.')\'), FALSE) as distance
+        from stops WHERE ST_DWithin(position, ST_GeographyFromText(\'SRID=4326;POINT('.$lng.' '.$lat.')\'), :distance, FALSE)
+        order by distance '.$limitSQL;
     debug($query, 'database');
     $query = $conn->prepare($query);
     $query->bindParam(':distance', $distance);
@@ -186,7 +186,7 @@ WHERE stop_times.stop_id = :stopID
 AND stop_times.trip_id = end_times.trip_id
 AND (service_id=:service_periodA OR service_id=:service_periodB) ' . ($route_short_name != '' ? ' AND route_short_name = :route_short_name ' : '') . ' 
 AND end_times.arrival_time > :afterTime
-ORDER BY end_time $limitSQL';
+ORDER BY end_time '.$limitSQL;
     } else {
         $query = 'SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times
@@ -195,7 +195,7 @@ stop_times.trip_id
 join routes on trips.route_id = routes.route_id
 WHERE stop_times.stop_id = :stopID
 AND (service_id=:service_periodA OR service_id=:service_periodB) ' . ($route_short_name != '' ? ' AND route_short_name = :route_short_name ' : '') . ' 
-ORDER BY arrival_time $limitSQL';
+ORDER BY arrival_time '.$limitSQL;
     }
     debug($query, 'database');
     $query = $conn->prepare($query);

@@ -27,13 +27,13 @@ function staticmap($mapPoints, $collapsible = true, $twotone = false, $path = fa
     if (sizeof($mapPoints) < 1)
         return 'map error';
     if (sizeof($mapPoints) === 1) {
-        $markers = 'markers={$mapPoints[0][0]},{$mapPoints[0][1]}';
+        $markers = 'markers='.$mapPoints[0][0].','.$mapPoints[0][1];
     } else {
         if (!$numbered) {
             $markers = 'markers=';
         }
         if ($path) {
-            $markers.= 'markers={$mapPoints[0][0]},{$mapPoints[0][1]}&amp;path=';
+            $markers.= 'markers='.$mapPoints[0][0].','.$mapPoints[0][1].'&amp;path=';
         }
         foreach ($mapPoints as $index => $mapPoint) {
             if ($twotone && $index == 0) {
