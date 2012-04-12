@@ -55,7 +55,7 @@ function service_ids($service_period, $date = '') {
 // school holidays
             $ymd = date('Ymd', $date);
             $dow = date('w', $date);
-            if (intval($ymd) < '20120203' && $dow != 0 && $dow != 6) {
+            if (intval($ymd) < '20120427' && $dow != 0 && $dow != 6) {
                 return Array('Weekday-SchoolVacation', 'Weekday-SchoolVacation');
             } else {
                 return Array('Weekday', 'Weekday');
