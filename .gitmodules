@@ -7,9 +7,9 @@
 [submodule "lib/amon-php"]
 	path = lib/amon-php
 	url = https://github.com/martinrusev/amon-php.git
-[submodule "javascripts/tesseract"]
-	path = javascripts/tesseract
+[submodule "js/tesseract"]
+	path = js/tesseract
 	url = https://github.com/square/tesseract.git
-[submodule "javascripts/d3"]
-	path = javascripts/d3
+[submodule "js/d3"]
+	path = js/d3
 	url = https://github.com/mbostock/d3.git
