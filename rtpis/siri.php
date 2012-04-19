@@ -37,7 +37,7 @@ function accept_header($header = false) {
     return $toret;
 }
 function usage() {
-echo "Usage notes: Must specify format json/xml. If callback is specified, will provide jsonp. Can filter with parmaters filter_class route/stop and filter_id with the id specified in GTFS."
+echo "Usage notes: Must specify format json/xml. If callback is specified, will provide jsonp. Can filter with parmaters filter_class route/stop and filter_id with the id specified in GTFS.";
 die();
 }
 $json_types =  Array("application/json","application/x-javascript","text/javascript","text/x-javascript","text/x-json");

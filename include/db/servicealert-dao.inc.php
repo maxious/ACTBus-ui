@@ -33,7 +33,7 @@ function getServiceOverride($date = '') {
 
 function getServiceAlert($alertID) {
     global $conn;
-    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as \\\'end\\\',cause,effect,header,description,url from servicealerts_alerts where id = :servicealert_id';
+    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as end,cause,effect,header,description,url from servicealerts_alerts where id = :servicealert_id';
     debug($query, 'database');
     $query = $conn->prepare($query);
     $query->bindParam(':servicealert_id', $alertID);
@@ -93,7 +93,7 @@ function addServiceAlert($alert) {
 
 function getCurrentAlerts() {
     global $conn;
-    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as "end",cause,effect,header,description,url from servicealerts_alerts where NOW() > start and NOW() < "end"';
+    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as end,cause,effect,header,description,url from servicealerts_alerts where NOW() > start and NOW() < "end"';
     // debug($query, 'database');
     $query = $conn->prepare($query);
     $query->execute();
@@ -106,7 +106,7 @@ function getCurrentAlerts() {
 
 function getFutureAlerts() {
     global $conn;
-    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as "end",cause,effect,header,description,url from servicealerts_alerts where  NOW() < "end"';
+    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as end,cause,effect,header,description,url from servicealerts_alerts where  NOW() < "end"';
     // debug($query, 'database');
     $query = $conn->prepare($query);
     $query->execute();
@@ -119,7 +119,7 @@ function getFutureAlerts() {
 
 function getAllAlerts() {
     global $conn;
-    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as "end",cause,effect,header,description,url from servicealerts_alerts';
+    $query = 'SELECT id,extract(\'epoch\' from start) as start, extract(\'epoch\' from "end") as end,cause,effect,header,description,url from servicealerts_alerts';
     // debug($query, 'database');
     $query = $conn->prepare($query);
     $query->execute();
