@@ -21,28 +21,14 @@ $debugOkay = Array(
     'session',
     'json',
     'phperror',
-    'awsotp',
-    //'squallotp',
-    //'vanilleotp',
     'database',
     'other'
 );
 $GTFSREnabled = true;
 $cloudmadeAPIkey = 'daa03470bb8740298d4b10e3f03d63e6';
 $googleMapsAPIkey = 'ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q';
-$otpAPIurl = 'http://localhost:8080/opentripplanner-api-webapp/';
-if (isDebug('awsotp') || php_uname('n') == 'maxious.xen.prgmr.com' || strstr(php_uname('n'),'actbus')) {
-    $otpAPIurl = 'http://bus-main.lambdacomplex.org:8080/opentripplanner-api-webapp/';
-}
-if (isDebug('dotcloudotp') || php_uname('n') == 'actbus-www') {
-    $otpAPIurl = 'http://otp.actbus.dotcloud.com/opentripplanner-api-webapp/';
-}
-if (isDebug('squallotp')) {
-    $otpAPIurl = 'http://10.0.1.108:5080/opentripplanner-api-webapp/';
-}
-if (isDebug('vanilleotp')) {
-    $otpAPIurl = 'http://10.0.1.135:8080/opentripplanner-api-webapp/';
-}
+$otpAPIurl = 'http://localhost:9080/opentripplanner-api-webapp/';
+
 if (isDebug('phperror'))
     error_reporting(E_ALL ^ E_NOTICE);
 

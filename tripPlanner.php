@@ -167,7 +167,11 @@ if ($_REQUEST['time']) {
             trackEvent("Trip Planner", "Plan Trip To", $to);
             $tripplan = json_decode($page);
             debug(print_r($tripplan, true));
+            if (isset ($tripplan->error->msg)) {
+                echo $tripplan->error->msg;
+            } else {
             echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";
+            echo  $tripplan->plan->date;
             echo "<h1> At: " . formatTime($tripplan->plan->date) . " </h1>";
             if (is_array($tripplan->plan->itineraries->itinerary)) {
                 echo '<div data-role="collapsible-set">';
@@ -177,6 +181,7 @@ if ($_REQUEST['time']) {
                 echo "</div>";
             } else {
                 processItinerary(0, $tripplan->plan->itineraries->itinerary);
+            }
             }
         }
         curl_close($ch);
