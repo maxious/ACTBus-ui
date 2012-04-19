@@ -34,10 +34,10 @@ function navbar() {
 function displayRoutes($routes) {
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
     foreach ($routes as $route) {
-        foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
+        foreach (getRouteHeadsigns($route) as $headsign) {
 
             //print_r($route);
-            echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route['route_id'] . "</h3>
+            echo '<li> <a href="trip.php?routeid=' . $route . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route . "</h3>
                    
                 <p>" . $headsign['trip_headsign'] . (strstr($headsign['trip_headsign'], "bound") === false ? "bound" : "") . ", starting at " . $headsign['stop_name'] . " (" . ucwords($headsign['service_id']) . ")</p>";
 

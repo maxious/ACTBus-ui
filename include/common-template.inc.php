@@ -46,7 +46,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
     echo '
 <!DOCTYPE html> 
 <html lang="en">
-	<head profile="http://microformats.org/profile/hcalendar http://microformats.org/profile/geo http://vocab.org/transit/terms">
+	<head profile="http://microformats.org/profile/hcalendar http://microformats.org/profile/geo">
         <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
 <title>' . $pageTitle . ' - Canberra Bus Timetable</title>

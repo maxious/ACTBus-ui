@@ -19,6 +19,15 @@ include ('include/common.inc.php');
 if (isset($stopid)) {
     $stop = getStop($stopid);
 }
+if ($stop == NULL) {
+    
+    header("Status: 404 Not Found");
+    header("HTTP/1.0 404 Not Found");
+    include_header("Stop Not Found", "404stop");
+    echo "<h1>Error: Stop not found</h1>";
+include_footer();
+    die();
+}
 /* if ($stopcode != "" && $stop[5] != $stopcode) {
   $url = $APIurl . "/json/stopcodesearch?q=" . $stopcode;
   $stopsearch = json_decode(getPage($url));
@@ -51,10 +60,10 @@ if (isset($stopids)) {
         $stopLinks.= '<span itemscope itemtype="http://schema.org/BusStop"> 
             <a itemprop="url" href="stop.php?stopid=' . $sub_stop["stop_id"] . 
                 '&amp;stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] 
-                . '</a><meta itemprop="latitude" content="'.$sub_stop["stop_lat"].'" />
+                . '</a><span class="geo" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates"><meta itemprop="latitude" content="'.$sub_stop["stop_lat"].'" />
                  <abbr class="latitude" title="'.$sub_stop["stop_lat"].'"></abbr> 
  <abbr class="longitude" title="'.$sub_stop["stop_lon"].'"></abbr>
-    <meta itemprop="longitude" content="'.$sub_stop["stop_lon"].'" /></span>';
+    <meta itemprop="longitude" content="'.$sub_stop["stop_lon"].'" /></span></span>';
 
         $stopPositions[$key] = Array(
             $sub_stop["stop_lat"],
@@ -181,7 +190,7 @@ if (sizeof($trips) == 0) {
             echo '<li class="vevent">';
 
             $destination = getTripDestination($trip['trip_id']);
-            echo '<a href="trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
+            echo '<a class="url" href="'.curPageURL().'/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
             $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
 if (isset($labs)) {
                 echo '<br><span class="eta">ETA: ' . $tripETA[$trip['trip_id']] . '</span>';
@@ -200,7 +209,7 @@ if (isset($labs)) {
                 echo '</small>';
             }
             echo '</p>';
-            echo '<p class="ui-li-aside"><time class="dtstart" datetime="'.date("c",strtotime($trip['arrival_time'])).'">' . $trip['arrival_time'] . '</time></p>';
+            echo '<p class="ui-li-aside"><span class="dtstart"><span class="value-title" title="'.date("c",strtotime($trip['arrival_time'])).'"></span>' . $trip['arrival_time'] . '</span></p>';
             echo '</a></li>';
             flush();
             @ob_flush();

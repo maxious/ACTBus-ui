@@ -28,6 +28,15 @@ if (isset($routeid) && !isset($tripid)) {
     $trip = getTrip($tripid);
     $routeid = $trip['route_id'];
 }
+if ($trip == NULL) {
+    
+    header("Status: 404 Not Found");
+    header("HTTP/1.0 404 Not Found");
+    include_header("Route Not Found", "404trip");
+    echo "<h1>Error: Trip/Route not found</h1>";
+include_footer();
+    die();
+}
 $directionid = $trip['direction_id'];
 $service_period = strtolower($trip["service_id"]);
 $destination = getTripDestination($trip['trip_id']);
@@ -92,7 +101,8 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
             $stopsGrouped["stop_ids"][] = $tripStopTime['stop_id'];
             $stopsGrouped["endTime"] = $tripStopTime['arrival_time'];
             echo '<a class="vevent" href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
-            echo '<p class="ui-li-aside"> <time class="dtstart" datetime="'.date("c",strtotime($stopsGrouped['startTime'])).'">' . $stopsGrouped['startTime'] . '</time> to <time class="dtend" datetime="'.date("c",strtotime($stopsGrouped['endTime'])).'">' . $stopsGrouped['endTime'] . '</time>';
+            echo '<p class="ui-li-aside"> <span class="dtstart"><span class="value-title" title="'.date("c",strtotime($stopsGrouped['startTime'])).'"></span>' . $stopsGrouped['startTime'] . '</span> 
+                to <span class="dtend"><span class="value-title" title="'.date("c",strtotime($stopsGrouped['endTime'])).'"></span>' . $stopsGrouped['endTime'] . '</span>';
             if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                 echo '<br>' . distance($tripStopTime['stop_lat'], $tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
             }
