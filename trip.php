@@ -91,13 +91,13 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
             // subsequent duplicates
             $stopsGrouped["stop_ids"][] = $tripStopTime['stop_id'];
             $stopsGrouped["endTime"] = $tripStopTime['arrival_time'];
-            echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
-            echo '<p class="ui-li-aside">' . $stopsGrouped['startTime'] . ' to ' . $stopsGrouped['endTime'];
+            echo '<a class="vevent" href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
+            echo '<p class="ui-li-aside"> <time class="dtstart" datetime="'.date("c",strtotime($stopsGrouped['startTime'])).'">' . $stopsGrouped['startTime'] . '</time> to <time class="dtend" datetime="'.date("c",strtotime($stopsGrouped['endTime'])).'">' . $stopsGrouped['endTime'] . '</time>';
             if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                 echo '<br>' . distance($tripStopTime['stop_lat'], $tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
             }
-            echo '</p>';
-            echo stopGroupTitle($tripStopTime['stop_name'], $tripStopTime['stop_desc']) . '<br><small>' . sizeof($stopsGrouped["stop_ids"]) . ' stops</small>';
+            echo '</p><span class="summary">';
+            echo stopGroupTitle($tripStopTime['stop_name'], $tripStopTime['stop_desc']) . '</span><br><small>' . sizeof($stopsGrouped["stop_ids"]) . ' stops</small>';
 
             echo '</a></li>';
             flush();
@@ -105,14 +105,17 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
             $stopsGrouped = Array();
         } else {
             // just a normal stop
-            echo '<a href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&amp;stopcode=' . $tripStopTime['stop_code'] : "") . '">';
-            echo '<p class="ui-li-aside">' . $tripStopTime['arrival_time'];
+            echo '<span itemscope itemtype="http://schema.org/BusStop" class="vevent"> <a itemprop="url" href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&amp;stopcode=' . $tripStopTime['stop_code'] : "") . '">';
+            echo '<p class="ui-li-aside geo"><time class="dtstart" datetime="'.date("c",strtotime($trip['arrival_time'])).'">' . $tripStopTime['arrival_time'].'</time>';
+            echo '<abbr class="latitude" title="'.$tripStopTime['stop_lat'].'"></abbr> 
+ <abbr class="longitude" title="'.$tripStopTime['stop_lon'].'"></abbr><meta itemprop="latitude" content="'.$tripStopTime['stop_lat'].'" />
+    <meta itemprop="longitude" content="'.$tripStopTime['stop_lon'].'" />';
             if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                 echo '<br>' . distance($tripStopTime['stop_lat'], $tripStopTime['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away';
             }
-            echo '</p>';
+            echo '</p><span class="summary" itemprop="name">';
             echo $tripStopTime['stop_name'];
-            echo '</a></li>';
+            echo '</span></a></li>';
             flush();
             @ob_flush();
         }

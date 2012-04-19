@@ -46,7 +46,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
     echo '
 <!DOCTYPE html> 
 <html lang="en">
-	<head>
+	<head profile="http://microformats.org/profile/hcalendar http://microformats.org/profile/geo http://vocab.org/transit/terms">
         <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
 <title>' . $pageTitle . ' - Canberra Bus Timetable</title>
@@ -161,11 +161,11 @@ $(document).ready(function() {
     </div>
  ';
     if ($opendiv) {
-        echo '<div data-role="page"> 
-	<div data-role="header" data-position="inline">
+        echo '<div data-role="page"'. (isset($stopid) ? 'itemscope itemtype="http://schema.org/BusStop"':'').'>'; 
+	echo '<div data-role="header" data-position="inline">
 	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
-		<h1>' . $pageTitle . '</h1>
-		<a href="' . $basePath . '/index.php" data-icon="home" class="ui-btn-right">Home</a>
+		<h1 itemprop="name">' . $pageTitle . '</h1>
+		<a href="' . $basePath . '/index.php" data-icon="home" class="ui-btn-right" rel="home">Home</a>
 	</div><!-- /header -->
         <a name="maincontent" id="maincontent"></a>
         <div data-role="content"> ';
@@ -215,7 +215,8 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 function include_footer() {
     global $basePath;
     echo '<div id="footer"><a href="' . $basePath . 'about.php">About/Contact Us</a>&nbsp;<a href="' . $basePath . 'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="' . $basePath . 'privacy.php">Privacy Policy</a>';
-    echo '</div>';
+    echo '<br><small>
+        <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/au/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/">Creative Commons Attribution 3.0 Australia License</a>.</div></small>';
     if (isAnalyticsOn()) {
         echo "<script>  (function() {
     var ga = document.createElement('script'); ga.type = 

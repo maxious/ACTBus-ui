@@ -56,15 +56,23 @@ function staticmap($mapPoints, $collapsible = true, $twotone = false, $path = fa
         }
     }
     $output = '';
-    if ($collapsible)
-        $output.= '<div class="map" data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>';
-    if (isIOSDevice())
+    if ($collapsible) {
+        $output.= '<div class="map geo" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates" data-role="collapsible" data-collapsed="true"><h3>Open Map...</h3>
+                <meta itemprop="latitude" content="'.$mapPoints[0][0].'" />
+                 <abbr class="latitude" title="'.$mapPoints[0][0].'"></abbr> 
+ <abbr class="longitude" title="'.$mapPoints[0][1].'"></abbr>
+    <meta itemprop="longitude" content="'.$mapPoints[0][1].'" />';
+    }
+    if (isIOSDevice()) {
         $output.= '<img class="hiresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=2&amp;sensor=true" width=' . $width . ' height=' . $height . '" alt="map of stop location">';
-    else
+    }
+    else {
         $output.= '<img class="lowresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=1&amp;format=jpg&amp;sensor=true" width=' . $width . ' height=' . $height . '" alt="map of stop location">';
-
-    if ($collapsible)
+    }
+    
+    if ($collapsible) {
         $output.= '</div>';
+    }
     return $output;
 }
 
