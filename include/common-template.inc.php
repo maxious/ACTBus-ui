@@ -46,13 +46,15 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
     echo '
 <!DOCTYPE html> 
 <html lang="en">
-	<head profile="http://microformats.org/profile/hcalendar http://microformats.org/profile/geo">
+	<head>
         <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
 <title>' . $pageTitle . ' - Canberra Bus Timetable</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
-<link rel="dns-prefetch" href="//code.jquery.com">
-<link rel="dns-prefetch" href="//ajax.googleapis.com">
+<link rel="dns-prefetch" href="//code.jquery.com"/>
+<link rel="dns-prefetch" href="//ajax.googleapis.com"/>
+<link rel="profile" href="http://microformats.org/profile/hcalendar"/>
+<link rel="profile" href="http://microformats.org/profile/geo"/>
 	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
     $jqmVersion = "1.1.0";
     if (isDebugServer()) {
@@ -161,7 +163,7 @@ $(document).ready(function() {
     </div>
  ';
     if ($opendiv) {
-        echo '<div data-role="page"'. (isset($stopid) ? 'itemscope itemtype="http://schema.org/BusStop"':'').'>'; 
+        echo '<div data-role="page" '. (isset($stopid) ? 'itemscope itemtype="http://schema.org/BusStop"':'').'>'; 
 	echo '<div data-role="header" data-position="inline">
 	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1 itemprop="name">' . $pageTitle . '</h1>
@@ -216,7 +218,7 @@ function include_footer() {
     global $basePath;
     echo '<div id="footer"><a href="' . $basePath . 'about.php">About/Contact Us</a>&nbsp;<a href="' . $basePath . 'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="' . $basePath . 'privacy.php">Privacy Policy</a>';
     echo '<br><small>
-        <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/au/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/">Creative Commons Attribution 3.0 Australia License</a>.</div></small>';
+        <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/au/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/">Creative Commons Attribution 3.0 Australia License</a>.</small></div>';
     if (isAnalyticsOn()) {
         echo "<script>  (function() {
     var ga = document.createElement('script'); ga.type = 
@@ -233,18 +235,20 @@ s.parentNode.insertBefore(ga, s);
 }
 
 function timeSettings() {
-    global $service_periods;
+    global $service_periods,$suburb,$stopid,$stopids,$stopcode,$time;
     echo '<div id="settings" data-role="collapsible" data-collapsed="true">
 <h3>Change Time (' . (isset($_REQUEST['time']) ? $_REQUEST['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . '" method="GET">
-               <input type="hidden" name="suburb" id="suburb" value="' . (isset($_REQUEST['suburb']) ? $_REQUEST['suburb'] : "") . '"/>
-       
-            <input type="hidden" name="stopid" id="stopid" value="' . (isset($_REQUEST['stopid']) ? $_REQUEST['stopid'] : "") . '"/>
-                 <input type="hidden" name="stopcode" id="stopcode" value="' . (isset($_REQUEST['stopcode']) ? $_REQUEST['stopcode'] : "") . '"/>
+               <input type="hidden" name="suburb" id="suburb" value="' . (isset($suburb) ? $suburb : "") . '"/>
+       ';
+    if (isset($stopids)) echo '<input type="hidden" name="stopids" id="stopids" value="' . implode(",",$stopids) . '"/>';
+    else if (isset($stopid)) echo '<input type="hidden" name="stopid" id="stopid" value="' . $stopid . '"/>';
+    
+                 echo '<input type="hidden" name="stopcode" id="stopcode" value="' . (isset($stopcode) ? $stopcode : "") . '"/>
         <div class="ui-body"> 
     		<div data-role="fieldcontain">
 		        <label for="time"> Time: </label>
-		    	<input type="time" name="time" id="time" value="' . (isset($_REQUEST['time']) ? $_REQUEST['time'] : date("H:i")) . '"/>
+		    	<input type="time" name="time" id="time" value="' . (isset($time) ? $time : date("H:i")) . '"/>
 			<a href="#" name="currentTime" id="currentTime" onClick="var d = new Date();' . "$('#time').val(d.getHours() +':'+ (d.getMinutes().toString().length == 1 ? '0'+ d.getMinutes():  d.getMinutes()));" . '">Current Time?</a>
 	        </div>
 		<div data-role="fieldcontain">

@@ -18,16 +18,9 @@
 include ('include/common.inc.php');
 if (isset($stopid)) {
     $stop = getStop($stopid);
+   
 }
-if ($stop == NULL) {
-    
-    header("Status: 404 Not Found");
-    header("HTTP/1.0 404 Not Found");
-    include_header("Stop Not Found", "404stop");
-    echo "<h1>Error: Stop not found</h1>";
-include_footer();
-    die();
-}
+
 /* if ($stopcode != "" && $stop[5] != $stopcode) {
   $url = $APIurl . "/json/stopcodesearch?q=" . $stopcode;
   $stopsearch = json_decode(getPage($url));
@@ -51,6 +44,17 @@ if (isset($stopids)) {
     foreach ($stopids as $sub_stopid) {
         $stops[] = getStop($sub_stopid);
     }
+}
+ if ($stop == NULL && (!isset($stops[0]) || $stops[0] == NULL) ) {
+    
+    header("Status: 404 Not Found");
+    header("HTTP/1.0 404 Not Found");
+    include_header("Stop Not Found", "404stop");
+    echo "<h1>Error: Stop not found</h1>";
+include_footer();
+    die();
+}
+if (isset($stopids)) {
     $stop = $stops[0];
     $stopid = $stops[0]["stop_id"];
     $stopLinks.= "Individual stop pages: <br>";
@@ -150,9 +154,9 @@ if (isset($stopids) && sizeof($stopids) > 0) {
     $stopidurl = "stopid=$stopid";
 }
 if (sizeof($trips) >= 10) {
-    echo '<a href="stop.php?' . $stopidurl . '&service_period=' . service_period() . '&time=' . date("H:i", $laterTime) . '" data-icon="arrow-r" class="ui-btn-right">Later Trips</a>';
+    echo '<a href="stop.php?' . $stopidurl . '&amp;service_period=' . service_period() . '&amp;time=' . date("H:i", $laterTime) . '" data-icon="arrow-r" class="ui-btn-right">Later Trips</a>';
 }
-echo '<a href="stop.php?' . $stopidurl . '&service_period=' . service_period() . '&time=' . date("H:i", $earlierTime) . '" data-icon="arrow-l" class="ui-btn-left">Earlier Trips</a>';
+echo '<a href="stop.php?' . $stopidurl . '&amp;service_period=' . service_period() . '&amp;time=' . date("H:i", $earlierTime) . '" data-icon="arrow-l" class="ui-btn-left">Earlier Trips</a>';
 echo "</div>";
 if (sizeof($trips) == 0) {
     echo "<li style='text-align: center;'>No trips in the near future.</li>";
