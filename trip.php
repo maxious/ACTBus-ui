@@ -93,9 +93,9 @@ $tripStopTimes = getTripStopTimes($tripid);
 echo '<li data-role="list-divider">' . $tripStopTimes[0]['arrival_time'] . ' to ' . $tripStopTimes[sizeof($tripStopTimes) - 1]['arrival_time'] . ' towards ' . $destination['stop_name'] . ' (' . ucwords(strtolower($tripStopTimes[0]['service_id'])) . ')</li>';
 foreach ($tripStopTimes as $key => $tripStopTime) {
     if ($key + 1 >= sizeof($tripStopTimes) || stopCompare($tripStopTimes[$key]["stop_name"]) != stopCompare($tripStopTimes[$key + 1]["stop_name"])) {
-        echo '<li>';
 
         if (sizeof($stopsGrouped) > 0) {
+        echo '<li>';
             // print and empty grouped stops
             // subsequent duplicates
             $stopsGrouped["stop_ids"][] = $tripStopTime['stop_id'];
@@ -115,7 +115,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
             $stopsGrouped = Array();
         } else {
             // just a normal stop
-            echo '<span itemscope itemtype="http://schema.org/BusStop" class="vevent"> <a itemprop="url" href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&amp;stopcode=' . $tripStopTime['stop_code'] : "") . '">';
+            echo '<li itemscope itemtype="http://schema.org/BusStop" class="vevent"> <a itemprop="url" href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&amp;stopcode=' . $tripStopTime['stop_code'] : "") . '">';
             echo '<p class="ui-li-aside geo"><time class="dtstart" datetime="'.date("c",strtotime($trip['arrival_time'])).'">' . $tripStopTime['arrival_time'].'</time>';
             echo '<abbr class="latitude" title="'.$tripStopTime['stop_lat'].'"></abbr> 
  <abbr class="longitude" title="'.$tripStopTime['stop_lon'].'"></abbr><meta itemprop="latitude" content="'.$tripStopTime['stop_lat'].'" />
@@ -125,7 +125,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
             }
             echo '</p><span class="summary" itemprop="name">';
             echo $tripStopTime['stop_name'];
-            echo '</span></a></li>';
+            echo '</a></li>';
             flush();
             @ob_flush();
         }
