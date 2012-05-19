@@ -32,8 +32,8 @@ if (php_sapi_name() == "cli") {
 
 // Unzip cbrfeed.zip, import all csv files to database
     $unzip = false;
-    $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
-    $tmpdir = "c:/tmp/cbrfeed/";
+//    $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
+    $tmpdir = "/tmp/cbrfeed/";
     mkdir($tmpdir);
     if ($unzip) {
         if (is_resource($zip)) {
@@ -116,8 +116,8 @@ if (php_sapi_name() == "cli") {
                         $values[4] = $distance;
                         $values[] = 'SRID=4326;POINT('.$values[2].' '.$values[1].')';
                     }
-if (substr($values[1],0,2) == '24') $values[1] = "23:59:59";
-if (substr($values[2],0,2) == '24') $values[2] = "23:59:59";
+if (substr($values[1],0,2) == '24' && $tablename == "stop_times") $values[1] = "23:59:59";
+if (substr($values[2],0,2) == '24' && $tablename == "stop_times") $values[2] = "23:59:59";
                     $stmt->execute($values);
                     $err = $pdconn->errorInfo();
                     if ($err[2] != "" && strpos($err[2], "duplicate key") === false) {
