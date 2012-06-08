@@ -18,22 +18,31 @@
 // SELECT array_to_string(array(SELECT REPLACE(name_2006, ',', '\,') as name FROM suburbs order by name), ',')
 $suburbs = explode(',', 'Acton,Ainslie,Amaroo,Aranda,Banks,Barton,Belconnen,Bonner,Bonython,Braddon,Bruce,Calwell,Campbell,Chapman,Charnwood,Chifley,Chisholm,City,Conder,Cook,Curtin,Deakin,Dickson,Downer,Duffy,Dunlop,Evatt,Fadden,Farrer,Fisher,Florey,Flynn,Forrest,Franklin,Fraser,Fyshwick,Garran,Gilmore,Giralang,Gordon,Gowrie,Greenway,Griffith,Gungahlin,Hackett,Hall,Harrison,Hawker,Higgins,Holder,Holt,Hughes,Hume,Isaacs,Isabella Plains,Kaleen,Kambah,Kingston,Latham,Lawson,Lyneham,Lyons,Macarthur,Macgregor,Macquarie,Mawson,McKellar,Melba,Mitchell,Monash,Narrabundah,Ngunnawal,Nicholls,Oaks Estate,O\'Connor,O\'Malley,Oxley,Page,Palmerston,Parkes,Pearce,Phillip,Pialligo,Red Hill,Reid,Richardson,Rivett,Russell,Scullin,Spence,Stirling,Symonston,Tharwa,Theodore,Torrens,Turner,Wanniassa,Waramanga,Watson,Weetangera,Weston,Yarralumla');
 
-function staticmap($mapPoints, $collapsible = true, $twotone = false, $path = false, $numbered = false) {
+function staticmap($mapPoints, $collapsible = true, $twotone = false, $path = false, $numbered = false, $encpolyline = false) {
 
     $markers = '';
     $height = 300;
     $width = $height;
     $index = 0;
-    if (sizeof($mapPoints) < 1)
+    if (sizeof($mapPoints) < 1) {
+       if ($encpolyline === false) {
         return 'map error';
-    if (sizeof($mapPoints) === 1) {
+        } else {
+               $markers.= 'path='. ($encpolyline === false ? "" : 'enc:'.$encpolyline);
+        }
+    } else  if (sizeof($mapPoints) === 1 ) {
+        if ($encpolyline === false) {
         $markers = 'markers='.$mapPoints[0][0].','.$mapPoints[0][1];
-    } else {
+        } else {     
+         $markers= 'markers='.$mapPoints[0][0].','.$mapPoints[0][1].'&amp;path='. ($encpolyline === false ? "" : 'enc:'.$encpolyline);
+        }
+    }
+    else {
         if (!$numbered) {
             $markers = 'markers=';
         }
         if ($path) {
-            $markers.= 'markers='.$mapPoints[0][0].','.$mapPoints[0][1].'&amp;path=';
+            $markers.= 'markers='.$mapPoints[0][0].','.$mapPoints[0][1].'&amp;path='. ($encpolyline === false ? "" : 'enc:'.$encpolyline);
         }
         foreach ($mapPoints as $index => $mapPoint) {
             if ($twotone && $index == 0) {

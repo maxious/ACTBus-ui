@@ -22,9 +22,9 @@ $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRI
 $date = (isset($_REQUEST['date']) ? filter_var($_REQUEST['date'], FILTER_SANITIZE_STRING) : date("m/d/Y"));
 $time = (isset($_REQUEST['time']) ? filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING) : date("H:i"));
 
-function formatTime($timeString) {
-    $timeParts = explode("T", $timeString);
-    return str_replace("Z", "", $timeParts[1]);
+function formatTime($time) {
+    
+    return date("g:ia",$time);
 }
 
 function tripPlanForm($errorMessage = "") {
@@ -57,9 +57,9 @@ function processItinerary($itineraryNumber, $itinerary) {
     echo "Walking time: " . floor($itinerary->walkTime / 60000) . " minutes (" . floor($itinerary->walkDistance) . " meters)<br>\n";
     echo "Transit time: " . floor($itinerary->transitTime / 60000) . " minutes<br>\n";
     echo "Waiting time: " . floor($itinerary->waitingTime / 60000) . " minutes<br>\n";
-    if (is_array($itinerary->legs->leg)) {
+    if (is_array($itinerary->legs)) {
         $legMarkers = array();
-        foreach ($itinerary->legs->leg as $legNumber => $leg) {
+        foreach ($itinerary->legs as $legNumber => $leg) {
             $legMarkers[] = array(
                 $leg->from->lat,
                 $leg->from->lon
@@ -67,7 +67,7 @@ function processItinerary($itineraryNumber, $itinerary) {
         }
         echo '' . staticmap($legMarkers, false, false, true) . "<br>\n";
         echo '<ul>';
-        foreach ($itinerary->legs->leg as $legNumber => $leg) {
+        foreach ($itinerary->legs as $legNumber => $leg) {
             echo '<li>';
             processLeg($legNumber, $leg);
             echo "</li>";
@@ -78,30 +78,34 @@ function processItinerary($itineraryNumber, $itinerary) {
     } else {
         echo '' . staticmap(array(
             array(
-                $itinerary->legs->leg->from->lat,
-                $itinerary->legs->leg->from->lon
+                $itinerary->legs[0]->from->lat,
+                $itinerary->legs[0]->from->lon
             )
                 ), false, false, true) . "<br>\n";
-        processLeg(0, $itinerary->legs->leg);
+        processLeg(0, $itinerary->legs);
     }
     echo "</p></div>";
 }
 
 function processLeg($legNumber, $leg) {
     $legArray = object2array($leg);
-    echo '<h3>Leg #' . ($legNumber + 1) . " ( {$legArray['@mode']} from: {$leg->from->name} to {$leg->to->name}, " . floor($leg->duration / 60000) . " minutes) </h3>\n";
-    if ($legArray["@mode"] === "BUS") {
-        echo "Take bus {$legArray['@route']} " . str_replace("To", "towards", $legArray['@headsign']) . " departing at " . formatTime($leg->startTime) . "<br>";
+    echo '<h3>Leg #' . ($legNumber + 1) . " ( {$legArray['mode']} from: {$leg->from->name} to {$leg->to->name}, " . floor($leg->duration / 60000) . " minutes) </h3>\n";
+    if ($leg->mode === "BUS") {
+        $walkStepMarkers = array(array(
+                $leg->from->lat,
+                $leg->from->lon
+            ));
+        echo "" . staticmap($walkStepMarkers, false, false, true, false, $leg->legGeometry->points) . "<br>\n";
+        echo "Take bus {$legArray['route']} " . str_replace("To", "towards", $legArray['headsign']) . " departing at " . formatTime($leg->startTime) . "<br>";
     } else {
         $walkStepMarkers = array();
-        foreach ($leg->steps->walkSteps as $stepNumber => $step) {
+
             $walkStepMarkers[] = array(
-                $step->lat,
-                $step->lon
+                $leg->steps[0]->lat,
+                $leg->steps[0]->lon
             );
-        }
-        echo "" . staticmap($walkStepMarkers, false, false, true) . "<br>\n";
-        foreach ($leg->steps->walkSteps as $stepNumber => $step) {
+        echo "" . staticmap($walkStepMarkers, false, false, true, false, $leg->legGeometry->points) . "<br>\n";
+        foreach ($leg->steps as $stepNumber => $step) {
             echo "Walking step " . ($stepNumber + 1) . ": ";
             if ($step->relativeDirection == "CONTINUE") {
                 echo "Continue, ";
@@ -171,16 +175,16 @@ if ($_REQUEST['time']) {
                 echo $tripplan->error->msg;
             } else {
             echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";
-            echo  $tripplan->plan->date;
-            echo "<h1> At: " . formatTime($tripplan->plan->date) . " </h1>";
-            if (is_array($tripplan->plan->itineraries->itinerary)) {
+            
+            echo "<h1> At: " . $tripplan->requestParameters->time . " </h1>";
+            if (is_array($tripplan->plan->itineraries)) {
                 echo '<div data-role="collapsible-set">';
-                foreach ($tripplan->plan->itineraries->itinerary as $itineraryNumber => $itinerary) {
+                foreach ($tripplan->plan->itineraries as $itineraryNumber => $itinerary) {
                     processItinerary($itineraryNumber, $itinerary);
                 }
                 echo "</div>";
             } else {
-                processItinerary(0, $tripplan->plan->itineraries->itinerary);
+                processItinerary(0, $tripplan->plan->itineraries);
             }
             }
         }
