@@ -82,15 +82,15 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 	$(function() {
 		$( "#geolocate" ).autocomplete({
 			source: "lib/autocomplete.php",
-			minLength: 2
+			minLength: 3
 		});
 		$( "#from" ).autocomplete({
 			source: "lib/autocomplete.php",
-			minLength: 2
+			minLength: 3
 		});
 		$( "#to" ).autocomplete({
 			source: "lib/autocomplete.php",
-			minLength: 2
+			minLength: 3
 		});
 	});
 	</script>';
