@@ -27,7 +27,7 @@ $debugOkay = Array(
 $GTFSREnabled = true;
 $cloudmadeAPIkey = 'daa03470bb8740298d4b10e3f03d63e6';
 $googleMapsAPIkey = 'ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q';
-$otpAPIurl = 'http://localhost:9080/opentripplanner-api-webapp/';
+$otpAPIurl = 'http://cloudnine.lambdacomplex.org:8080/opentripplanner-api-webapp/';
 
 if (isDebug('phperror'))
     error_reporting(E_ALL ^ E_NOTICE);
