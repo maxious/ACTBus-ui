@@ -76,7 +76,6 @@ if (php_sapi_name() == "cli") {
                     }
                     if ($tablename == "shapes") {
                         $headers[] = "shape_pt";
-                         $headers[] = "shape_dist_traveled";
                     }
                     $query = "insert into $tablename (";
                     $valueCount = 0;
@@ -94,7 +93,7 @@ if (php_sapi_name() == "cli") {
                     if ($tablename == "stops") {
                         $query.= ", ST_GeographyFromText(?));";
                     } else if ($tablename == "shapes") {
-                        $query.= ", ST_GeographyFromText(?),?);";
+                        $query.= ", ST_GeographyFromText(?));";
                     } else {
                         $query.= ");";
                     }
@@ -108,18 +107,10 @@ if (php_sapi_name() == "cli") {
                         $values[] = 'SRID=4326;POINT('.$values[5].' '.$values[4].')';
                     }
                     if ($tablename == "shapes") {
-                        if ($data[0] != $lastshape) {
-                            $distance = 0;
-                            $lastshape = $data[0];
-                        } else {
-                            $distance += distance($lastlat, $lastlon, $data[1], $data[2]);
-                        }
-                        $lastlat = $data[1];
-                        $lastlon = $data[2];
+                        
 
                         
                         $values[] = 'SRID=4326;POINT('.$values[2].' '.$values[1].')';
-                        $values[] = $distance;
                     }
 if (substr($values[1],0,2) == '24' && $tablename == "stop_times") $values[1] = "23:59:59";
 if (substr($values[2],0,2) == '24' && $tablename == "stop_times") $values[2] = "23:59:59";

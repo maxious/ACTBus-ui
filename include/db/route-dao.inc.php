@@ -90,7 +90,7 @@ function getRouteByFullName($routeFullName) {
 
 function getRoutes() {
     global $conn;
-    $query = 'Select * from routes order by route_short_name;';
+    $query = 'Select * from routes order by route_short_name offset 122;';
     debug($query, 'database');
     $query = $conn->prepare($query);
     $query->execute();

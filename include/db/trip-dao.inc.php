@@ -119,6 +119,41 @@ function getTripAtStop($tripID, $stop_sequence) {
     return Array();
 }
 
+function getTripByExactStartTime($startTime, $routeID, $directionID='') {
+    global $conn;
+    $query = 'select trips.trip_id,arrival_time,direction_id,wheelchair_accessible,route_id,stop_id,stop_sequence 
+        from stop_times inner join trips on stop_times.trip_id = trips.trip_id 
+        where arrival_time = :startTime::time 
+        and route_id = :routeID' 
+            .($directionID!='' ? " and direction_id = :directionID" : "")
+        .' order by stop_sequence';
+    debug($query, 'database');
+    $query = $conn->prepare($query);
+    $query->bindParam(':startTime', $startTime);
+    $query->bindParam(':routeID', $routeID);
+    if ($directionID!='')     $query->bindParam(':directionID', $directionID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return $query->fetchAll();
+}
+function setTripAccessiblity($tripID, $accessible) {
+    global $conn;
+    $query = 'update trips set wheelchair_accessible = :accessible where trip_id = :tripID';
+    debug($query, 'database');
+    $query = $conn->prepare($query);
+    $query->bindParam(':accessible', $accessible);
+    $query->bindParam(':tripID', $tripID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+    return;
+}
+
 function getTripStartTime($tripID) {
     global $conn;
     $query = 'Select * from stop_times
@@ -205,6 +240,7 @@ WHERE start_times.trip_id = end_times.trip_id AND stop_times.trip_id = end_times
     }
     return $query->fetchAll();
 }
+
 function getTripLastStop($tripid, $time='') {
     global $conn;
     if ($time == '') {

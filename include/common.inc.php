@@ -29,8 +29,9 @@ $cloudmadeAPIkey = 'daa03470bb8740298d4b10e3f03d63e6';
 $googleMapsAPIkey = 'ABQIAAAA95XYXN0cki3Yj_Sb71CFvBTPaLd08ONybQDjcH_VdYtHHLgZvRTw2INzI_m17_IoOUqH3RNNmlTk1Q';
 $otpAPIurl = 'http://cloudnine.lambdacomplex.org:8080/opentripplanner-api-webapp/';
 
-if (isDebug('phperror'))
+if (isDebug('phperror')) {
     error_reporting(E_ALL ^ E_NOTICE);
+}
 
 define('ROOT' , pathinfo(__FILE__, PATHINFO_DIRNAME));
 if (strstr($_SERVER['PHP_SELF'], "labs/")
@@ -44,7 +45,7 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
 $tempPath = "c:/tmp/";
 
 function isDebugServer() {
-    
+    if (isset($_REQUEST['debug'])) return true;
     return php_sapi_name() == 'cli' || strstr(php_uname('n'),'actbus') || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == 'azusa' || $_SERVER['SERVER_NAME'] == 'vanille'
             || $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1' ||  $_SERVER['SERVER_NAME'] == '192.168.1.8' || $_SERVER['SERVER_NAME'] == '192.168.178.24');
 }
