@@ -13,3 +13,6 @@
 [submodule "js/d3"]
 	path = js/d3
 	url = https://github.com/mbostock/d3.git
+[submodule "lib/Requests"]
+	path = lib/Requests
+	url = https://github.com/rmccue/Requests.git

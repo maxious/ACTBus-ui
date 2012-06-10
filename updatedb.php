@@ -35,7 +35,7 @@ if (php_sapi_name() == "cli") {
 // Unzip cbrfeed.zip, import all csv files to database
     $unzip = false;
 //    $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
-    $tmpdir = "c:/tmp/cbrfeed/";
+    $tmpdir = $tempPath."/cbrfeed/";
     mkdir($tmpdir);
     if ($unzip) {
         if (is_resource($zip)) {

@@ -4,9 +4,6 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <bean id="graphBundle" class="org.opentripplanner.model.GraphBundle">
-        <property name="path" value="c:\tmp\" />
-    </bean>
 
     <bean id="gtfsBuilder" class="org.opentripplanner.graph_builder.impl.GtfsGraphBuilderImpl">
         <property name="gtfsBundles">
@@ -14,44 +11,52 @@
                 <property name="bundles">
                     <list>
                         <bean class="org.opentripplanner.graph_builder.model.GtfsBundle">
-                            <property name="path" value="C:\tmp\cbrfeed.zip" />
+                            <property name="path" value="/home/ec2-user/cbrfeed.zip" />
+<property name="defaultAgencyId" value="0" />
+                <property name="defaultBikesAllowed" value="true" />
                         </bean>
                     </list>
                 </property>
             </bean>
         </property>
+ <property name="gtfsGraphBuilders">
+                <list>
+                        <bean
+class="org.opentripplanner.graph_builder.impl.transit_index.TransitIndexBuilder" />
+                </list>
+          </property>
     </bean>
 
     <bean id="osmBuilder" class="org.opentripplanner.graph_builder.impl.osm.OpenStreetMapGraphBuilderImpl">
         <property name="provider">
     <bean class="org.opentripplanner.openstreetmap.impl.AnyFileBasedOpenStreetMapProviderImpl">
-        <property name="path" value="C:\Users\Madoka\Documents\canberra.osm" />
+        <property name="path" value="/home/ec2-user/canberra.osm" />
     </bean>
         </property>
     </bean>
 
     <bean id="transitStreetLink" class="org.opentripplanner.graph_builder.impl.TransitToStreetNetworkGraphBuilderImpl" />
-   <bean id="optimizeTransit" class="org.opentripplanner.graph_builder.impl.OptimizeTransitGraphBuilderImpl" />
-
+    <bean id="optimizeTransit" class="org.opentripplanner.graph_builder.impl.OptimizeTransitGraphBuilderImpl" />
+<bean id="nedBuilder" class="org.opentripplanner.graph_builder.impl.ned.NEDGraphBuilderImpl">
+    <property name="gridCoverageFactory">
+        <bean class="org.opentripplanner.graph_builder.impl.ned.GeotiffGridCoverageFactoryImpl">
+            <property name="path" value="/home/ec2-user/3Sec_SRTM_DEM_WGS841.tif" />
+        </bean>
+    </property>
+</bean>
     <bean id="graphBuilderTask" class="org.opentripplanner.graph_builder.GraphBuilderTask">
-        <property name="graphBundle" ref="graphBundle" />
+        <property name="path" value="/tmp" />
         <property name="graphBuilders">
             <list>
                 <!-- GTFS comes before OSM, because we use the loaded set of stops to determine our OSM coverage -->
                 <ref bean="gtfsBuilder" />
                 <ref bean="osmBuilder" />
+<ref bean="nedBuilder" />
                 <ref bean="transitStreetLink" />
+
                 <ref bean="optimizeTransit" />
             </list>
         </property>
-<property name="modes">
-  <list>
-    <bean class="org.opentripplanner.routing.core.TraverseOptions">
-      <property name="mode" value="WALK" />
-      <property name="optimize" value="QUICK" />
-    </bean>
-      </list>
-    </property>
-    <property name="contractionFactor" value="0.97" /> 
+
 </bean>
 </beans>
