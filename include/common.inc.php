@@ -80,8 +80,12 @@ function isDebug($debugReason = 'other') {
 }
 
 function debug($msg, $debugReason = 'other') {
-    if (isDebug($debugReason))
+    if (isDebug($debugReason)) {
+        if (is_array($msg)) $msg = print_r($msg,true);
         echo PHP_EOL.'<!-- ' . date(DATE_RFC822) . PHP_EOL.$msg.PHP_EOL.' -->'.PHP_EOL;
+       
+    }
+        
 }
 function isIOSDevice() {
    return strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad');

@@ -35,7 +35,7 @@ if (php_sapi_name() == "cli") {
 // Unzip cbrfeed.zip, import all csv files to database
     $unzip = false;
 //    $zip = zip_open(dirname(__FILE__) . "/cbrfeed.zip");
-    $tmpdir = $tempPath."/cbrfeed/";
+    $tmpdir = $tempPath . "/cbrfeed/";
     mkdir($tmpdir);
     if ($unzip) {
         if (is_resource($zip)) {
@@ -89,7 +89,7 @@ if (php_sapi_name() == "cli") {
                         $query.=($valueCount > 0 ? "," : "") . '?';
                         $valueCount++;
                     }
-                    
+
                     if ($tablename == "stops") {
                         $query.= ", ST_GeographyFromText(?));";
                     } else if ($tablename == "shapes") {
@@ -104,19 +104,19 @@ if (php_sapi_name() == "cli") {
                     $values = array_values($data);
                     if ($tablename == "stops") {
                         // Coordinate values are out of range [-180 -90, 180 90]
-                        $values[] = 'SRID=4326;POINT('.$values[5].' '.$values[4].')';
+                        $values[] = 'SRID=4326;POINT(' . $values[5] . ' ' . $values[4] . ')';
                     }
                     if ($tablename == "shapes") {
-                        
 
-                        
-                        $values[] = 'SRID=4326;POINT('.$values[2].' '.$values[1].')';
+                        $values[] = 'SRID=4326;POINT(' . $values[2] . ' ' . $values[1] . ')';
                     }
-if (substr($values[1],0,2) == '24' && $tablename == "stop_times") $values[1] = "23:59:59";
-if (substr($values[2],0,2) == '24' && $tablename == "stop_times") $values[2] = "23:59:59";
+                    if (substr($values[1], 0, 2) == '24' && $tablename == "stop_times")
+                        $values[1] = "23:59:59";
+                    if (substr($values[2], 0, 2) == '24' && $tablename == "stop_times")
+                        $values[2] = "23:59:59";
                     $stmt->execute($values);
                     $err = $pdconn->errorInfo();
-                    if ($err[2] != "" && strpos($err[2], "duplicate key") === false) {
+                    if ($err[2] != "" ) { // || strpos($err[2], "duplicate key") === false
                         print_r($values);
                         print_r($err);
                         die("terminated import due to db error above");
