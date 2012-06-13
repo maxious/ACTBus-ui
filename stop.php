@@ -99,11 +99,7 @@ if (sizeof($stops) > 0) {
 } else {
     include_header($stop['stop_name'], "stop");
 }
-/* $serviceAlerts = json_decode(getPage(curPageURL() . "/servicealerts_api.php?filter_class=stop&filter_id=".$stopid) , true);
 
-  foreach($serviceAlerts['entities'] as $serviceAlert) {
-  echo '<div id="servicewarning">'.$serviceAlert['alert']['description']['translation'].'</div>';
-  } */
 
 echo '<div class="content-secondary"><br>';
 echo $stopLinks;

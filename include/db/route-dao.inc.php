@@ -41,7 +41,7 @@ function getRoutesByShortName($routeShortName) {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getRouteHeadsigns($routeID) {
@@ -59,7 +59,7 @@ and stop_times.stop_sequence = 1 group by stops.stop_name, trip_headsign, direct
         databaseError($conn->errorInfo());
         return Array();
     }
-    $results = $query->fetchAll();
+    $results = $query->fetchAll(PDO::FETCH_ASSOC);
     if (is_array($results)) {
         return $results;
     } else {
@@ -98,7 +98,7 @@ function getRoutes() {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getRoutesByNumberSeries($routeNumberSeries = '') {
@@ -121,7 +121,7 @@ routes.route_id join stop_times on stop_times.trip_id = trips.trip_id where to_n
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getRouteNextTrip($routeID, $directionID) {
@@ -209,7 +209,7 @@ arrival_time ';
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getRoutesByDestination($destination = '', $service_period = '') {
@@ -243,7 +243,7 @@ function getRoutesByDestination($destination = '', $service_period = '') {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getRoutesBySuburb($suburb, $service_period = '') {
@@ -270,7 +270,7 @@ WHERE stop_desc LIKE :suburb AND (service_id=:service_periodA OR service_id=:ser
 
     databaseError($conn->errorInfo());
 
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getRoutesNearby($lat, $lng, $limit = '', $distance = 500) {
@@ -305,5 +305,5 @@ AND ST_DWithin(position, ST_GeographyFromText(\'SRID=4326;POINT($lng $lat)\'), :
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }

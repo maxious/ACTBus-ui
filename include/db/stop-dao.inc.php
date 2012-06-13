@@ -60,7 +60,7 @@ function getStops($firstLetter = '', $startsWith = '') {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getNearbyStops($lat, $lng, $limit = '', $distance = 1000) {
@@ -81,7 +81,7 @@ function getNearbyStops($lat, $lng, $limit = '', $distance = 1000) {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getStopsByName($name) {
@@ -96,7 +96,7 @@ function getStopsByName($name) {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getStopsBySuburb($suburb) {
@@ -111,7 +111,7 @@ function getStopsBySuburb($suburb) {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getStopsByStopCode($stop_code, $startsWith = '') {
@@ -135,7 +135,7 @@ function getStopsByStopCode($stop_code, $startsWith = '') {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getStopRoutes($stopID, $service_period) {
@@ -160,7 +160,7 @@ AND (service_id=:service_periodA OR service_id=:service_periodB)';
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getStopTrips($stopID, $service_period = '', $afterTime = '', $limit = '', $route_short_name = '') {
@@ -213,7 +213,7 @@ ORDER BY arrival_time '.$limitSQL;
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getStopTripsWithTimes($stopID, $time = '', $service_period = '', $time_range = '', $limit = '') {

@@ -50,7 +50,7 @@ WHERE trips.trip_id = :tripID ORDER BY stop_sequence';
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getTripHasStop($tripID, $stopID) {
@@ -106,7 +106,7 @@ WHERE trips.trip_id = :tripID ORDER BY stop_sequence';
         databaseError($conn->errorInfo());
         return Array();
     }
-    $stopTimes = $query->fetchAll();
+    $stopTimes = $query->fetchAll(PDO::FETCH_ASSOC);
     return $stopTimes;
 }
 
@@ -137,7 +137,7 @@ function getTripByExactStartTime($startTime, $routeID, $directionID='') {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 function setTripAccessiblity($tripID, $accessible) {
     global $conn;
@@ -238,7 +238,7 @@ WHERE start_times.trip_id = end_times.trip_id AND stop_times.trip_id = end_times
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getTripLastStop($tripid, $time='') {
@@ -256,7 +256,7 @@ function getTripLastStop($tripid, $time='') {
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function viaPoints($tripID, $stop_sequence = '') {
@@ -275,5 +275,5 @@ WHERE stop_times.trip_id = :tripID
         databaseError($conn->errorInfo());
         return Array();
     }
-    return $query->fetchAll();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
