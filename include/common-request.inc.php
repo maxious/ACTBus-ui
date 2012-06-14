@@ -78,6 +78,9 @@ if (isset($_REQUEST['routeid'])) {
 if (isset($_REQUEST['directionid'])) {
     $directionid = filter_var($_REQUEST['directionid'], FILTER_SANITIZE_STRING);
 }
+if (isset($_REQUEST['time'])) {
+$time = filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING);
+}
 if (isset($_REQUEST['stopid'])) {
     $stopid = filter_var($_REQUEST['stopid'], FILTER_SANITIZE_NUMBER_INT);
 }

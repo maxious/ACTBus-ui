@@ -110,7 +110,7 @@ if ($stop == NULL && (!isset($stops[0]) || $stops[0] == NULL)) {
     }
 
     $result['service_period'] = service_period();
-    $result['time'] = (isset($time) ? $time : date("H:i"));
+    $result['time'] =  current_time();
 
     if (sizeof($allStopsTrips) > 0) {
         sktimesort($allStopsTrips, "arrival_time", true);

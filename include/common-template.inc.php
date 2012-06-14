@@ -237,7 +237,7 @@ s.parentNode.insertBefore(ga, s);
 function timeSettings() {
     global $service_periods,$suburb,$stopid,$stopids,$stopcode,$time;
     echo '<div id="settings" data-role="collapsible" data-collapsed="true">
-<h3>Change Time (' . (isset($_REQUEST['time']) ? $_REQUEST['time'] : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
+<h3>Change Time (' . (isset($time) ? $time : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']) . '" method="GET">
                <input type="hidden" name="suburb" id="suburb" value="' . (isset($suburb) ? $suburb : "") . '"/>
        ';
