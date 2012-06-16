@@ -22,16 +22,27 @@ function navbar() {
     echo '
 		<div data-role="navbar">
 			<ul> 
+                        
 				<li><a href="stopList.php">Stops by Name</a></li>
 				<li><a href="stopList.php?bysuburbs=yes">By Suburb</a></li>
+                                <li><a href="stopList.php?byid=yes">By Stop ID</a></li>
 				<li><a href="stopList.php?nearby=yes">Nearby Stops</a></li>
 			</ul>
                 </div>
 	';
 }
 
-// By suburb
-if (isset($bysuburbs)) {
+if (isset($byid)) {
+include_header("Stop by ID", "stopIDForm");
+    navbar();
+    echo '<form action="stop.php" method="GET">
+        <div data-role="fieldcontain">
+		        <label for="stopid"> Stop ID: </label>
+		    	<input type="text" name="stopid" id="stopid" maxlength="5" />
+                            </div>
+                <input type="submit" value="View Stop"/>
+                </form>';
+} else if (isset($bysuburbs)) {// By suburb
     include_header("Stops by Suburb", "stopList");
     navbar();
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';

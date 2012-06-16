@@ -24,6 +24,9 @@ if (isset($_REQUEST['bysuburbs'])) {
 if (isset($_REQUEST['bynumber'])) {
     $bynumber = true;
 }
+if (isset($_REQUEST['byid'])) {
+    $byid = true;
+}
 if (isset($_REQUEST['allstops'])) {
     $allstops = true;
 }
