@@ -97,7 +97,7 @@ if (sizeof($stops) > 0) {
     $stopDescParts = explode("<br>", $stop['stop_desc']);
     include_header(trim(str_replace("Street: ", "", $stopDescParts[0])), "stop");
 } else {
-    include_header($stop['stop_name'], "stop");
+    include_header($stop['stop_name']." (#".$stop['stop_id'].")", "stop");
 }
 
 

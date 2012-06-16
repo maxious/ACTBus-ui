@@ -238,7 +238,10 @@ function timeSettings() {
     global $service_periods,$suburb,$stopid,$stopids,$stopcode,$time;
     echo '<div id="settings" data-role="collapsible" data-collapsed="true">
 <h3>Change Time (' . (isset($time) ? $time : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
-        <form action="' . basename($_SERVER['PHP_SELF']) . '" method="GET">
+        <form action="' . basename($_SERVER['PHP_SELF']);
+     if (isset($stopids)) echo '?stopids=' . implode(",",$stopids) ;
+    else if (isset($stopid)) echo '?stopid=' . $stopid ;
+            echo '" method="POST">
                <input type="hidden" name="suburb" id="suburb" value="' . (isset($suburb) ? $suburb : "") . '"/>
        ';
     if (isset($stopids)) echo '<input type="hidden" name="stopids" id="stopids" value="' . implode(",",$stopids) . '"/>';
