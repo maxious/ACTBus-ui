@@ -115,7 +115,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
             $stopsGrouped = Array();
         } else {
             // just a normal stop
-            echo '<li itemscope itemtype="http://schema.org/BusStop" class="vevent"> <a itemprop="url" href="stop.php?stopid=' . $tripStopTime['stop_id'] . (startsWith($tripStopTime['stop_code'], "Wj") ? '&amp;stopcode=' . $tripStopTime['stop_code'] : "") . '">';
+            echo '<li itemscope itemtype="http://schema.org/BusStop" class="vevent"> <a itemprop="url" href="stop.php?stopid=' . $tripStopTime['stop_id']. '">';
             echo '<p class="ui-li-aside geo"><time class="dtstart" datetime="'.date("c",strtotime($trip['arrival_time'])).'">' . $tripStopTime['arrival_time'].'</time>';
             echo '<abbr class="latitude" title="'.$tripStopTime['stop_lat'].'"></abbr> 
  <abbr class="longitude" title="'.$tripStopTime['stop_lon'].'"></abbr><meta itemprop="latitude" content="'.$tripStopTime['stop_lat'].'" />

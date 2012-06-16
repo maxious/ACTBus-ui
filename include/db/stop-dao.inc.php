@@ -114,29 +114,7 @@ function getStopsBySuburb($suburb) {
     return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getStopsByStopCode($stop_code, $startsWith = '') {
-    global $conn;
-    $query = 'Select * from stops where (stop_code = :stop_code OR stop_code LIKE :stop_code2)';
-    if ($startsWith != '')
-        $query .= ' AND stop_name like :startsWith';
 
-    debug($query, 'database');
-    $query = $conn->prepare($query);
-
-    $query->bindParam(':stop_code', $stop_code);
-    $stop_code2 = $stop_code . '%';
-    $query->bindParam(':stop_code2', $stop_code2);
-    if ($startsWith != '') {
-        $startsWith = $startsWith . '%';
-        $query->bindParam(':startsWith', $startsWith);
-    }
-    $query->execute();
-    if (!$query) {
-        databaseError($conn->errorInfo());
-        return Array();
-    }
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-}
 
 function getStopRoutes($stopID, $service_period) {
     if ($service_period == '') {

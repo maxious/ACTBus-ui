@@ -101,7 +101,7 @@ if (isset($bysuburbs)) {
                     // subsequent duplicates
                     $stopsGrouped["stop_ids"][] = $stop['stop_id'];
                     echo '<li>';
-                    echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '&stopcodes=' . implode(",", $stopsGrouped['stop_codes']) . '">';
+                    echo '<a href="stop.php?stopids=' . implode(",", $stopsGrouped['stop_ids']) . '">';
                     if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                         echo '<span class="ui-li-count">' . distance($stop['stop_lat'], $stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
                     }
@@ -113,7 +113,7 @@ if (isset($bysuburbs)) {
                 } else {
                     // just a normal stop
                     echo '<li>';
-                    echo '<a href="stop.php?stopid=' . $stop['stop_id'] . '&amp;stopcode=' . $stop['stop_code'] . '">';
+                    echo '<a href="stop.php?stopid=' . $stop['stop_id'] . '">';
                     if (isset($_SESSION['lat']) && isset($_SESSION['lon'])) {
                         echo '<span class="ui-li-count">' . distance($stop['stop_lat'], $stop['stop_lon'], $_SESSION['lat'], $_SESSION['lon'], true) . 'm away</span>';
                     }
@@ -130,9 +130,6 @@ if (isset($bysuburbs)) {
                         "name" => trim(preg_replace("/\(Platform.*/", "", $stop['stop_name'])),
                         "stop_ids" => Array(
                             $stop['stop_id']
-                        ),
-                        "stop_codes" => Array(
-                            $stop['stop_code']
                         )
                     );
                 } else {

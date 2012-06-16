@@ -63,7 +63,7 @@ if (isset($stopids)) {
         $stopNames[$key] = $sub_stop["stop_name"];
         $stopLinks.= '<span itemscope itemtype="http://schema.org/BusStop"> 
             <a itemprop="url" href="stop.php?stopid=' . $sub_stop["stop_id"] . 
-                '&amp;stopcode=' . $sub_stop["stop_code"] . '">' . $sub_stop["stop_name"] 
+               '">' . $sub_stop["stop_name"] 
                 . '</a><span class="geo" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates"><meta itemprop="latitude" content="'.$sub_stop["stop_lat"].'" />
                  <abbr class="latitude" title="'.$sub_stop["stop_lat"].'"></abbr> 
  <abbr class="longitude" title="'.$sub_stop["stop_lon"].'"></abbr>

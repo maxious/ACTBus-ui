@@ -91,7 +91,7 @@ WHERE trips.trip_id = :tripID ORDER BY shape_pt_sequence) as a group by a.shape_
 function getTripStopTimes($tripID) {
     global $conn;
     $query = 'SELECT stop_times.trip_id,trip_headsign,arrival_time,stop_times.stop_id
-    ,stop_lat,stop_lon,stop_name,stop_desc,stop_code,
+    ,stop_lat,stop_lon,stop_name,stop_desc,
 	stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times
 join trips on trips.trip_id = stop_times.trip_id
@@ -246,7 +246,7 @@ function getTripLastStop($tripid, $time='') {
     if ($time == '') {
         $time = current_time();
     }
-    $query = 'Select trip_id,stops.stop_id,stop_sequence,stop_code,stop_name,stop_lat,stop_lon,arrival_time,(arrival_time - :time::time) as time_diff  from stop_times inner join stops on stop_times.stop_id = stops.stop_id WHERE trip_id = :tripid  and arrival_time >= :time::time order by stop_sequence limit 2';
+    $query = 'Select trip_id,stops.stop_id,stop_sequence,stop_name,stop_lat,stop_lon,arrival_time,(arrival_time - :time::time) as time_diff  from stop_times inner join stops on stop_times.stop_id = stops.stop_id WHERE trip_id = :tripid  and arrival_time >= :time::time order by stop_sequence limit 2';
     debug($query, 'database');
     $query = $conn->prepare($query);
     $query->bindParam(':time', $time);
