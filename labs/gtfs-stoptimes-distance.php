@@ -129,15 +129,21 @@ foreach ($uncalcdStopTrips as $stoptrip) {
        // ({$closestShape['stop_distance']} meters away from stop, {$closestShape['point_distance']} meters away from nearest point on line) <br><br>\n";
         $distTraveled = floor($closestShape['shape_dist_traveled'] + $closestShape['point_distance']);
         if ($reverse) $distTraveled = floor($closestShape['shape_dist_traveled'] - $closestShape['point_distance']);
-        if ($distTraveled == 0 && $closestShape['point_distance'] < 0) {
+        if ($distTraveled == 0 && ($stopSequence == 0 || $stopSequence == 1)) {
+            $distTraveled = 1; // HACKHACKHACK reduces warnings but isn't always right to do
+            echo ("first or second stop has 0 distance, rounding to 1<br>\n");
+        }
+        if ($distTraveled == 0 || $closestShape['point_distance'] < 0) {
             print_r($stoptime);
             print_r($closestShape);
             //die("ERROR zero distance");
             echo("ERROR zero distance");
-        } else if (($reverse == false && $distTraveled < $lastDistance) || ($reverse == true && $distTraveled > $lastDistance)) {
+            break;
+        } else if (!($stopSequence == 0 || $stopSequence == 1) && (($reverse == false && $distTraveled < $lastDistance) || ($reverse == true && $distTraveled > $lastDistance))) {
             //die("this stop distance $distTraveled < $lastDistance last point ($lastShapePoint) difference");
-            echo ("this stop distance $distTraveled < $lastDistance last point ($lastShapePoint) difference<br>\n");
-            continue;
+            echo ("this stop distance $distTraveled ".($reverse? ">":"<")." $lastDistance last point ({$closestShape['shape_pt_sequence']}) difference<br>\n");
+                    
+            break;
         } else {
 
             $lastDistance = $distTraveled;
@@ -149,6 +155,6 @@ foreach ($uncalcdStopTrips as $stoptrip) {
             }
         }
     }
-    echo "Processing $tripID complete.<br>\n";
+    echo "Processing $tripID complete.<br>\n\n";
 }
 ?>

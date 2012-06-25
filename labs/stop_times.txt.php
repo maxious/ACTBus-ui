@@ -5,7 +5,7 @@ setlocale(LC_CTYPE, 'C');
 // source: http://stackoverflow.com/questions/81934/easy-way-to-export-a-sql-table-without-access-to-the-server-or-phpmyadmin#81951
 
 $query = $conn->prepare('
-SELECT * from stop_times'
+SELECT * from stop_times order by trip_id, stop_sequence'
         , array(PDO::ATTR_CURSOR => PDO::FETCH_ORI_NEXT));
 $query->execute();
 $errors = $conn->errorInfo();
