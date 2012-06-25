@@ -133,8 +133,9 @@ and routes.route_id = :routeID and trips.direction_id = :directionID order by
 arrival_time limit 1';
     debug($query, 'database');
     $query = $conn->prepare($query);
-    $query->bindParam(':currentTime', current_time());
-    $futureTime = current_time(strtotime(current_time() . ' +2h'));
+    $time = current_time();
+    $query->bindParam(':currentTime', $time);
+    $futureTime = current_time(strtotime( $time. ' +2h'));
     if (date('h', strtotime(current_time()) > 22))
         $futureTime = '23:59:59';
     $query->bindParam(':futureTime', $futureTime);

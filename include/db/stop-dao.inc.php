@@ -124,7 +124,7 @@ function getStopRoutes($stopID, $service_period) {
     $sidA = $service_ids[0];
     $sidB = $service_ids[1];
     global $conn;
-    $query = 'SELECT distinct service_id,trips.route_id,route_short_name,route_long_name
+    $query = 'SELECT distinct service_id,trips.route_id,route_short_name,route_long_name,direction_id
 FROM stop_times join trips on trips.trip_id =
 stop_times.trip_id join routes on trips.route_id = routes.route_id WHERE stop_id = :stopID 
 AND (service_id=:service_periodA OR service_id=:service_periodB)';
