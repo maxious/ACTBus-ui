@@ -108,6 +108,7 @@ if (sizeof($stops) > 0) {
     echo staticmap($stopPositions);
 } else {
     trackEvent("View Stops", "View Single Stop", $stop["stop_name"], $stop["stop_id"]);
+     echo '<a href="labs/stop.timetable.php?stopid='.$stop["stop_id"].'">View Printable Timetable for this Stop</a><br>';
     echo staticmap(Array(
         0 => Array(
             $stop["stop_lat"],
