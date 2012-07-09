@@ -54,6 +54,7 @@ if (php_sapi_name() == "cli") {
     }
 
     foreach (scandir($tmpdir) as $file) {
+        echo $file;
         $headers = Array();
         if (!strpos($file, ".txt") === false) {
             $fieldseparator = ",";
@@ -129,6 +130,8 @@ if (php_sapi_name() == "cli") {
             fclose($handle);
             $stmt->closeCursor();
             echo "Found a total of $line records in $file.\n";
+        } else {
+            echo "Not a GTFS file: $file \n";
         }
     }
 }
