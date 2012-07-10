@@ -90,7 +90,7 @@ WHERE trips.trip_id = :tripID ORDER BY shape_pt_sequence) as a group by a.shape_
 
 function getTripStopTimes($tripID) {
     global $conn;
-    $query = 'SELECT stop_times.trip_id,trip_headsign,arrival_time,stop_times.stop_id
+    $query = 'SELECT stop_times.trip_id,trip_headsign,arrival_time,departure_time,stop_times.stop_id
     ,stop_lat,stop_lon,stop_name,stop_desc,
 	stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times

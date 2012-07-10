@@ -28,10 +28,10 @@ echo '<div data-role="page">
 $return = Array();
 
 function logout() {
-    setcookie("card_number", "", time() - 60 * 60 * 24 * 100, "/");
-    setcookie("date", "", time() - 60 * 60 * 24 * 100, "/");
-    setcookie("secret_answer", "", time() - 60 * 60 * 24 * 100, "/");
-    setcookie("contribute_myway", "", time() - 60 * 60 * 24 * 100, "/");
+    setcookie("card_number", "", time() - 3600, "/");
+    setcookie("date", "", time() - 3600, "/");
+    setcookie("secret_answer", "", time() - 3600, "/");
+    setcookie("contribute_myway", "", time() - 3600, "/");
 }
 
 function printBalance($mywayResult) {
@@ -62,12 +62,13 @@ function printBalance($mywayResult) {
 function recordMyWayObservations($mywayResult) {
     global $conn;
     if (!isset($mywayResult['error'])) {
-        $stmt = $conn->prepare("insert into myway_observations (observation_id, myway_stop, time, myway_route)
-				      values (:observation_id, :myway_stop, :time, :myway_route)");
+        $stmt = $conn->prepare("insert into myway_observations (observation_id, myway_stop, time, myway_route,tag_on)
+				      values (:observation_id, :myway_stop, :time, :myway_route, :tag_on)");
         $stmt->bindParam(':observation_id', $observation_hash);
         $stmt->bindParam(':myway_stop', $myway_stop);
         $stmt->bindParam(':time', $timestamp);
         $stmt->bindParam(':myway_route', $myway_route);
+        $stmt->bindParam(':tag_on', $tag_on);
         // insert a record
         $resultCount = 0;
         foreach ($mywayResult['myway_transactions'] as $transaction) {
@@ -76,8 +77,10 @@ function recordMyWayObservations($mywayResult) {
                 $timestamp = date("c", strtotime($transaction["Date / Time"]));
                 $myway_stop = $transaction["Stop Name"];
                 $myway_route = $transaction["Route"];
-                if ($stmt->execute())
+                $tag_on = (strpos($transaction["TX Type"], "TAP ON") !== false ? true : false);
+                if ($stmt->execute()) {
                     $resultCount++;
+                }
             }
         }
         echo "<h3>Thanks for participating in the study! $resultCount transactions were recorded</h3>";
@@ -100,6 +103,7 @@ if (isset($_REQUEST['card_number']) && isset($_REQUEST['date']) && isset($_REQUE
     printBalance($mywayResult);
 }
 else if (isset($_REQUEST['logout'])) {
+    logout();
     echo '<center><h3> Logged out of MyWay balance </h3><a href="/index.php">Back to main menu...</a><center>';
 } else if (isset($_COOKIE['card_number']) && isset($_COOKIE['date']) && isset($_COOKIE['secret_answer'])) {
     $cardNumber = $_COOKIE['card_number'];
