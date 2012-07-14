@@ -56,7 +56,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <link rel="profile" href="http://microformats.org/profile/hcalendar"/>
 <link rel="profile" href="http://microformats.org/profile/geo"/>
 	<link rel="stylesheet"  href="' . $basePath . 'css/jquery-ui-1.8.12.custom.css" />';
-    $jqmVersion = "1.1.0";
+    $jqmVersion = "1.1.1";
     if (isDebugServer()) {
         $jqmcss = $basePath . "css/jquery.mobile-$jqmVersion.min.css";
         $jqjs = $basePath . "js/jquery-1.7.2.min.js";
