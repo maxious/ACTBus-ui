@@ -18,7 +18,6 @@
 include ('include/common.inc.php');
 if (isset($stopid)) {
     $stop = getStop($stopid);
-   
 }
 
 /* if ($stopcode != "" && $stop[5] != $stopcode) {
@@ -45,13 +44,13 @@ if (isset($stopids)) {
         $stops[] = getStop($sub_stopid);
     }
 }
- if ($stop == NULL && (!isset($stops[0]) || $stops[0] == NULL) ) {
-    
+if ($stop == NULL && (!isset($stops[0]) || $stops[0] == NULL)) {
+
     header("Status: 404 Not Found");
     header("HTTP/1.0 404 Not Found");
     include_header("Stop Not Found", "404stop");
     echo "<h1>Error: Stop not found</h1>";
-include_footer();
+    include_footer();
     die();
 }
 if (isset($stopids)) {
@@ -62,12 +61,12 @@ if (isset($stopids)) {
 
         $stopNames[$key] = $sub_stop["stop_name"];
         $stopLinks.= '<span itemscope itemtype="http://schema.org/BusStop"> 
-            <a itemprop="url" href="stop.php?stopid=' . $sub_stop["stop_id"] . 
-               '">' . $sub_stop["stop_name"] 
-                . '</a><span class="geo" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates"><meta itemprop="latitude" content="'.$sub_stop["stop_lat"].'" />
-                 <abbr class="latitude" title="'.$sub_stop["stop_lat"].'"></abbr> 
- <abbr class="longitude" title="'.$sub_stop["stop_lon"].'"></abbr>
-    <meta itemprop="longitude" content="'.$sub_stop["stop_lon"].'" /></span></span>';
+            <a itemprop="url" href="stop.php?stopid=' . $sub_stop["stop_id"] .
+                '">' . $sub_stop["stop_name"]
+                . '</a><span class="geo" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates"><meta itemprop="latitude" content="' . $sub_stop["stop_lat"] . '" />
+                 <abbr class="latitude" title="' . $sub_stop["stop_lat"] . '"></abbr> 
+ <abbr class="longitude" title="' . $sub_stop["stop_lon"] . '"></abbr>
+    <meta itemprop="longitude" content="' . $sub_stop["stop_lon"] . '" /></span></span>';
 
         $stopPositions[$key] = Array(
             $sub_stop["stop_lat"],
@@ -97,7 +96,7 @@ if (sizeof($stops) > 0) {
     $stopDescParts = explode("<br>", $stop['stop_desc']);
     include_header(trim(str_replace("Street: ", "", $stopDescParts[0])), "stop");
 } else {
-    include_header($stop['stop_name']." (#".$stop['stop_id'].")", "stop");
+    include_header($stop['stop_name'] . " (#" . $stop['stop_id'] . ")", "stop");
 }
 
 
@@ -108,7 +107,7 @@ if (sizeof($stops) > 0) {
     echo staticmap($stopPositions);
 } else {
     trackEvent("View Stops", "View Single Stop", $stop["stop_name"], $stop["stop_id"]);
-     echo '<a href="labs/stop.timetable.php?stopid='.$stop["stop_id"].'">View Printable Timetable for this Stop</a><br>';
+    echo '<a href="labs/stop.timetable.php?stopid=' . $stop["stop_id"] . '">View Printable Timetable for this Stop</a><br>';
     echo staticmap(Array(
         0 => Array(
             $stop["stop_lat"],
@@ -126,7 +125,6 @@ if (sizeof($allStopsTrips) > 0) {
     $trips = $allStopsTrips;
 } else {
     $trips = getStopTripsWithTimes($stopid, "", "", "", (isset($filterIncludeRoutes) || isset($filterHasStop) ? "75" : ""));
-    
 }
 
 echo "<div class='ui-header' style='overflow: visible; height: 2.5em'>";
@@ -158,30 +156,30 @@ echo "</div>";
 if (sizeof($trips) == 0) {
     echo "<li style='text-align: center;'>No trips in the near future.</li>";
 } else {
-            if (isset($labs)) {
+    if (isset($labs)) {
 // ETA calculation
-                
-                $tripETA = Array();
-                // max/min delay instead of stddev?
-                $query = $query = "select 'lol', avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas where extract(hour from time) between ".date("H", $earlierTime)." and ".date("H", $laterTime);
-       //select 'lol', stop_id,extract(hour from time), avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas where stop_id = '5501' group by stop_id, extract(hour from time) order by extract(hour from time)
-                $query = $conn->prepare($query);
-    $query->execute();
-    if (!$query) {
-        databaseError($conn->errorInfo());
-        return Array();
+
+        $tripETA = Array();
+        // max/min delay instead of stddev?
+        $query = $query = "select 'lol', avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas where extract(hour from time) between " . date("H", $earlierTime) . " and " . date("H", $laterTime);
+        //select 'lol', stop_id,extract(hour from time), avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas where stop_id = '5501' group by stop_id, extract(hour from time) order by extract(hour from time)
+        $query = $conn->prepare($query);
+        $query->execute();
+        if (!$query) {
+            databaseError($conn->errorInfo());
+            return Array();
+        }
+        $ETAparams = Array();
+        foreach ($query->fetchAll() as $row) {
+            $ETAparams[$row[0]] = Array("avg" => $row[1], "stddev" => floor($row[2]), "count" => $row[3]);
+        };
+        //print_r($ETAparams);
+        foreach ($trips as $trip) {
+            $tripETA[$trip['trip_id']] = date("H:i", strtotime($trip['arrival_time'] . " - " . (floor($ETAparams['lol']['stddev'])) . " seconds")) . " to " .
+                    date("H:i", strtotime($trip['arrival_time'] . " + " . (floor($ETAparams['lol']['stddev'])) . " seconds"));
+        }
+        //print_r($tripETA);
     }
-    $ETAparams = Array();
-    foreach ($query->fetchAll() as $row) {
-        $ETAparams[$row[0]] = Array("avg"=> $row[1], "stddev"=>floor($row[2]),"count"=>$row[3]);
-    };
-    //print_r($ETAparams);
-    foreach ($trips as $trip) {
-        $tripETA[$trip['trip_id']] = date("H:i",strtotime($trip['arrival_time']." - ".(floor($ETAparams['lol']['stddev']))." seconds"))." to ".
-        date("H:i",strtotime($trip['arrival_time']." + ".(floor($ETAparams['lol']['stddev']))." seconds"));
-    }
-    //print_r($tripETA);
-}
     foreach ($trips as $trip) {
         if (
                 isset($filterHasStop) && (getTripHasStop($trip['trip_id'], $filterHasStop) == 1)
@@ -191,26 +189,30 @@ if (sizeof($trips) == 0) {
             echo '<li class="vevent">';
 
             $destination = getTripDestination($trip['trip_id']);
-            echo '<a class="url" href="'.curPageURL().'/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
+            echo '<a class="url" href="' . curPageURL() . '/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
             $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
-if (isset($labs)) {
+            if (isset($labs)) {
                 echo '<br><span class="eta">ETA: ' . $tripETA[$trip['trip_id']] . '</span>';
             }
-            if ($viaPoints != "")
+            if ($viaPoints != "") {
                 echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
+            }
+            if ($trip['departure_time'] != $trip['arrival_time']) {
+                echo '<br><span class="departureTime">Departs: ' . $trip['departure_time'] . '</span>';
+            }
             if (sizeof($tripStopNumbers) > 0) {
                 echo '<br><small>Boarding At: ';
                 if (sizeof($tripStopNumbers[$trip['trip_id']]) == sizeof($stopids)) {
                     echo "All Stops";
                 } else {
                     foreach ($tripStopNumbers[$trip['trip_id']] as $key) {
-                        echo $stopNames[$key] . ', ';
+                        echo $stopNames[$key] . ($key < count($tripStopNumbers[$trip['trip_id']]) ? ', ': "");
                     }
                 }
                 echo '</small>';
             }
             echo '</p>';
-            echo '<p class="ui-li-aside"><span class="dtstart"><span class="value-title" title="'.date("c",strtotime($trip['arrival_time'])).'"></span>' . $trip['arrival_time'] . '</span></p>';
+            echo '<p class="ui-li-aside"><span class="dtstart"><span class="value-title" title="' . date("c", strtotime($trip['arrival_time'])) . '"></span>' . $trip['arrival_time'] . '</span></p>';
             echo '</a></li>';
             flush();
             @ob_flush();

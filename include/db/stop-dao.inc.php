@@ -154,7 +154,7 @@ function getStopTrips($stopID, $service_period = '', $afterTime = '', $limit = '
 
     global $conn;
     if ($afterTime != '') {
-        $query = ' SELECT stop_times.trip_id,stop_times.arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,trips.direction_id,trips.trip_headsign,route_short_name,route_long_name,end_times.arrival_time as end_time
+        $query = ' SELECT stop_times.trip_id,stop_times.arrival_time,departure_time, stop_times.stop_id,stop_sequence,service_id,trips.route_id,trips.direction_id,trips.trip_headsign,route_short_name,route_long_name,end_times.arrival_time as end_time
 FROM stop_times
 join trips on trips.trip_id =
 stop_times.trip_id
@@ -166,7 +166,7 @@ AND (service_id=:service_periodA OR service_id=:service_periodB) ' . ($route_sho
 AND end_times.arrival_time > :afterTime
 ORDER BY end_time '.$limitSQL;
     } else {
-        $query = 'SELECT stop_times.trip_id,arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
+        $query = 'SELECT stop_times.trip_id,departure_time, arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
 FROM stop_times
 join trips on trips.trip_id =
 stop_times.trip_id
@@ -207,16 +207,10 @@ function getStopTripsWithTimes($stopID, $time = '', $service_period = '', $time_
     $timedTrips = Array();
     if ($trips && sizeof($trips) > 0) {
         foreach ($trips as $trip) {
-            if ($trip['arrival_time'] != '') {
-                if (strtotime($trip['arrival_time']) > strtotime($time) and strtotime($trip['arrival_time']) < (strtotime($time) + $time_range)) {
+                 if (strtotime($trip['arrival_time']) > strtotime($time) and strtotime($trip['arrival_time']) < (strtotime($time) + $time_range)) {
                     $timedTrips[] = $trip;
                 }
-            } else {
-                $timedTrip = getTripAtStop($trip['trip_id'], $trip['stop_sequence']);
-                if ($timedTrip['arrival_time'] > $time and strtotime($timedTrip['arrival_time']) < (strtotime($time) + $time_range)) {
-                    $timedTrips[] = $timedTrip;
-                }
-            }
+           
             if (sizeof($timedTrips) > $limit)
                 break;
         }
