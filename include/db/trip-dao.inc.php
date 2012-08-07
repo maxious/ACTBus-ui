@@ -121,15 +121,16 @@ function getTripAtStop($tripID, $stop_sequence) {
 
 function getTripByExactStartTime($startTime, $routeID, $directionID='') {
     global $conn;
-    $query = 'select trips.trip_id,arrival_time,direction_id,wheelchair_accessible,route_id,stop_id,stop_sequence 
+    $query = 'select trips.trip_id,arrival_time,departure_time,direction_id,wheelchair_accessible,route_id,stop_id,stop_sequence
         from stop_times inner join trips on stop_times.trip_id = trips.trip_id 
-        where arrival_time = :startTime::time 
+        where (arrival_time = :startTimeA::time or departure_time = :startTimeB::time)
         and route_id = :routeID' 
             .($directionID!='' ? " and direction_id = :directionID" : "")
         .' order by stop_sequence';
     debug($query, 'database');
     $query = $conn->prepare($query);
-    $query->bindParam(':startTime', $startTime);
+    $query->bindParam(':startTimeA', $startTime);
+    $query->bindParam(':startTimeB', $startTime);
     $query->bindParam(':routeID', $routeID);
     if ($directionID!='')     $query->bindParam(':directionID', $directionID);
     $query->execute();
