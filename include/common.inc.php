@@ -42,8 +42,14 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
         || strstr($_SERVER['PHP_SELF'], "rtpis/")) {
     $basePath = "../";
 }
-$tempPath = "c:/tmp/";
-$tempPath = "/tmp/";
+
+if (stristr(PHP_OS, 'WIN')) {
+    // Win
+    $tempPath = "c:/tmp/";
+} else {
+    // Other
+    $tempPath = "/tmp/";
+}
 
 function isDebugServer() {
     if (isset($_REQUEST['debug'])) return true;
