@@ -43,6 +43,7 @@ if (strstr($_SERVER['PHP_SELF'], "labs/")
     $basePath = "../";
 }
 $tempPath = "c:/tmp/";
+$tempPath = "/tmp/";
 
 function isDebugServer() {
     if (isset($_REQUEST['debug'])) return true;

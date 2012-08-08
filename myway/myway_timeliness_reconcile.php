@@ -82,7 +82,7 @@ foreach ($query->fetchAll() as $myway_stop) {
     echo "<h3>{$myway_stop[0]}</h3>";
     $markers = array();
     $stopKey = 0;
-    $foundStops = getStops("",$myway_stop[0]);
+    $foundStops = getStops("",str_replace("Plt ","Platform ",str_replace("Stn ","Station ",$myway_stop[0])));
     if (sizeof($foundStops) > 0) {
         echo "<table>";
         foreach ($foundStops as $stopResult) {
