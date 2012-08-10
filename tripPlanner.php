@@ -21,13 +21,18 @@ $from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZ
 $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "");
 $date = (isset($_REQUEST['date']) ? filter_var($_REQUEST['date'], FILTER_SANITIZE_STRING) : date("m/d/Y"));
 $time = (isset($_REQUEST['time']) ? filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING) : date("H:i"));
+$mode = (isset($_REQUEST['mode']) ? filter_var($_REQUEST['mode'], FILTER_SANITIZE_STRING) : "WALK");
+$wheelchair = (isset($_REQUEST['wheelchair']) ? "true" : "false");
+$optimize = (isset($_REQUEST['optimize']) ? filter_var($_REQUEST['optimize'], FILTER_SANITIZE_STRING) : "QUICK");
 
-function formatTime($time) {
-    
-    return date("g:ia",$time);
+function formatTime($time)
+{
+
+    return date("g:ia", $time);
 }
 
-function tripPlanForm($errorMessage = "") {
+function tripPlanForm($errorMessage = "")
+{
     global $date, $time, $from, $to;
     echo "<div class='error'>$errorMessage</font>";
     echo '<form action="tripPlanner.php" method="post">
@@ -49,23 +54,48 @@ function tripPlanForm($errorMessage = "") {
         <label for="time"> at </label>
         <input type="time" name="time" id="time" value="' . $time . '"  />
     </div>
+        <input type="checkbox" name="wheelchair" id="wheelchair" />
+<label for="wheelchair">Wheelchair/pram accessible journey suggestions only?</label>
+<br />
+<fieldset> <legend>Mode of non-transit transport</legend>   <INPUT type="radio" name="mode" value="WALK" checked id="walking"/> <label for="walking">Walking</label>
+    <INPUT type="radio" name="mode" value="BICYCLE" id="cycling"/> <label for="cycling">Cycling</label></fieldset>
+<fieldset>
+        <legend>Make non-transit journeys...</legend>
+    <INPUT type="radio" name="optimize" value="QUICK" checked id="quick"/> <label for="quick">Quick - prefer speed over ease</label>
+    <INPUT type="radio" name="optimize" value="SAFE" id="safe"/> <label for="safe">Safe - prefer journeys away from roads</label>
+        <INPUT type="radio" name="optimize" value="FLAT" id="flat"/> <label for="flat">Flat - prefer flatter (less changes in elevation) but longer journeys over speed</label>
+    </fieldset>
+
         <input type="submit" value="Go!"></form>';
 }
 
-function processItinerary($itineraryNumber, $itinerary) {
-    echo '<div data-role="collapsible" ' . ($itineraryNumber > 0 ? 'data-collapsed="true"' : "") . '> <h3> Option #' . ($itineraryNumber + 1) . ": " . floor($itinerary->duration / 60000) . " minutes (" . formatTime($itinerary->startTime) . " to " . formatTime($itinerary->endTime) . ")</h3><p>";
-    echo "Walking time: " . floor($itinerary->walkTime / 60000) . " minutes (" . floor($itinerary->walkDistance) . " meters)<br>\n";
-    echo "Transit time: " . floor($itinerary->transitTime / 60000) . " minutes<br>\n";
-    echo "Waiting time: " . floor($itinerary->waitingTime / 60000) . " minutes<br>\n";
+
+function processItinerary($itineraryNumber, $itinerary)
+{
+    echo '<div data-role="collapsible" ' . ($itineraryNumber > 0 ? 'data-collapsed="true"' : "") . '> <h3> Option #' . ($itineraryNumber + 1) . ": " . floor($itinerary->duration / 60000) . " minutes (" . formatTime($itinerary->startTime / 1000) . " to " . formatTime($itinerary->endTime / 1000) . ")</h3><p>";
+    echo "Walking time: " . floor($itinerary->walkTime / 60) . " minutes (" . floor($itinerary->walkDistance) . " meters)<br>\n";
+    echo "Transit time: " . floor($itinerary->transitTime / 60) . " minutes<br>\n";
+    echo "Waiting time: " . floor($itinerary->waitingTime / 60) . " minutes<br>\n";
     if (is_array($itinerary->legs)) {
         $legMarkers = array();
+        $legShapes = Array();
         foreach ($itinerary->legs as $legNumber => $leg) {
-            $legMarkers[] = array(
-                $leg->from->lat,
-                $leg->from->lon
+            if (!isset($legMarkers[0])) {
+                $legMarkers[0]                     = array(
+                    $leg->from->lat,
+                    $leg->from->lon
+                );
+            }
+
+            $legMarkers[1]                = array(
+                $leg->to->lat,
+                $leg->to->lon
             );
+            $legShapes = array_merge($legShapes, decodePolylineToArray($leg->legGeometry->points, false));
         }
-        echo '' . staticmap($legMarkers, false, false, true) . "<br>\n";
+
+
+        echo '' . staticmap($legMarkers, false, false, true, false, simplePolyline($legShapes)) . "<br>\n";
         echo '<ul>';
         foreach ($itinerary->legs as $legNumber => $leg) {
             echo '<li>';
@@ -80,30 +110,39 @@ function processItinerary($itineraryNumber, $itinerary) {
             array(
                 $itinerary->legs[0]->from->lat,
                 $itinerary->legs[0]->from->lon
+            ), array(
+                $itinerary->legs[0]->to->lat,
+                $itinerary->legs[0]->to->lon
             )
-                ), false, false, true) . "<br>\n";
+
+        ), false, false, true, false, $itinerary->legs[0]->legGeometry->points) . "<br>\n";
         processLeg(0, $itinerary->legs);
     }
     echo "</p></div>";
 }
 
-function processLeg($legNumber, $leg) {
+function processLeg($legNumber, $leg)
+{
     $legArray = object2array($leg);
     echo '<h3>Leg #' . ($legNumber + 1) . " ( {$legArray['mode']} from: {$leg->from->name} to {$leg->to->name}, " . floor($leg->duration / 60000) . " minutes) </h3>\n";
     if ($leg->mode === "BUS") {
         $walkStepMarkers = array(array(
-                $leg->from->lat,
-                $leg->from->lon
-            ));
-        echo "" . staticmap($walkStepMarkers, false, false, true, false, $leg->legGeometry->points) . "<br>\n";
+            $leg->from->lat,
+            $leg->from->lon
+        ), array(
+            $leg->to->lat,
+            $leg->to->lon
+        ));
+        $polyline = (strlen($leg->legGeometry->points) < 100 ? $leg->legGeometry->points : simplePolyline(decodePolylineToArray($leg->legGeometry->points)));
+        echo "" . staticmap($walkStepMarkers, false, true, true, false, $polyline) . "<br>\n";
         echo "Take bus {$legArray['route']} " . str_replace("To", "towards", $legArray['headsign']) . " departing at " . formatTime($leg->startTime) . "<br>";
     } else {
         $walkStepMarkers = array();
 
-            $walkStepMarkers[] = array(
-                $leg->steps[0]->lat,
-                $leg->steps[0]->lon
-            );
+        $walkStepMarkers[] = array(
+            $leg->steps[0]->lat,
+            $leg->steps[0]->lon
+        );
         echo "" . staticmap($walkStepMarkers, false, false, true, false, $leg->legGeometry->points) . "<br>\n";
         foreach ($leg->steps as $stepNumber => $step) {
             echo "Walking step " . ($stepNumber + 1) . ": ";
@@ -144,16 +183,21 @@ if ($_REQUEST['time']) {
     if ($toPlace == "" || $fromPlace == "") {
         $errorMessage = "";
         if ($toPlace == "") {
-            $errorMessage.= urlencode($to) . " not found.<br>\n";
+            $errorMessage .= urlencode($to) . " not found.<br>\n";
             trackEvent("Trip Planner", "Geocoder Failed", $to);
         }
         if ($fromPlace == "") {
-            $errorMessage.= urlencode($from) . " not found.<br>\n";
+            $errorMessage .= urlencode($from) . " not found.<br>\n";
             trackEvent("Trip Planner", "Geocoder Failed", $from);
         }
         tripPlanForm($errorMessage);
     } else {
-        $url = $otpAPIurl . "ws/plan?date=" . urlencode($_REQUEST['date']) . "&time=" . urlencode($_REQUEST['time']) . "&mode=TRANSIT%2CWALK&optimize=QUICK&maxWalkDistance=840&wheelchair=false&toPlace=$toPlace&fromPlace=$fromPlace&intermediatePlaces=";
+        $url = $otpAPIurl . "ws/plan?date=" . urlencode($_REQUEST['date'])
+            . "&time=" . urlencode($_REQUEST['time'])
+            . "&mode=TRANSIT%2C.$mode
+    .'&optimize='.$optimize
+    .'&wheelchair='.$wheelchair
+    . '&maxWalkDistance=840&toPlace=$toPlace&fromPlace=$fromPlace&intermediatePlaces=";
         debug($url);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -174,27 +218,27 @@ if ($_REQUEST['time']) {
             if (isset ($tripplan->error->msg)) {
                 echo $tripplan->error->msg;
             } else {
-            echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";
-            
-            echo "<h1> At: " . $tripplan->requestParameters->time . " </h1>";
-            if (is_array($tripplan->plan->itineraries)) {
-                echo '<div data-role="collapsible-set">';
-                foreach ($tripplan->plan->itineraries as $itineraryNumber => $itinerary) {
-                    processItinerary($itineraryNumber, $itinerary);
+                echo "<h1> From: {$tripplan->plan->from->name} To: {$tripplan->plan->to->name} </h1>";
+
+                echo "<h1> At: " . $tripplan->requestParameters->time . " </h1>";
+                if (is_array($tripplan->plan->itineraries)) {
+                    echo '<div data-role="collapsible-set">';
+                    foreach ($tripplan->plan->itineraries as $itineraryNumber => $itinerary) {
+                        processItinerary($itineraryNumber, $itinerary);
+                    }
+                    echo "</div>";
+                } else {
+                    processItinerary(0, $tripplan->plan->itineraries);
                 }
-                echo "</div>";
-            } else {
-                processItinerary(0, $tripplan->plan->itineraries);
-            }
             }
         }
         curl_close($ch);
     }
 } else {
     $overrides = getServiceOverride();
-      if (isset($overrides['service_id'])) {
-       echo "Sorry, due to the modified timetable, this trip planner won't work correctly today. Instead, use the Google Maps one below:";
-       echo '
+    if (isset($overrides['service_id'])) {
+        echo "Sorry, due to the modified timetable, this trip planner won't work correctly today. Instead, use the Google Maps one below:";
+        echo '
 <script language="javascript">
 	// make some ezamples
   var startExample = "Gungahlin, ACT";
@@ -281,9 +325,9 @@ Plan by:
 
 </script>
 ';
-      } else {
-    tripPlanForm();
-      }
+    } else {
+        tripPlanForm();
+    }
 }
 include_footer();
 ?>

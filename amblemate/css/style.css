@@ -74,7 +74,7 @@ margin: 8px auto;
 }
 
 
-
+#map_canvas {  width:640px; height:400px; border: 1px solid black; }
 
 
 
