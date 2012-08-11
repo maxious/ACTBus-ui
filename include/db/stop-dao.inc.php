@@ -158,8 +158,9 @@ function getStopTrips($stopID, $service_period = '', $afterTime = '', $limit = '
 FROM stop_times
 join trips on trips.trip_id =
 stop_times.trip_id
-join routes on trips.route_id = routes.route_id , (SELECT trip_id,max(arrival_time) as arrival_time from stop_times
-	WHERE stop_times.arrival_time IS NOT NULL group by trip_id) as end_times 
+join routes on trips.route_id = routes.route_id , (select DISTINCT ON (trip_id) trip_id, arrival_time
+  from stop_times
+ order by trip_id, arrival_time DESC) as end_times 
 WHERE stop_times.stop_id = :stopID
 AND stop_times.trip_id = end_times.trip_id
 AND (service_id=:service_periodA OR service_id=:service_periodB) ' . ($route_short_name != '' ? ' AND route_short_name = :route_short_name ' : '') . ' 

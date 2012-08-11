@@ -51,6 +51,8 @@ function getRouteHeadsigns($routeID) {
 join stop_times on stop_times.trip_id = trips.trip_id join stops on 
 stop_times.stop_id = stops.stop_id where trips.route_id = :routeID 
 and stop_times.stop_sequence = 1 group by stops.stop_name, trip_headsign, direction_id having count(*) > 2';
+    
+    //FIXME: what is the count for?
     debug($query, 'database');
     $query = $conn->prepare($query);
     $query->bindParam(':routeID', $routeID);
