@@ -59,11 +59,11 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
     $jqmVersion = "1.1.1";
     if (isDebugServer()) {
         $jqmcss = $basePath . "css/jquery.mobile-$jqmVersion.min.css";
-        $jqjs = $basePath . "js/jquery-1.7.2.min.js";
+        $jqjs = $basePath . "js/jquery-1.8.0.min.js";
         $jqmjs = $basePath . "js/jquery.mobile-$jqmVersion.min.js";
     } else {
         $jqmcss = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.css";
-        $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js";
+        $jqjs = "//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js";
         $jqmjs = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.js";
     }
     echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
