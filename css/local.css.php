@@ -48,9 +48,7 @@ echo '
         display: none;
         text-size: 0.2em;
     }
-    .min-width-480px .viaPoints {
-        display: inline;
-    }
+
     #extrainfo {
     visibility: hidden;
     display: none;
@@ -117,7 +115,9 @@ echo '
 }
 	/* hires ahoy */
 @media all and (min-width: 650px){
-
+  .viaPoints {
+        display: block;
+    }
 .content-secondary {
 		text-align: left;
 		float: left;

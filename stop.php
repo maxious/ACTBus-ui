@@ -189,7 +189,7 @@ if (sizeof($trips) == 0) {
             echo '<li class="vevent">';
 
             $destination = getTripDestination($trip['trip_id']);
-            echo '<a class="url" href="' . curPageURL() . '/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . " towards " . $destination['stop_name'] . "</h3><p>";
+            echo '<a class="url" href="' . curPageURL() . '/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . ' '.$trip['trip_headsign'] ." towards " . $destination['stop_name'] . "</h3><p>";
             $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
             if (isset($labs)) {
                 echo '<br><span class="eta">ETA: ' . $tripETA[$trip['trip_id']] . '</span>';

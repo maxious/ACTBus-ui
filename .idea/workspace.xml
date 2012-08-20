@@ -138,7 +138,6 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/js/FlashCanvas/src/externs.js" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/js/FlashCanvas/src/flashcanvas.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/FlashCanvas" afterPath="$PROJECT_DIR$/js/FlashCanvas" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="busui.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -170,7 +169,7 @@
       <file leaf-file-name="myway_timeliness.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/myway/myway_timeliness.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="58" selection-start="2401" selection-end="2401" vertical-scroll-proportion="0.4305136">
+            <state line="72" column="32" selection-start="2458" selection-end="2458" vertical-scroll-proportion="0.47583082">
               <folding />
             </state>
           </provider>
@@ -299,6 +298,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="busui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="busui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="amblemate" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -315,16 +328,16 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="176" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="178" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="181" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="976" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="179" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="181" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="185" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="979" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="176" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="178" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="181" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="976" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="179" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="181" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="185" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="979" />
   </component>
   <component name="PublishConfig" serverName="busui" serverId="3f901479-a24a-4c83-bd2f-d76448f25313">
     <servers>
@@ -421,7 +434,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="0" width="1608" height="874" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947233" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965517" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -588,7 +601,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/myway/myway_timeliness.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="58" selection-start="2401" selection-end="2401" vertical-scroll-proportion="0.4305136">
+        <state line="72" column="32" selection-start="2458" selection-end="2458" vertical-scroll-proportion="0.47583082">
           <folding />
         </state>
       </provider>
