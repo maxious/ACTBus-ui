@@ -33,13 +33,13 @@ if (isDebug('phperror')) {
     error_reporting(E_ALL ^ E_NOTICE);
 }
 
-define('ROOT' , pathinfo(__FILE__, PATHINFO_DIRNAME));
-if (strstr($_SERVER['PHP_SELF'], "labs/")
-        || strstr($_SERVER['PHP_SELF'], "myway/")
-        || strstr($_SERVER['PHP_SELF'], "lib/")
-        || strstr($_SERVER['PHP_SELF'], "geo/")
-        || strstr($_SERVER['PHP_SELF'], "include/")
-        || strstr($_SERVER['PHP_SELF'], "rtpis/")) {
+define('ROOT', pathinfo(__FILE__, PATHINFO_DIRNAME));
+if (strpos($_SERVER['PHP_SELF'], "labs/")
+        || strpos($_SERVER['PHP_SELF'], "myway/")
+        || strpos($_SERVER['PHP_SELF'], "lib/")
+        || strpos($_SERVER['PHP_SELF'], "geo/")
+        || strpos($_SERVER['PHP_SELF'], "include/")
+        || strpos($_SERVER['PHP_SELF'], "rtpis/")) {
     $basePath = "../";
 }
 
@@ -52,22 +52,25 @@ if (stristr(PHP_OS, 'WIN')) {
 }
 
 function isDebugServer() {
-    if (isset($_REQUEST['debug'])) return true;
-    return php_sapi_name() == 'cli' || strstr(php_uname('n'),'actbus') || isset($_SERVER['SERVER_NAME']) && ( $_SERVER['SERVER_NAME'] == 'azusa' || $_SERVER['SERVER_NAME'] == 'vanille'
-            || $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1' ||  $_SERVER['SERVER_NAME'] == '192.168.1.8' || $_SERVER['SERVER_NAME'] == '192.168.178.24');
+    if (isset($_REQUEST['debug']))
+        return true;
+    return php_sapi_name() == 'cli' || strpos(php_uname('n'), 'actbus') || isset($_SERVER['SERVER_NAME'])
+            && ( $_SERVER['SERVER_NAME'] == 'azusa' || $_SERVER['SERVER_NAME'] == 'vanille'
+            || $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1'
+            || $_SERVER['SERVER_NAME'] == '192.168.1.8' || $_SERVER['SERVER_NAME'] == '192.168.178.24');
 }
 
-if (isset($_SERVER['SERVER_NAME'])  && $_SERVER['SERVER_NAME'] == 'maxious.xen.prgmr.com') {
+if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'maxious.xen.prgmr.com') {
 // Set the exception handler
-require ROOT.'../lib/amon-php/amon.php';
-Amon::setup_exception_handler();
+    require ROOT . '../lib/amon-php/amon.php';
+    Amon::setup_exception_handler();
 }
 
 include_once ('common-geo.inc.php');
 include_once ('common-net.inc.php');
 include_once ('common-transit.inc.php');
-if (!strstr($_SERVER['PHP_SELF'], 'feedback')) {
-	include_once ('common-db.inc.php');
+if (!strpos($_SERVER['PHP_SELF'], 'feedback')) {
+    include_once ('common-db.inc.php');
 }
 
 include_once ('common-request.inc.php');
@@ -88,21 +91,21 @@ function isDebug($debugReason = 'other') {
 
 function debug($msg, $debugReason = 'other') {
     if (isDebug($debugReason)) {
-        if (is_array($msg)) $msg = print_r($msg,true);
-        echo PHP_EOL.'<!-- ' . date(DATE_RFC822) . PHP_EOL.$msg.PHP_EOL.' -->'.PHP_EOL;
-       
+        if (is_array($msg))
+            $msg = print_r($msg, true);
+        echo PHP_EOL . '<!-- ' . date(DATE_RFC822) . PHP_EOL . $msg . PHP_EOL . ' -->' . PHP_EOL;
     }
-        
 }
+
 function isIOSDevice() {
-   return strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPod') || strstr($_SERVER['HTTP_USER_AGENT'], 'iPad');
+    return strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strpos($_SERVER['HTTP_USER_AGENT'], 'iPod') || strpos($_SERVER['HTTP_USER_AGENT'], 'iPad');
 }
+
 function isJQueryMobileDevice() {
     // http://forum.jquery.com/topic/what-is-the-best-way-to-detect-all-useragents-which-can-handle-jquery-mobile#14737000002087897
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
     return preg_match('/iphone/i', $user_agent) || preg_match('/android/i', $user_agent) || preg_match('/webos/i', $user_agent) || preg_match('/ios/i', $user_agent) || preg_match('/bada/i', $user_agent) || preg_match('/maemo/i', $user_agent) || preg_match('/meego/i', $user_agent) || preg_match('/fennec/i', $user_agent) || (preg_match('/symbian/i', $user_agent) && preg_match('/s60/i', $user_agent) && $browser['majorver'] >= 5) || (preg_match('/symbian/i', $user_agent) && preg_match('/platform/i', $user_agent) && $browser['majorver'] >= 3) || (preg_match('/blackberry/i', $user_agent) && $browser['majorver'] >= 5) || (preg_match('/opera mobile/i', $user_agent) && $browser['majorver'] >= 10) || (preg_match('/opera mini/i', $user_agent) && $browser['majorver'] >= 5);
 }
-
 
 function array_flatten($a, $f = array()) {
     if (!$a || !is_array($a))

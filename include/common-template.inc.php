@@ -163,8 +163,8 @@ $(document).ready(function() {
     </div>
  ';
     if ($opendiv) {
-        echo '<div data-role="page" '. (isset($stopid) ? 'itemscope itemtype="http://schema.org/BusStop"':'').'>'; 
-	echo '<div data-role="header" data-position="inline">
+        echo '<div data-role="page" ' . (isset($stopid) ? 'itemscope itemtype="http://schema.org/BusStop"' : '') . '>';
+        echo '<div data-role="header" data-position="inline">
 	<a href="' . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "javascript:history.go(-1)") . '" data-icon="arrow-l" data-rel="back" class="ui-btn-left">Back</a> 
 		<h1 itemprop="name">' . $pageTitle . '</h1>
 		<a href="' . $basePath . '/index.php" data-icon="home" class="ui-btn-right" rel="home">Home</a>
@@ -235,19 +235,23 @@ s.parentNode.insertBefore(ga, s);
 }
 
 function timeSettings() {
-    global $service_periods,$suburb,$stopid,$stopids,$stopcode,$time;
+    global $service_periods, $suburb, $stopid, $stopids, $stopcode, $time;
     echo '<div id="settings" data-role="collapsible" data-collapsed="true">
 <h3>Change Time (' . (isset($time) ? $time : "Current Time,") . ' ' . ucwords(service_period()) . ')...</h3>
         <form action="' . basename($_SERVER['PHP_SELF']);
-     if (isset($stopids)) echo '?stopids=' . implode(",",$stopids) ;
-    else if (isset($stopid)) echo '?stopid=' . $stopid ;
-            echo '" method="POST">
+    if (isset($stopids))
+        echo '?stopids=' . implode(",", $stopids);
+    else if (isset($stopid))
+        echo '?stopid=' . $stopid;
+    echo '" method="POST">
                <input type="hidden" name="suburb" id="suburb" value="' . (isset($suburb) ? $suburb : "") . '"/>
        ';
-    if (isset($stopids)) echo '<input type="hidden" name="stopids" id="stopids" value="' . implode(",",$stopids) . '"/>';
-    else if (isset($stopid)) echo '<input type="hidden" name="stopid" id="stopid" value="' . $stopid . '"/>';
-    
-                 echo '<input type="hidden" name="stopcode" id="stopcode" value="' . (isset($stopcode) ? $stopcode : "") . '"/>
+    if (isset($stopids))
+        echo '<input type="hidden" name="stopids" id="stopids" value="' . implode(",", $stopids) . '"/>';
+    else if (isset($stopid))
+        echo '<input type="hidden" name="stopid" id="stopid" value="' . $stopid . '"/>';
+
+    echo '<input type="hidden" name="stopcode" id="stopcode" value="' . (isset($stopcode) ? $stopcode : "") . '"/>
         <div class="ui-body"> 
     		<div data-role="fieldcontain">
 		        <label for="time"> Time: </label>

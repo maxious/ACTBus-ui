@@ -57,13 +57,13 @@ $fe = new transit_realtime\FeedEntity();
 $fm->addEntity($fe);
 //var_dump($fm);
 
-//$codec = new DrSlump\Protobuf\Codec\Binary();
-//echo $codec->encode($fm);
+$codec = new DrSlump\Protobuf\Codec\Binary();
+echo $codec->encode($fm);
 
 //$codec = new DrSlump\Protobuf\Codec\Json();
 //echo $codec->encode($fm);
 
-$codec = new DrSlump\Protobuf\Codec\PhpArray();
-print_r($codec->encode($fm));
+//$codec = new DrSlump\Protobuf\Codec\PhpArray();
+//print_r($codec->encode($fm));
 
 ?>
