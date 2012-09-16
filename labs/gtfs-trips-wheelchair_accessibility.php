@@ -169,7 +169,9 @@ foreach ($numberSerieses as $numberSeries) {
                 //die("no trip id found!");
             } else {
                 if ($verbose) echo " --- Trip $tripid is " . ($accessibleTrip ? "" : "not ") . "accessible<br>\n";
-                setTripAccessiblity($tripid, ($accessibleTrip ? "1" : "0"));
+                setTripAccessiblity($tripid, ($accessibleTrip ? "1" : "2"));
+                /* "1" - indicates that the vehicle being used on this particular trip can accommodate at least one rider in a wheelchair
+                   "2" - indicates that no riders in wheelchairs can be accommodated on this trip*/
             }
         }
            } // end numberserieses
