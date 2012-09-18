@@ -65,6 +65,7 @@ if (isset($_REQUEST['secret_answer'])) {
     $return["error"][] = "secret_answer parameter invalid or unspecified";
 }
 $fields['button'] = 'Submit';
+$fields['rows'] = 1000;
 $fields_string = "";
 //url-ify the data for the POST
 foreach ($fields as $key => $value) {
