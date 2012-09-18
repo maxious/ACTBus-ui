@@ -124,7 +124,7 @@
             }
             $routeDescs = Array();
             foreach ($routes as $route) {
-                $trip = getRouteFirstTrip($route['route_id'], $route['direction_id']);
+                $trip = getRouteLastTrip($route['route_id'], $route['direction_id']);
 //    $start = getTripStartingPoint($trip['trip_id']);
                 $end = getTripDestination($trip['trip_id']);             
                 $routeDescs[$route['route_short_name']] = '<b>'.$route['route_short_name'] . '</b> To ' . $end['stop_name'] . '<br>';

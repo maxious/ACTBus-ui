@@ -70,7 +70,7 @@ foreach ($uncalcdObservations as $obsv) {
     if (isset($obsv["stop_id"]) && $obsv["stop_id"] != "" && $obsv["stop_id"] != "*") {
         $potentialStops = Array(getStop($obsv["stop_id"]));
     } else {
-        echo "No stop_id recorded for this stop_name, potential stops are a bus station<br>";
+        echo "No stop_id recorded for this stop_name, potential stops are a bus station or otherwise ambigious<br>";
         $potentialStops = getStops("", trim(str_replace(Array("Arrival", "Arrivals", "Arrive Platform 3 Set down only.", "Arrive", "Set Down Only"), "", $obsv["myway_stop"])));
     }
     //:get myway_stops records

@@ -174,6 +174,27 @@ arrival_time DESC limit 1';
     $r = $query->fetch(PDO :: FETCH_ASSOC);
     return $r;
 }
+function getRouteLastTrip($routeID, $directionID) {
+    global $conn;
+
+    $query = 'select * from routes join trips on trips.route_id = routes.route_id
+join stop_times on stop_times.trip_id = trips.trip_id where routes.route_id = :routeID 
+and trips.direction_id = :directionID order by
+arrival_time limit 1';
+    debug($query, 'database');
+    $query = $conn->prepare($query);
+    $query->bindParam(':routeID', $routeID);
+
+    $query->bindParam(':directionID', $directionID);
+    $query->execute();
+    if (!$query) {
+        databaseError($conn->errorInfo());
+        return Array();
+    }
+
+    $r = $query->fetch(PDO :: FETCH_ASSOC);
+    return $r;
+}
 
 function getRouteAtStop($routeID, $directionID, $stop_id) {
     $nextTrip = getRouteNextTrip($routeID, $directionID);

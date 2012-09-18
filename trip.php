@@ -21,7 +21,7 @@ if (isset($routeid) && !isset($tripid)) {
     $trip = getRouteNextTrip($routeid,$directionid);
     
     if (!($trip)) {
-        $trip = getRouteFirstTrip($routeid,$directionid);
+        $trip = getRouteLastTrip($routeid,$directionid);
     }
     $tripid = $trip['trip_id'];
 } else {
