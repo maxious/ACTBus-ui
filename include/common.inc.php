@@ -50,7 +50,11 @@ if (stristr(PHP_OS, 'WIN')) {
     // Other
     $tempPath = "/tmp/";
 }
-
+require $basePath."lib/amon-php/amon.php";
+Amon::config(array('address'=> 'http://amon.disclosurelo.gs:2464', 
+		'protocol' => 'http', 
+		'secret_key' => "JBcSUdFOi5lK0vCjLjbHDpQamcBnRA4iV7QLaTADeDQ"));
+Amon::setup_exception_handler();
 function isDebugServer() {
     if (isset($_REQUEST['debug']))
         return true;
