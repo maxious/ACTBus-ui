@@ -44,11 +44,12 @@ if (isset($stopids)) {
         $stops[] = getStop($sub_stopid);
     }
 }
-if ($stop == NULL && (!isset($stops[0]) || $stops[0] == NULL)) {
+if ((!isset($stop) || $stop == NULL) && (!isset($stops[0]) || $stops[0] == NULL)) {
 
     header("Status: 404 Not Found");
     header("HTTP/1.0 404 Not Found");
     include_header("Stop Not Found", "404stop");
+    Amon::log("Stop Not Found ".print_r($_REQUEST,true), array('error'));
     echo "<h1>Error: Stop not found</h1>";
     include_footer();
     die();
@@ -83,8 +84,9 @@ if (isset($stopids)) {
             $fetchedTripSequences[] = $tripSequence;
             $trips = getStopTripsWithTimes($sub_stop["stop_id"]);
             foreach ($trips as $trip) {
-                if (!isset($allStopsTrips[$trip["trip_id"]]))
+                if (!isset($allStopsTrips[$trip["trip_id"]])) {
                     $allStopsTrips[$trip["trip_id"]] = $trip;
+                }
             }
         }
         //else {
@@ -189,7 +191,7 @@ if (sizeof($trips) == 0) {
             echo '<li class="vevent">';
 
             $destination = getTripDestination($trip['trip_id']);
-            echo '<a class="url" href="' . curPageURL() . '/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . ' '.$trip['trip_headsign'] ." towards " . $destination['stop_name'] . "</h3><p>";
+            echo '<a class="url" href="' . curPageURL() . '/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . ' ' . $trip['trip_headsign'] . " towards " . $destination['stop_name'] . "</h3><p>";
             $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
             if (isset($labs)) {
                 echo '<br><span class="eta">ETA: ' . $tripETA[$trip['trip_id']] . '</span>';
@@ -206,7 +208,7 @@ if (sizeof($trips) == 0) {
                     echo "All Stops";
                 } else {
                     foreach ($tripStopNumbers[$trip['trip_id']] as $key) {
-                        echo $stopNames[$key] . ($key < count($tripStopNumbers[$trip['trip_id']]) ? ', ': "");
+                        echo $stopNames[$key] . ($key < count($tripStopNumbers[$trip['trip_id']]) ? ', ' : "");
                     }
                 }
                 echo '</small>';

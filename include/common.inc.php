@@ -41,6 +41,8 @@ if (strpos($_SERVER['PHP_SELF'], "labs/")
         || strpos($_SERVER['PHP_SELF'], "include/")
         || strpos($_SERVER['PHP_SELF'], "rtpis/")) {
     $basePath = "../";
+} else {
+    $basePath = "";
 }
 
 if (stristr(PHP_OS, 'WIN')) {
@@ -50,11 +52,12 @@ if (stristr(PHP_OS, 'WIN')) {
     // Other
     $tempPath = "/tmp/";
 }
-require $basePath."lib/amon-php/amon.php";
-Amon::config(array('address'=> 'http://amon.disclosurelo.gs:2464', 
-		'protocol' => 'http', 
-		'secret_key' => "sSdt1ek79H0aNefmF36cq5SqrJEgtKpyBh1haEMwt4Q"));
+require $basePath . "lib/amon-php/amon.php";
+Amon::config(array('address' => 'http://amon.disclosurelo.gs:2464',
+    'protocol' => 'http',
+    'secret_key' => "sSdt1ek79H0aNefmF36cq5SqrJEgtKpyBh1haEMwt4Q"));
 Amon::setup_exception_handler();
+
 function isDebugServer() {
     if (isset($_REQUEST['debug']))
         return true;
@@ -84,7 +87,7 @@ include_once ('common-template.inc.php');
 
 function isAnalyticsOn() {
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
-    return !isDebugServer() && !preg_match('/cloudkick/i', $user_agent) && !preg_match('/googlebot/i', $user_agent) &&
+    return!isDebugServer() && !preg_match('/cloudkick/i', $user_agent) && !preg_match('/googlebot/i', $user_agent) &&
             !preg_match('/baidu/i', $user_agent);
 }
 
@@ -153,8 +156,10 @@ function endsWith($haystack, $needle, $case = true) {
 }
 
 function sksort(&$array, $subkey = 'id', $sort_ascending = false) {
-    if (count($array))
+    $temp_array = Array();
+    if (count($array)) {
         $temp_array[key($array)] = array_shift($array);
+    }
     foreach ($array as $key => $val) {
         $offset = 0;
         $found = false;
@@ -167,20 +172,23 @@ function sksort(&$array, $subkey = 'id', $sort_ascending = false) {
             }
             $offset++;
         }
-        if (!$found)
+        if (!$found) {
             $temp_array = array_merge($temp_array, array(
                 $key => $val
                     ));
+        }
     }
-    if ($sort_ascending)
+    if ($sort_ascending) {
         $array = array_reverse($temp_array);
-    else
+    } else {
         $array = $temp_array;
+    }
 }
 
 function sktimesort(&$array, $subkey = 'id', $sort_ascending = false) {
-    if (count($array))
+    if (count($array)) {
         $temp_array[key($array)] = array_shift($array);
+    }
     foreach ($array as $key => $val) {
         $offset = 0;
         $found = false;
@@ -193,15 +201,17 @@ function sktimesort(&$array, $subkey = 'id', $sort_ascending = false) {
             }
             $offset++;
         }
-        if (!$found)
+        if (!$found) {
             $temp_array = array_merge($temp_array, array(
                 $key => $val
                     ));
+        }
     }
-    if ($sort_ascending && isset($temp_array))
+    if ($sort_ascending && isset($temp_array)) {
         $array = array_reverse($temp_array);
-    else
+    } else {
         $array = $temp_array;
+    }
 }
 
 function r_implode($glue, $pieces) {
