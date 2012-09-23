@@ -186,6 +186,7 @@ function sksort(&$array, $subkey = 'id', $sort_ascending = false) {
 }
 
 function sktimesort(&$array, $subkey = 'id', $sort_ascending = false) {
+    $temp_array = Array();
     if (count($array)) {
         $temp_array[key($array)] = array_shift($array);
     }

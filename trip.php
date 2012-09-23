@@ -18,6 +18,7 @@
 include ('include/common.inc.php');
 $routetrips = Array();
 if (isset($routeid) && !isset($tripid)) {
+    if (!isset($directionid)) $directionid = 0;
     $trip = getRouteNextTrip($routeid,$directionid);
     
     if (!($trip)) {
@@ -116,7 +117,7 @@ foreach ($tripStopTimes as $key => $tripStopTime) {
         } else {
             // just a normal stop
             echo '<li itemscope itemtype="http://schema.org/BusStop" class="vevent"> <a itemprop="url" href="stop.php?stopid=' . $tripStopTime['stop_id']. '">';
-            echo '<p class="ui-li-aside geo"><time class="dtstart" datetime="'.date("c",strtotime($trip['arrival_time'])).'">' . $tripStopTime['arrival_time'].'</time>';
+            echo '<p class="ui-li-aside geo"><time class="dtstart" datetime="'.date("c",strtotime($tripStopTime['arrival_time'])).'">' . $tripStopTime['arrival_time'].'</time>';
             echo '<abbr class="latitude" title="'.$tripStopTime['stop_lat'].'"></abbr> 
  <abbr class="longitude" title="'.$tripStopTime['stop_lon'].'"></abbr><meta itemprop="latitude" content="'.$tripStopTime['stop_lat'].'" />
     <meta itemprop="longitude" content="'.$tripStopTime['stop_lon'].'" />';

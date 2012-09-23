@@ -49,7 +49,7 @@ if ((!isset($stop) || $stop == NULL) && (!isset($stops[0]) || $stops[0] == NULL)
     header("Status: 404 Not Found");
     header("HTTP/1.0 404 Not Found");
     include_header("Stop Not Found", "404stop");
-    Amon::log("Stop Not Found ".print_r($_REQUEST,true), array('error'));
+    Amon::log("Stop Not Found " . print_r($_REQUEST, true), array('error'));
     echo "<h1>Error: Stop not found</h1>";
     include_footer();
     die();
@@ -83,9 +83,11 @@ if (isset($stopids)) {
             // only fetch new trip sequences
             $fetchedTripSequences[] = $tripSequence;
             $trips = getStopTripsWithTimes($sub_stop["stop_id"]);
-            foreach ($trips as $trip) {
-                if (!isset($allStopsTrips[$trip["trip_id"]])) {
-                    $allStopsTrips[$trip["trip_id"]] = $trip;
+            if (count($trips) > 0) {
+                foreach ($trips as $trip) {
+                    if (!isset($allStopsTrips[$trip["trip_id"]])) {
+                        $allStopsTrips[$trip["trip_id"]] = $trip;
+                    }
                 }
             }
         }

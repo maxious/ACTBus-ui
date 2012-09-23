@@ -34,12 +34,28 @@ function navbar() {
 function displayRoutes($routes) {
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';
     foreach ($routes as $route) {
-        foreach (getRouteHeadsigns($route) as $headsign) {
-
+        $filteredHeadsigns = Array();
+        foreach (getRouteHeadsigns($route['route_id']) as $headsign) {
+            $filteredHeadsign = Array();
+            if (isset($filteredHeadsigns[$headsign['service_id']])) {
+                $filteredHeadsign = $filteredHeadsigns[$headsign['service_id'].$headsign['direction_id']];
+                $filteredHeadsign['stop_name'] .= " / " . $headsign['stop_name'];
+            } else {
+                $filteredHeadsign['trip_headsign'] = $headsign['trip_headsign'] . (strstr($headsign['trip_headsign'], "bound") === false ? "bound" : "");
+                $filteredHeadsign['stop_name'] = $headsign['stop_name'];
+                $filteredHeadsign['service_id'] = ucwords($headsign['service_id']);
+                $filteredHeadsign['direction_id'] = ucwords($headsign['direction_id']);
+            }
+              
+            $filteredHeadsigns[$headsign['service_id'].$headsign['direction_id']] = $filteredHeadsign;
+            
+        }
+        //print_r($filteredHeadsigns);
+        foreach ($filteredHeadsigns as $headsign) {
             //print_r($route);
-            echo '<li> <a href="trip.php?routeid=' . $route . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route . "</h3>
+            echo '<li> <a href="trip.php?routeid=' . $route['route_id'] . '&directionid=' . $headsign['direction_id'] . '"><h3>' . $route['route_id'] . "</h3>
                    
-                <p>" . $headsign['trip_headsign'] . (strstr($headsign['trip_headsign'], "bound") === false ? "bound" : "") . ", starting at " . $headsign['stop_name'] . " (" . ucwords($headsign['service_id']) . ")</p>";
+                <p>" . $headsign['trip_headsign'] . ", starting at " . $headsign['stop_name'] . " (" . $headsign['service_id'] . ")</p>";
 
             echo"       </a></li>\n";
         }

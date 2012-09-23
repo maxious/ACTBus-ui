@@ -46,7 +46,7 @@ function getRoutesByShortName($routeShortName) {
 
 function getRouteHeadsigns($routeID) {
     global $conn;
-    $query = 'select stops.stop_name, trip_headsign, direction_id,max(service_id) as service_id, count(*)
+    $query = 'select max(trips.route_id) as route_id ,stops.stop_name, trip_headsign, direction_id,max(service_id) as service_id, count(*)
         from routes join trips on trips.route_id = routes.route_id
 join stop_times on stop_times.trip_id = trips.trip_id join stops on 
 stop_times.stop_id = stops.stop_id where trips.route_id = :routeID 

@@ -1,4 +1,5 @@
 <?php
+
 header('Content-Type: application/vnd.google-earth.kml+xml');
 include ('../include/common.inc.php');
 header('Content-Disposition: attachment; filename="trip.' . urlencode($tripid) . '.kml"');
@@ -43,7 +44,7 @@ echo '
 	</Style>';
 $trip = getTrip($tripid);
 echo "\n<Placemark>\n";
-$link = curPageURL() . "/../trip.php?tripid=" . htmlspecialchars($$tripid);
+$link = curPageURL() . "/../trip.php?tripid=" . htmlspecialchars($tripid);
 echo "<name>" . $tripid . "</name>";
 echo '<atom:link rel="related" href="' . $link . '"/>';
 echo '<description><![CDATA[ <a href="' . $link . '">' . $tripid . "</a>]]> </description>";
