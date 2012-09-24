@@ -49,7 +49,7 @@ if ((!isset($stop) || $stop == NULL) && (!isset($stops[0]) || $stops[0] == NULL)
     header("Status: 404 Not Found");
     header("HTTP/1.0 404 Not Found");
     include_header("Stop Not Found", "404stop");
-    Amon::log("Stop Not Found " . print_r($_REQUEST, true), array('error'));
+    Amon::log("Stop Not Found " . print_r($_REQUEST, true).print_r($_SERVER, true), array('error'));
     echo "<h1>Error: Stop not found</h1>";
     include_footer();
     die();
