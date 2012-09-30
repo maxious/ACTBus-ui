@@ -52,11 +52,7 @@ if (stristr(PHP_OS, 'WIN')) {
     // Other
     $tempPath = "/tmp/";
 }
-require $basePath . "lib/amon-php/amon.php";
-Amon::config(array('address' => 'http://amon.disclosurelo.gs:2464',
-    'protocol' => 'http',
-    'secret_key' => "sSdt1ek79H0aNefmF36cq5SqrJEgtKpyBh1haEMwt4Q"));
-Amon::setup_exception_handler();
+
 
 function isDebugServer() {
     if (isset($_REQUEST['debug']))
@@ -69,8 +65,11 @@ function isDebugServer() {
 
 if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'maxious.xen.prgmr.com') {
 // Set the exception handler
-    require ROOT . '../lib/amon-php/amon.php';
-    Amon::setup_exception_handler();
+    require $basePath . "lib/amon-php/amon.php";
+Amon::config(array('address' => 'http://amon.disclosurelo.gs:2464',
+    'protocol' => 'http',
+    'secret_key' => "sSdt1ek79H0aNefmF36cq5SqrJEgtKpyBh1haEMwt4Q"));
+Amon::setup_exception_handler();
 }
 
 include_once ('common-geo.inc.php');
