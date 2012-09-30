@@ -73,12 +73,17 @@ function staticmap($mapPoints, $collapsible = true, $twotone = false, $path = fa
  <abbr class="longitude" title="' . $mapPoints[0][1] . '"></abbr>
     <meta itemprop="longitude" content="' . $mapPoints[0][1] . '" />';
     }
+    if (sizeof($mapPoints) === 1) {
+           $output .= '<a href="https://maps.google.com.au/?ll='. $mapPoints[0][0] . ',' . $mapPoints[0][1].'">';
+    }
     if (isIOSDevice()) {
         $output .= '<img class="hiresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=2&amp;sensor=true" width=' . $width . ' height=' . $height . ' alt="map of stop location">';
     } else {
         $output .= '<img class="lowresmap" src="http://maps.googleapis.com/maps/api/staticmap?size=' . $width . 'x' . $height . '&amp;' . $markers . '&amp;scale=1&amp;format=jpg&amp;sensor=true" width=' . $width . ' height=' . $height . ' alt="map of stop location">';
     }
-
+if (sizeof($mapPoints) === 1) {
+           $output .= '</a>';
+}
     if ($collapsible) {
         $output .= '</div>';
     }
