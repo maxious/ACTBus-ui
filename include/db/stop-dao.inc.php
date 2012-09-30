@@ -153,18 +153,17 @@ function getStopTrips($stopID, $service_period = '', $afterTime = '', $limit = '
         $limitSQL .= ' LIMIT :limit ';
 
     global $conn;
+    
     if ($afterTime != '') {
-        $query = ' SELECT stop_times.trip_id,stop_times.arrival_time,departure_time, stop_times.stop_id,stop_sequence,service_id,trips.route_id,trips.direction_id,trips.trip_headsign,route_short_name,route_long_name,end_times.arrival_time as end_time
+        $query = ' SELECT stop_times.trip_id,stop_times.arrival_time,departure_time, stop_times.stop_id,stop_sequence,service_id,trips.route_id,trips.direction_id,trips.trip_headsign,route_short_name,route_long_name,x_end_times.arrival_time as end_time
 FROM stop_times
 join trips on trips.trip_id =
 stop_times.trip_id
-join routes on trips.route_id = routes.route_id , (select DISTINCT ON (trip_id) trip_id, arrival_time
-  from stop_times
- order by trip_id, arrival_time DESC) as end_times 
+join routes on trips.route_id = routes.route_id , x_end_times 
 WHERE stop_times.stop_id = :stopID
-AND stop_times.trip_id = end_times.trip_id
+AND stop_times.trip_id = x_end_times.trip_id
 AND (service_id=:service_periodA OR service_id=:service_periodB) ' . ($route_short_name != '' ? ' AND route_short_name = :route_short_name ' : '') . ' 
-AND end_times.arrival_time > :afterTime
+AND x_end_times.arrival_time > :afterTime
 ORDER BY end_time '.$limitSQL;
     } else {
         $query = 'SELECT stop_times.trip_id,departure_time, arrival_time,stop_times.stop_id,stop_sequence,service_id,trips.route_id,route_short_name,route_long_name
