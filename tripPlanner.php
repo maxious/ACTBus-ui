@@ -16,6 +16,9 @@
   limitations under the License.
  */
 include ('include/common.inc.php');
+if (!isset($_REQUEST['time'])) {
+    cache_modtime();
+}
 include_header("Trip Planner", "tripPlanner", true, false, true);
 $from = (isset($_REQUEST['from']) ? filter_var($_REQUEST['from'], FILTER_SANITIZE_STRING) : "");
 $to = (isset($_REQUEST['to']) ? filter_var($_REQUEST['to'], FILTER_SANITIZE_STRING) : "");
@@ -161,7 +164,7 @@ function processLeg($legNumber, $leg)
     }
 }
 
-if ($_REQUEST['time']) {
+if (isset($_REQUEST['time'])) {
     if (startsWith($to, "-")) {
         $toPlace = $to;
     } else if (strpos($to, "(") !== false) {

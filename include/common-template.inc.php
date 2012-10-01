@@ -19,7 +19,13 @@
 // Copyright 2009 Google Inc. All Rights Reserved.
 $GA_ACCOUNT = "MO-22173039-1";
 $GA_PIXEL = "/lib/ga.php";
-
+function cache_modtime() {
+    header('Cache-Control: max-age=31556926');
+    $mtime = filemtime(__FILE__);
+    $etag = md5($mtime);
+    header('ETag: "' . $etag . '"');
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s", $mtime) . " GMT");
+}
 function googleAnalyticsGetImageUrl() {
     global $GA_ACCOUNT, $GA_PIXEL;
     //if (stristr($_SERVER['HTTP_USER_AGENT'], 'Googlebot') return "";
@@ -47,7 +53,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
 <!DOCTYPE html> 
 <html lang="en">
 	<head>
-        <meta charset="UTF-8">
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 	
 <title>' . $pageTitle . ' - Canberra Bus Timetable</title>
         <meta name="google-site-verification" content="-53T5Qn4TB_de1NyfR_ZZkEVdUNcNFSaYKSFkWKx-sY" />
@@ -67,18 +73,18 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
         $jqmjs = "//code.jquery.com/mobile/$jqmVersion/jquery.mobile-$jqmVersion.min.js";
     }
     echo '<link rel="stylesheet"  href="' . $jqmcss . '" />
-	<script src="' . $jqjs . '"></script>
-		 <script>$(document).bind("mobileinit", function(){
+	<script type="text/javascript" src="' . $jqjs . '"></script>
+		 <script type="text/javascript">$(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 </script> 
-	<script src="' . $jqmjs . '"></script>
+	<script type="text/javascript" src="' . $jqmjs . '"></script>
 
-<script src="' . $basePath . 'js/jquery.ui.core.min.js"></script>
-<script src="' . $basePath . 'js/jquery.ui.position.min.js"></script>
-<script src="' . $basePath . 'js/jquery.ui.widget.min.js"></script>
-  <script src="' . $basePath . 'js/jquery.ui.autocomplete.min.js"></script>
-  <script>
+<script type="text/javascript" src="' . $basePath . 'js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="' . $basePath . 'js/jquery.ui.position.min.js"></script>
+<script type="text/javascript" src="' . $basePath . 'js/jquery.ui.widget.min.js"></script>
+  <script type="text/javascript" src="' . $basePath . 'js/jquery.ui.autocomplete.min.js"></script>
+  <script type="text/javascript">
 	$(function() {
 		$( "#geolocate" ).autocomplete({
 			source: "lib/autocomplete.php",
@@ -113,7 +119,7 @@ function include_header($pageTitle, $pageType, $opendiv = true, $geolocate = fal
  <link rel="apple-touch-icon" href="apple-touch-icon.png" />';
     }
     if ($geolocate) {
-        echo "<script>
+        echo "<script type=\"text/javascript\">
 
 function success(position) {
 $('#error').val('Location now detected. Please wait for data to load.');
@@ -147,7 +153,7 @@ $(document).ready(function() {
             echo "geolocate();";
         echo "</script> ";
     }
-    if (isAnalyticsOn())
+    if (isAnalyticsOn()) {
         echo '
 <script type="text/javascript">' . "
 
@@ -156,6 +162,7 @@ $(document).ready(function() {
   _gaq.push(['_trackPageview']);
    _gaq.push(['_trackPageLoadTime']);
 </script>";
+    }
     echo '</head>
 <body>
     <div id="skip">
@@ -217,10 +224,10 @@ href="http://www.action.act.gov.au">http://www.action.act.gov.au</a> for details
 function include_footer() {
     global $basePath;
     echo '<div id="footer"><a href="' . $basePath . 'about.php">About/Contact Us</a>&nbsp;<a href="' . $basePath . 'feedback.php">Feedback/Bug Report</a>&nbsp;<a href="' . $basePath . 'privacy.php">Privacy Policy</a>';
-    echo '<br><small>
-        <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/au/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/">Creative Commons Attribution 3.0 Australia License</a>.</small></div>';
+    echo '<br/><small>
+        <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/au/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/au/">Creative Commons Attribution 3.0 Australia License</a>.</small></div>';
     if (isAnalyticsOn()) {
-        echo "<script>  (function() {
+        echo "<script type=\"text/javascript\">  (function() {
     var ga = document.createElement('script'); ga.type = 
 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 
@@ -229,7 +236,7 @@ function include_footer() {
 s.parentNode.insertBefore(ga, s);
   })();</script>";
         $googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
-        echo '<noscript><img src="' . $googleAnalyticsImageUrl . '" alt=""/></noscript>';
+        echo '<noscript><div><img src="' . $googleAnalyticsImageUrl . '" alt=""/></div></noscript>';
     }
     echo "\n</div></div></body></html>";
 }
@@ -301,7 +308,7 @@ function placeSettings() {
 
 function trackEvent($category, $action, $label = "", $value = - 1) {
     if (isAnalyticsOn()) {
-        echo "\n<script> _gaq.push(['_trackEvent', '$category', '$action'" . ($label != "" ? ", '$label'" : "") . ($value != - 1 ? ", $value" : "") . "]);</script>";
+        echo "\n<script type=\"text/javascript\"> _gaq.push(['_trackEvent', '$category', '$action'" . ($label != "" ? ", '$label'" : "") . ($value != - 1 ? ", $value" : "") . "]);</script>";
     }
 }
 

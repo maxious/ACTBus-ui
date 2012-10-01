@@ -16,6 +16,7 @@
   limitations under the License.
  */
 // you have to open the session to be able to modify or remove it
+session_cache_limiter ('private_no_expire, must-revalidate');
 session_start();
 if (isset($_REQUEST['geolocate']) && $_REQUEST['geolocate'] != 'Enter co-ordinates or address here') {
     $geocoded = false;

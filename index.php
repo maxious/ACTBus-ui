@@ -15,12 +15,13 @@
   limitations under the License.
  */
 include ('include/common.inc.php');
+cache_modtime();
 include_header("bus.lambdacomplex.org", "index", false)
 ?>
 <div data-role="page">
     <div data-role="content">
         <div id="jqm-homeheader">
-            <h1>busness time</h1><br><small>Canberra Bus Timetables and Trip Planner</small> 
+            <h1>busness time</h1><br/><small>Canberra Bus Timetables and Trip Planner</small> 
         </div> 
         <a name="maincontent" id="maincontent"></a>
         <a href="tripPlanner.php" data-role="button" data-icon="navigation">Launch Trip Planner...</a>

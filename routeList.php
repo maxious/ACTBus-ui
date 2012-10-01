@@ -81,6 +81,7 @@ function displayNearbyRoutes($routes) {
 }
 
 if (isset($bysuburbs)) {
+    
     include_header("Routes by Suburb", "routeList");
     navbar();
     echo '  <ul data-role="listview" data-filter="true" data-inset="true" >';

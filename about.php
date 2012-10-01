@@ -15,6 +15,7 @@
   limitations under the License.
  */
 include ('include/common.inc.php');
+cache_modtime();
 include_header("About", "about")
 ?>
 <p>

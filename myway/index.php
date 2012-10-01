@@ -15,7 +15,7 @@
   limitations under the License.
  */
 include ('../include/common.inc.php');
-
+ cache_modtime();
 include_header("MyWay Balance and Timeliness Survey Results", "index");
 if ($_SESSION['authed'] == true) {
     echo '<ul data-role="listview" data-theme="e" data-groupingtheme="e">

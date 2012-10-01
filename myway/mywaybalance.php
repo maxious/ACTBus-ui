@@ -16,6 +16,9 @@
   limitations under the License.
  */
 include ('../include/common.inc.php');
+if (!isset($_REQUEST['card_number'])) {
+    cache_modtime();
+}
 include_header("MyWay Balance", "mywayBalance", false, false, true);
 echo '<div data-role="page"> 
 	<div data-role="header" data-position="inline">

@@ -30,6 +30,7 @@ if (php_sapi_name() == "cli") {
       delete from trips;
       delete from fare_attributes;
       delete from feed_info;
+      delete from x_end_times;
      */
 
 // Unzip cbrfeed.zip, import all csv files to database
