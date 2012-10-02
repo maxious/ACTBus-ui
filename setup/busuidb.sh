@@ -7,7 +7,7 @@ gunzip /var/www/transitdata.cbrfeed.sql.gz
 psql -d transitdata -f /var/www/transitdata.cbrfeed.sql
 #createuser transitdata -SDRP
 #password transitdata
-#psql -d transitdata -c "GRANT SELECT ON TABLE agency,calendar,calendar_dates,routes,stop_times,stops,trips TO transitdata;"
+#psql -d transitdata -c "GRANT SELECT ON TABLE agency,calendar,calendar_dates,routes,shapes,stop_times,stops,trips,x_end_times TO transitdata;"
 #psql -d transitdata -c "GRANT SELECT,INSERT ON TABLE myway_observations,myway_timingdeltas,myway_routes,myway_stops TO transitdata;"
 #psql -d transitdata -c	"GRANT SELECT,INSERT,UPDATE ON TABLE servicealerts_alerts,servicealerts_informed TO transitdata;"
 #psql -d transitdata -c	"GRANT USAGE,SELECT ON SEQUENCE servicealerts_alerts_id_seq TO transitdata;"
