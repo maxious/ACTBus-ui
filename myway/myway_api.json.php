@@ -41,7 +41,8 @@ $field_mapping = Array(
     "DOBday" => "day",
     "DOByear" => "year",
     "secret_answer" => "pwrd",
-    "button" => "Submit"
+    "button" => "Submit",
+    "rows" => "rows"
 );
 foreach (Array(
 "card_number",
@@ -65,7 +66,7 @@ if (isset($_REQUEST['secret_answer'])) {
     $return["error"][] = "secret_answer parameter invalid or unspecified";
 }
 $fields['button'] = 'Submit';
-$fields['rows'] = 1000;
+$fields['rows'] = '200';
 $fields_string = "";
 //url-ify the data for the POST
 foreach ($fields as $key => $value) {
