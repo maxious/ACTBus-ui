@@ -160,30 +160,6 @@ echo "</div>";
 if (sizeof($trips) == 0) {
     echo "<li style='text-align: center;'>No trips in the near future.</li>";
 } else {
-    if (isset($labs)) {
-// ETA calculation
-
-        $tripETA = Array();
-        // max/min delay instead of stddev?
-        $query = $query = "select 'lol', avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas where extract(hour from time) between " . date("H", $earlierTime) . " and " . date("H", $laterTime);
-        //select 'lol', stop_id,extract(hour from time), avg(timing_delta), stddev(timing_delta), count(*) from myway_timingdeltas where stop_id = '5501' group by stop_id, extract(hour from time) order by extract(hour from time)
-        $query = $conn->prepare($query);
-        $query->execute();
-        if (!$query) {
-            databaseError($conn->errorInfo());
-            return Array();
-        }
-        $ETAparams = Array();
-        foreach ($query->fetchAll() as $row) {
-            $ETAparams[$row[0]] = Array("avg" => $row[1], "stddev" => floor($row[2]), "count" => $row[3]);
-        };
-        //print_r($ETAparams);
-        foreach ($trips as $trip) {
-            $tripETA[$trip['trip_id']] = date("H:i", strtotime($trip['arrival_time'] . " - " . (floor($ETAparams['lol']['stddev'])) . " seconds")) . " to " .
-                    date("H:i", strtotime($trip['arrival_time'] . " + " . (floor($ETAparams['lol']['stddev'])) . " seconds"));
-        }
-        //print_r($tripETA);
-    }
     foreach ($trips as $trip) {
         if (
                 isset($filterHasStop) && (getTripHasStop($trip['trip_id'], $filterHasStop) == 1)
@@ -196,7 +172,7 @@ if (sizeof($trips) == 0) {
             echo '<a class="url" href="' . curPageURL() . '/trip.php?stopid=' . $stopid . '&amp;tripid=' . $trip['trip_id'] . '"><h3 class="summary">' . $trip['route_short_name'] . ' ' . $trip['trip_headsign'] . " towards " . $destination['stop_name'] . "</h3><p>";
             $viaPoints = viaPointNames($trip['trip_id'], $trip['stop_sequence']);
             if (isset($labs)) {
-                echo '<br><span class="eta">ETA: ' . $tripETA[$trip['trip_id']] . '</span>';
+                //echo '<br><span class="eta">ETA: ' . $tripETA[$trip['trip_id']] . '</span>';
             }
             if ($viaPoints != "") {
                 echo '<br><span class="viaPoints">Via: ' . $viaPoints . '</span>';
