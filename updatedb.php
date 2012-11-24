@@ -137,6 +137,7 @@ if (php_sapi_name() == "cli") {
     }
     // materialised views
     $pdconn->exec('
+        drop table x_end_times;
             CREATE TABLE x_end_times AS select DISTINCT ON (trip_id) trip_id, arrival_time   from stop_times  order by trip_id, arrival_time DESC;
       ALTER TABLE public.x_end_times  ADD CONSTRAINT x_end_times_pkey PRIMARY KEY(trip_id , arrival_time );'
             );

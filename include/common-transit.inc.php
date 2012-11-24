@@ -45,21 +45,41 @@ function service_period($date = '') {
 }
 
 function service_ids($service_period, $date = '') {
-    switch ($service_period) {
-        case 'sunday':
-            return Array('Sunday', 'Sunday');
-        case 'saturday':
-            return Array('Saturday', 'Saturday');
-        default:
-            $date = ($date != '' ? $date : time());
+    $date = ($date != '' ? $date : time());
 // school holidays
-            $ymd = intval(date('Ymd', $date));
-            $dow = date('w', $date);
-            if ($dow != 0 && $dow != 6 && (($ymd > '20120708' && $ymd < '20120724') || ($ymd > '20120927' && $ymd < '20121016'))) {
-                return Array('Weekday-SchoolVacation', 'Weekday-SchoolVacation');
-            } else {
-                return Array('Weekday', 'Weekday');
-            }
+    $ymd = intval(date('Ymd', $date));
+    $dow = date('w', $date);
+    switch ($service_period) {
+
+        case 'sunday':
+            if ($ymd <= 20121230) {
+                return Array('Sunday12.0', 'Sunday12.0');
+            } else if ($ymd <= 20121225) {
+                return Array('Xmas-Sunday', 'Xmas-Sunday');
+            } else
+                return Array('Sunday13.0', 'Sunday13.0');
+        //return Array('Sunday', 'Sunday');
+        case 'saturday':
+            if ($ymd <= 20121230) {
+                return Array('Saturday12.0', 'Saturday12.0');
+            } else if ($ymd <= 20121222) {
+                return Array('Saturday12.1', 'Saturday12.1');
+            } else
+                return Array('Saturday13.0', 'Saturday13.0');
+        //return Array('Saturday', 'Saturday');
+        default:
+
+            if ($ymd <= 20121230) {
+                return Array("Weekday12.0", "Weekday12.0");
+            } else if ($ymd <= 20121222) {
+                return Array("Weekday12.1", "Weekday12.1");
+            } else if ($ymd <= 20130102) {
+                return Array("Xmas-Weekday12.0", "Xmas-Weekday12.0");
+            } else if ($ymd <= 20130105) {
+                return Array("Xmas-Weekday13.0", "Xmas-Weekday13.0");
+            } else
+                return Array('Weekday13.0', 'Weekday13.0');
+        //          return Array('Weekday', 'Weekday');
     }
 }
 
@@ -114,7 +134,7 @@ if ($GTFSREnabled) {
         'UNKNOWN_EFFECT' => 'Unknown effect',
         'STOP_MOVED' => 'Stop moved');
 
-    set_include_path(get_include_path() . PATH_SEPARATOR . (ROOT. '/../lib/Protobuf-PHP/library/DrSlump/'));
+    set_include_path(get_include_path() . PATH_SEPARATOR . (ROOT . '/../lib/Protobuf-PHP/library/DrSlump/'));
 
     include_once('Protobuf.php');
     include_once('Protobuf/Message.php');
@@ -122,7 +142,7 @@ if ($GTFSREnabled) {
     include_once('Protobuf/Descriptor.php');
     include_once('Protobuf/Field.php');
 
-    include_once(ROOT. '/../lib/Protobuf-PHP/gtfs-realtime.php');
+    include_once(ROOT . '/../lib/Protobuf-PHP/gtfs-realtime.php');
     include_once('Protobuf/CodecInterface.php');
     include_once('Protobuf/Codec/PhpArray.php');
     include_once('Protobuf/Codec/Binary.php');
@@ -173,25 +193,25 @@ if ($GTFSREnabled) {
 
                     $affectsFilteredEntities = true;
                     foreach ($informedEntities as $informedEntity) {
-	$informed_count++;
-                    $informed = Array();
-                    $es = new transit_realtime\EntitySelector();
-                    if ($informedEntity['informed_class'] == 'agency') {
-                        $es->setAgencyId($informedEntity['informed_id']);
+                        $informed_count++;
+                        $informed = Array();
+                        $es = new transit_realtime\EntitySelector();
+                        if ($informedEntity['informed_class'] == 'agency') {
+                            $es->setAgencyId($informedEntity['informed_id']);
+                        }
+                        if ($informedEntity['informed_class'] == 'stop') {
+                            $es->setStopId($informedEntity['informed_id']);
+                        }
+                        if ($informedEntity['informed_class'] == 'route') {
+                            $es->setRouteId($informedEntity['informed_id']);
+                        }
+                        if ($informedEntity['informed_class'] == 'trip') {
+                            $td = new transit_realtime\TripDescriptor();
+                            $td->setTripId($informedEntity['informed_id']);
+                            $es->setTrip($td);
+                        }
+                        $alert->addInformedEntity($es);
                     }
-                    if ($informedEntity['informed_class'] == 'stop') {
-                        $es->setStopId($informedEntity['informed_id']);
-                    }
-                    if ($informedEntity['informed_class'] == 'route') {
-                        $es->setRouteId($informedEntity['informed_id']);
-                    }
-                    if ($informedEntity['informed_class'] == 'trip') {
-                        $td = new transit_realtime\TripDescriptor();
-                        $td->setTripId($informedEntity['informed_id']);
-                        $es->setTrip($td);
-                    }
-                    $alert->addInformedEntity($es);
-}
                 }
                 if ($current_alert['cause'] != '') {
                     $alert->setCause(constant('transit_realtime\Alert\Cause::' . $current_alert['cause']));
