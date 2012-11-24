@@ -10,13 +10,13 @@ echo '<ul data-role="listview" data-theme="e" data-groupingtheme="e">';
           }
  	echo'	<li><a href="servicealert_viewer.php"><h3>Service Alert Viewer</h3>
 		<p>Browse current network alerts</p></a></li>';
+ 	echo'	<li><a href="servicealert_map.php"><h3>Service Alert Map</h3>
+		<p>Browse current network alerts</p></a></li>';
           
            echo'  </ul>';
 echo '<ul data-role="listview" data-theme="e" data-groupingtheme="e">';
  	echo'	<li><a href="gtfs-realtime.php"><h3>GTFS-realtime API</h3>
-		<p>Browse current network alerts</p></a></li>';
- 	echo'	<li><a href="siri.php"><h3>SIRI API</h3>
-		<p>Browse current network alerts</p></a></li>';
+		<p>Current alerts/updates API</p></a></li>';
 
            echo'  </ul>';
 
