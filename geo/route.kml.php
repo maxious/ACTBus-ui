@@ -1,6 +1,16 @@
 <?php
+
 header('Content-Type: application/vnd.google-earth.kml+xml');
 include ('../include/common.inc.php');
+if ((!isset($routeid) || $routeid == NULL)) {
+
+    header("Status: 404 Not Found");
+    header("HTTP/1.0 404 Not Found");
+    include_header("Route Not Found", "404stop");
+    Amon::log("Route Not Found " . print_r($_REQUEST, true).print_r($_SERVER, true), array('error'));
+    echo "<h1>Error: route not found</h1>";
+    die();
+}
 header('Content-Disposition: attachment; filename="route.' . urlencode($routeid) . '.kml"');
 $debugOkay = Array(); // disable debugging output even on dev server
 echo '<?xml version="1.0" encoding="UTF-8"?>
