@@ -33,7 +33,7 @@ $return = Array();
   }
   } */
 //set POST variables
-$url = 'https://www.transport.act.gov.au/ARTS/use_Funcs.asp';
+$url = 'https://www.transport.act.gov.au/catch_a_bus/myway/check_your_balance?sq_content_src=%2BdXJsPWh0dHAlM0ElMkYlMkZmaWxlcy50cmFuc3BvcnQuYWN0Lmdvdi5hdSUyRkFSVFMlMkZ1c2VfRnVuY3MuYXNwJmFsbD0x';
 //$url = 'http://localhost/myway.html';
 $field_mapping = Array(
     "card_number" => "SRNO",
@@ -67,12 +67,13 @@ if (isset($_REQUEST['secret_answer'])) {
 }
 $fields['button'] = 'Submit';
 $fields['rows'] = '200';
+$fields['sq_content_src'] = '+dXJsPWh0dHAlM0ElMkYlMkZmaWxlcy50cmFuc3BvcnQuYWN0Lmdvdi5hdSUyRkFSVFMlMkZ1c2VfRnVuY3MuYXNwJmFsbD0x';
 $fields_string = "";
 //url-ify the data for the POST
 foreach ($fields as $key => $value) {
     if (sizeof($value) === 0)
         $return['error'][] = $key . " parameter invalid or unspecified";
-    $fields_string.= $field_mapping[$key] . '=' . $value . '&';
+    $fields_string.= $field_mapping[$key] . '=' . urlencode($value) . '&';
 }
 $fields_string = rtrim($fields_string, '&');
 if (!isset($return['error'])) {
@@ -83,7 +84,7 @@ if (!isset($return['error'])) {
     curl_setopt($ch, CURLOPT_POST, count($fields));
     curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_REFERER, "https://www.transport.act.gov.au/ARTS/getbalance.asp");
+    curl_setopt($ch, CURLOPT_REFERER, $url);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     // ssl ignore
